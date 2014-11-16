@@ -13,4 +13,5 @@
  */
 int main(void){	// use int type for CCI interface
 	ei();	// enable interrupt
+	di();	// disable interrupt
 }
