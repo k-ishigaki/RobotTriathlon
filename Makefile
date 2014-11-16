@@ -1,4 +1,4 @@
 # this is a comment
-TARGET = 
-OBJECTS = main.o
+TARGET = RobotTriathlon
+OBJECTS = main.p1
 
