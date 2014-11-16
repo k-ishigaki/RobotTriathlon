@@ -1,1 +1,4 @@
-# this is comment
+# this is a comment
+TARGET = 
+OBJECTS = main.o
+
