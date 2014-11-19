@@ -8,16 +8,16 @@ COMPILER = xc8
 # chip name
 CHIP = 18F26K22
 # compiler options
-OPTIONS += --chip=$(CHIP)
-OPTIONS += --CCI
+CFLAGS += --chip=$(CHIP)
+CFLAGS += --CCI
 # additional suffixes
 .SUFFIXES: .p1
 
 $(TARGET).hex: $(OBJECTS)
-	$(COMPILER) $(OPTIONS) -O$@ $(OBJECTS)
+	$(COMPILER) $(CFLAGS) -O$@ $(OBJECTS)
 
 # suffix rule(.c -> .p1)
 .c.p1:
-	$(COMPILER) $(OPTIONS) --PASS1 $<
+	$(COMPILER) $(CFLAGS) --PASS1 $<
 
 main.p1: configurationBits.h
