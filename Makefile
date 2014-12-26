@@ -1,10 +1,17 @@
 # Environment 
-MKDIR=mkdir
-CP=cp
+ifeq (\$(OS),Windows_NT)
+	MKDIR = mkdir
+	CP = move
+	BASENAME = 
+else
+	MKDIR = mkdir
+	CP = cp
+	BASENAME = basename
+endif
 #CCADMIN=CCadmin	# I don't know what this means
-RANLIB=ranlib
+#RANLIB = ranlib	# I don't know what this means
 # compiler command
-COMPILER = xc8
+CC = xc8
 # compiler options
 CFLAGS = --chip=18F26K22 --CCI
 # Link options
@@ -16,7 +23,7 @@ INCLUDE =
 # target name
 TARGET = ../bin/$(shell basename 'readlink -f ..')
 # intermediate files directory
-OBJDIR = ./obj
+OBJDIR = ./bin
 ifeq "$(strip (OBJDIR))" ""
   OBJDIR = .
 endif
