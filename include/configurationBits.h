@@ -1,0 +1,1 @@
+#pragma config PLLCFG = ON, FOSC = INTIO67, MCLRE = EXTMCLR

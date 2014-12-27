@@ -1,36 +1,45 @@
-#CCADMIN=CCadmin	# I don't know what this means
-#RANLIB = ranlib	# I don't know what this means
+# target name
+TARGET = release
 # compiler command
-CC = xc8
+CC := xc8
 # compiler options
-CFLAGS = --chip=18F26K22 --CCI
+CFLAGS = --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist
 # Link options
 LDFLAGS = 
 # library paths
 LIBS = 
 # include paths
-INCLUDE = 
-# target name
-TARGET = RobotTriathlon
+INCLUDE := include
 # sourse files directory
-SRCDIR = ./src
+SRCDIR := src
 # intermediate files directory
-OBJDIR = ./bin
+OBJDIR := bin
 # source files
-SOURCES = $(addprefix $(SRCDIR)/, $(wildcard *.c))
+SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
-OBJECTS = $(addprefix $(OBJDIR)/, $(addsuffix .p1, $(basename $(notdir $(SOURCES)))))
+OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
-DEPENDS = $(OBJECTS:.p1=.d)
+DEPS = $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 # additional suffixes
 .SUFFIXES: .p1
 
-$(TARGET): $(OBJECTS) $(LIBS)
-	$(CC) $(CFLAGS) -O$@ $(OBJDIR)
+all:$(TARGET)
 
-# suffix rule(.c -> .p1)
-.c.p1:
-	$(CC) $(CFLAGS) --PASS1 $<
+-include $(DEPS)
 
-#main.p1: configurationBits.h
+$(TARGET): $(OBJS) $(LIBS)
+	$(CC) $(CFLAGS) -O$@ $^
+
+$(OBJS): $(SRCS)
+	$(CC) $(CFLAGS) --pass1 $(SRCS)
+
+.PHONY: debug
+debug:
+	echo $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+
+.PHONY: clean
+clean:
+	rm -f $(wildcard $(addprefix $(OBJDIR)/,*))
+
+
