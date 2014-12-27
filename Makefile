@@ -1,13 +1,3 @@
-# Environment 
-ifeq (\$(OS),Windows_NT)
-	MKDIR = mkdir
-	CP = move
-	BASENAME = 
-else
-	MKDIR = mkdir
-	CP = cp
-	BASENAME = basename
-endif
 #CCADMIN=CCadmin	# I don't know what this means
 #RANLIB = ranlib	# I don't know what this means
 # compiler command
@@ -21,16 +11,15 @@ LIBS =
 # include paths
 INCLUDE = 
 # target name
-TARGET = ../bin/$(shell basename 'readlink -f ..')
+TARGET = RobotTriathlon
+# sourse files directory
+SRCDIR = ./src
 # intermediate files directory
 OBJDIR = ./bin
-ifeq "$(strip (OBJDIR))" ""
-  OBJDIR = .
-endif
 # source files
-SOURCES = $(wildcard *.c)
+SOURCES = $(addprefix $(SRCDIR)/, $(wildcard *.c))
 # object files
-OBJECTS = $(addprefix $(OBJDIR)/, $(SOURCES:.c=.p1))
+OBJECTS = $(addprefix $(OBJDIR)/, $(addsuffix .p1, $(basename $(notdir $(SOURCES)))))
 # dependency
 DEPENDS = $(OBJECTS:.p1=.d)
 
@@ -38,10 +27,10 @@ DEPENDS = $(OBJECTS:.p1=.d)
 .SUFFIXES: .p1
 
 $(TARGET): $(OBJECTS) $(LIBS)
-	$(COMPILER) $(CFLAGS) -O$@ $(OBJDIR)
+	$(CC) $(CFLAGS) -O$@ $(OBJDIR)
 
 # suffix rule(.c -> .p1)
 .c.p1:
-	$(COMPILER) $(CFLAGS) --PASS1 $<
+	$(CC) $(CFLAGS) --PASS1 $<
 
-main.p1: configurationBits.h
+#main.p1: configurationBits.h
