@@ -1,3 +1,6 @@
+#ifndef CONFIGURATIONBITS_H
+#define CONFIGURATIONBITS_H
+
 /*
  * PLLCFG =	4X PLL Enable
  * OFF	Oscillator used directly
@@ -302,3 +305,5 @@
  * ON	Boot Block (000000-0007FFh) protected from table reads executed in other blocks
  */
 #pragma config EBTRB = OFF
+
+#endif
