@@ -3,7 +3,7 @@ TARGET = release
 # compiler command
 CC := xc8
 # compiler options
-CFLAGS = --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist
+CFLAGS = --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none
 # Link options
 LDFLAGS = 
 # library paths
