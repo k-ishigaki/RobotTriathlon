@@ -9,6 +9,16 @@
 #ifndef EUSART_H
 #define EUSART_H
 
+// EUSARTの数
+// ソースコードではNUM_OF_EUSARTを元に分岐を行っている
+// チップ名によってNUM_OF_EUSARTを決定する
+#if defined (_18F26K22)
+#define NUM_OF_EUSART 2
+#else
+#error your device has no definition of NUM_OF_EUSART, \
+please add definition of your device here.
+#endif
+
 // EUSARTのオブジェクト（構造体）
 // EUSART.cの中で実態が定義されている
 // Eusartの記述を簡略化するためにtypedef
@@ -16,8 +26,12 @@ typedef struct Eusart_t Eusart;
 
 // EUSARTが複数ある場合に、getEUSART関数の引数に指定する
 enum EusartIdentifier {
+#if NUM_OF_EUSART == 1
+	EUSART,
+#elif NUM_OF_EUSART == 2
 	EUSART1,
 	EUSART2,
+#endif
 };
 
 /**
