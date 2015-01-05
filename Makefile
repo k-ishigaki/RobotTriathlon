@@ -19,7 +19,7 @@ SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
 OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
-DEPS = $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+DEPS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 # additional suffixes
 .SUFFIXES: .p1
