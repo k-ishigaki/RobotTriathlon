@@ -1,3 +1,13 @@
+# commands depend on OS
+ifeq (($OS),Windows_NT)
+	RM := del
+# windows separator "\" is defined only in this way
+	SEPARATOR != echo "\\"
+else
+# -f option is force remove (no confirmation)
+	RM := rm -f
+	SEPARATOR := /
+endif
 # target name
 TARGET = release
 # compiler command
@@ -15,11 +25,11 @@ SRCDIR := src
 # intermediate files directory
 OBJDIR := bin
 # source files
-SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
+SRCS := $(wildcard $(addprefix $(SRCDIR)$(SEPARATOR),*.c))
 # object files
-OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
+OBJS := $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
-DEPS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+DEPS := $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 # additional suffixes
 .SUFFIXES: .p1
@@ -36,10 +46,10 @@ $(OBJS): $(SRCS)
 
 .PHONY: debug
 debug:
-	echo $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+	echo $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 .PHONY: clean
 clean:
-	rm -f $(wildcard $(addprefix $(OBJDIR)/,*))
+	$(RM) $(wildcard $(addprefix $(OBJDIR)$(SEPARATOR),*))
 
 
