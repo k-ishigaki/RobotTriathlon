@@ -11,18 +11,9 @@
 // デフォルトのボーレート
 #define DEFAULT_BAUD_RATE 9600
 
-// フラグ
-typedef struct{
-	unsigned portEnabled		:1;
-	unsigned RXInterruptEnabled	:1;
-	unsigned TXInterruptEnabled	:1;
-} Flags;
-
 // Eusart構造体の定義
 struct Eusart_t{
 	enum EusartIdentifier id;
-	unsigned long baudRate;
-	Flags flags;
 };
 
 // Eusartの実体定義
@@ -36,11 +27,6 @@ Eusart* getEUSART(enum EusartIdentifier e) {
 	// オブジェクトとIDの割り当て
 	Eusart *this = &eusart[e];
 	this->id = e;
-	// メンバ変数の初期化
-	this->baudRate = DEFAULT_BAUD_RATE;
-	this->flags.portEnabled = 0;
-	this->flags.RXInterruptEnabled = 0;
-	this->flags.TXInterruptEnabled = 0;
 	return this;
 }
 
