@@ -46,7 +46,7 @@ char EUSART_open(Eusart *this, long baudRate) {
 }
 
 void EUSART_reset(Eusart *this) {
-	switch(this->id) {
+	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
 			RCSTAbits.SPEN = 0;
@@ -66,32 +66,54 @@ void EUSART_reset(Eusart *this) {
 }
 
 char EUSART_setBaudRate(Eusart *this, unsigned long baudRate) {
-	switch(this->id) {
+	// ボーレートが設定できない値であるときは失敗
+	// OPERATING_FREQUENCYの設定によってはこの範囲内でも動作しないことがあるので注意
+	if (baudRate > 4000000L || baudRate < 300L) return 0;
+	// (baud rate) = F_OSC / (16 * (n + 1))
+	// n = F_OSC / (16 * (baud rate)) - 1
+	unsigned int n = OPERATING_FREQUENCY / (16 * baudRate) - 1;
+	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
-			TXSTAbits.BRGH = 0;
-			BAUDCONbits.BRG16 = 1;
+			TXSTAbits.BRGH = 0;			// Low Speed
+			BAUDCONbits.BRG16 = 1;  		// 16-bit Baud Rate Generater
+			SPBRG = n;
 			break;
 #elif NUM_OF_EUSART == 2
 		case EUSART1:
 			TXSTA1bits.BRGH = 0;			// Low Speed
 			BAUDCON1bits.BRG16 = 1;			// 16-bit Baud Rate Generater
+			SPBRG1 = n;
 			break;
 		case EUSART2:
 			TXSTA2bits.BRGH = 0;			// Low Speed
 			BAUDCON2bits.BRG16 = 1;			// 16-bit Baud Rate Generater
+			SPBRG2 = n;
 			break;
 #endif
 	}
-	return 0;
+	return 1;
 }
 
 unsigned long EUSART_getBaudRate(Eusart *this) {
-	return 0L;
+	// (baud rate) = F_OSC / (16 * (n + 1))
+	switch (this->id) {
+#if NUM_OF_EUSART == 1
+		case EUSART:
+			return OPERATING_FREQUENCY / (16 * (SPBRG + 1));
+#elif NUM_OF_EUSART == 2
+		case EUSART1:
+			return OPERATING_FREQUENCY / (16 * (SPBRG1 + 1));
+		case EUSART2:
+			return OPERATING_FREQUENCY / (16 * (SPBRG2 + 1));
+#endif
+		default:
+			return 0L;
+	}
 }
 
 void EUSART_enableSerialPort(Eusart *this) {
-	switch(this->id) {
+	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
 			TXSTAbits.TXEN = 1;
@@ -111,7 +133,7 @@ void EUSART_enableSerialPort(Eusart *this) {
 }
 
 void EUSART_disableSerialPort(Eusart *this) {
-	switch(this->id) {
+	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
 			TXSTAbits.TXEN = 0;
