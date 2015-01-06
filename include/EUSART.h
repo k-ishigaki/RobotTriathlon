@@ -85,30 +85,6 @@ void EUSART_enableSerialPort(Eusart *this);
 void EUSART_disableSerialPort(Eusart *this);
 
 /**
- * 受信割り込みを有効にする
- * @param this EUSARTのオブジェクト
- */
-void EUSART_enableRXInterrupt(Eusart *this);
-
-/**
- * 受信割り込みを無効にする
- * @param this EUSARTのオブジェクト
- */
-void EUSART_disableRXInterrupt(Eusart *this);
-
-/**
- * 送信割り込みを有効にする
- * @param this EUSARTのオブジェクト
- */
-void EUSART_enableTXInterrupt(Eusart *this);
-
-/**
- * 送信割り込みを無効にする
- * @param this EUSARTのオブジェクト
- */
-void EUSART_disableTXInterrupt(Eusart *this);
-
-/**
  * 1byte受信する
  * @pram this EUSARTのオブジェクト
  * @param data 受信データの格納先のポインタ

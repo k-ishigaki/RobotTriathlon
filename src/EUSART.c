@@ -144,22 +144,6 @@ void EUSART_disableSerialPort(Eusart *this) {
 	}
 }
 
-void EUSART_enableRXInterrupt(Eusart *this) {
-
-}
-
-void EUSART_disableRXInterrupt(Eusart *this) {
-
-}
-
-void EUSART_enableTXInterrupt(Eusart *this) {
-
-}
-
-void EUSART_disableTXInterrupt(Eusart *this) {
-
-}
-
 char EUSART_receive(Eusart *this, char *data) {
 	return 0;
 }
