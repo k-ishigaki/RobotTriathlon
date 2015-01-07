@@ -94,7 +94,7 @@ unsigned long EUSART_getBaudRate(Eusart *this) {
 	}
 }
 
-void EUSART_enableSerialPort(Eusart *this) {
+void EUSART_enable(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -114,7 +114,7 @@ void EUSART_enableSerialPort(Eusart *this) {
 	}
 }
 
-void EUSART_disableSerialPort(Eusart *this) {
+void EUSART_disable(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -134,18 +134,13 @@ void EUSART_disableSerialPort(Eusart *this) {
 	}
 }
 
-char EUSART_receive(Eusart *this, char *data) {
+char EUSART_read(Eusart *this) {
 	return 0;
 }
 
-char EUSART_transmit(Eusart *this, char data) {
-	return 0;
+void EUSART_write(Eusart *this, char data) {
 }
 
-char EUSART_Received(Eusart *this) {
-	return 0;
-}
-
-char EUSART_isTXBufferEmpty(Eusart *this) {
+char EUSART_isTSREmpty(Eusart *this) {
 	return 0;
 }

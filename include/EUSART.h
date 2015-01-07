@@ -64,46 +64,36 @@ char EUSART_setBaudRate(Eusart *this, unsigned long baudRate);
 unsigned long EUSART_getBaudRate(Eusart *this);
 
 /**
- * シリアルポートを有効にする
- * setBaudRateを実行していない場合はボーレートはデフォルト値となる
+ * EUSARTを有効にする
  * @param this EUSARTのオブジェクト
  */
-void EUSART_enableSerialPort(Eusart *this);
+void EUSART_enable(Eusart *this);
 
 /**
- * シリアルポートを無効にする
+ * EUSARTを無効にする
  * @param this EUSARTのオブジェクト
  */
-void EUSART_disableSerialPort(Eusart *this);
+void EUSART_disable(Eusart *this);
 
 /**
  * 1byte受信する
  * @pram this EUSARTのオブジェクト
- * @param data 受信データの格納先のポインタ
- * @return バッファに何もなかったら0
+ * @return 受信データ
  */
-char EUSART_receive(Eusart *this, char *data);
+char EUSART_read(Eusart *this);
 
 /**
  * 1byte送信する
  * @param this EUSARTのオブジェクト
  * @param data 送信するデータ
- * @return バッファがいっぱいだったら0
  */
-char EUSART_transmit(Eusart *this, char data);
-
-/**
- * 受信バッファにデータがあるかを確認する
- * @param this EUSARTのオブジェクト
- * @return データがある場合は1、ない場合は0
- */
-char EUSART_Received(Eusart *this);
+void EUSART_write(Eusart *this, char data);
 
 /**
  * 送信バッファが空かを確認する
  * @param this EUSARTのオブジェクト
  * @return 空の場合は1、空でない場合は0
  */
-char EUSART_isTXBufferEmpty(Eusart *this);
+char EUSART_isTSREmpty(Eusart *this);
 
 #endif /* EUSART_H */
