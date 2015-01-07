@@ -42,14 +42,6 @@ enum EusartIdentifier {
 Eusart* getEUSART(enum EusartIdentifier e);
 
 /**
- * ボーレートを設定し、ポートを開く
- * @param this EUSARTのオブジェクト
- * @param baudRate ボーレート、整数で指定
- * @return 開けなかった場合は0
- */
-char EUSART_open(Eusart *this, long baudRate);
-
-/**
  * 現在の設定のまま、シリアルポートをリセットする
  * エラーで動作しない場合に呼び出すこと
  * @param this EUSARTのオブジェクト

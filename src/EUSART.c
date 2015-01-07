@@ -20,29 +20,11 @@ struct Eusart_t{
 // mallocが使えないのである分の実体が予め用意される
 Eusart eusart[NUM_OF_EUSART];
 
-// local method protype
-void initilizeField(Eusart *this);
-
 Eusart* getEUSART(enum EusartIdentifier e) {
 	// オブジェクトとIDの割り当て
 	Eusart *this = &eusart[e];
 	this->id = e;
 	return this;
-}
-
-char EUSART_open(Eusart *this, long baudRate) {
-	// ポートを開く前にリセットする
-	EUSART_reset(this);
-	// ボーレートを設定
-	char isSuccess = EUSART_setBaudRate(this, baudRate);
-	if(!isSuccess) {
-		// ボーレートの設定に失敗したとき
-		// 何もせず戻る
-		return 0;					// 0:失敗
-	}
-	// ポートを有効にする
-	EUSART_enableSerialPort(this);
-	return 1;						// 1:成功
 }
 
 void EUSART_reset(Eusart *this) {
