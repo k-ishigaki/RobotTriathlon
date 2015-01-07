@@ -135,12 +135,52 @@ void EUSART_disable(Eusart *this) {
 }
 
 char EUSART_read(Eusart *this) {
-	return 0;
+	switch (this->id) {
+#if NUM_OF_EUSART == 1
+		case EUSART:
+			return RCREG;
+#elif NUM_OF_EUSART == 2
+		case EUSART1:
+			return RCREG1;
+		case EUSART2:
+			return RCREG2;
+#endif
+		default:
+			return 0x00;
+	}
 }
 
 void EUSART_write(Eusart *this, char data) {
+	switch (this->id) {
+#if NUM_OF_EUSART == 1
+		case EUSART:
+			TXREG = data;
+			return;
+#elif NUM_OF_EUSART == 2
+		case EUSART1:
+			TXREG1 = data;
+			return;
+		case EUSART2:
+			TXREG2 = data;
+			return;
+#endif
+		default:
+			return;
+	}
 }
 
 char EUSART_isTSREmpty(Eusart *this) {
-	return 0;
+	switch (this->id) {
+#if NUM_OF_EUSART == 1
+		case EUSART:
+			return TXSTAbits.TRMT;
+#elif NUM_OF_EUSART == 2
+		case EUSART1:
+			return TXSTA1bits.TRMT;
+		case EUSART2:
+			return TXSTA2bits.TRMT;
+#endif
+		default:
+			return 0;
+	}
 }
