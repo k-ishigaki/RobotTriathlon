@@ -25,11 +25,11 @@ SRCDIR := src
 # intermediate files directory
 OBJDIR := bin
 # source files
-SRCS := $(wildcard $(addprefix $(SRCDIR)$(SEPARATOR),*.c))
+SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
-OBJS := $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.p1,$(notdir $(SRCS))))
+OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
-DEPS := $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.d,$(notdir $(SRCS))))
+DEPS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 # additional suffixes
 .SUFFIXES: .p1
@@ -46,10 +46,10 @@ $(OBJS): $(SRCS)
 
 .PHONY: debug
 debug:
-	echo $(addprefix $(OBJDIR)$(SEPARATOR),$(patsubst %.c,%.d,$(notdir $(SRCS))))
+	echo $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
 
 .PHONY: clean
 clean:
-	$(RM) $(wildcard $(addprefix $(OBJDIR)$(SEPARATOR),*))
+	$(RM) $(wildcard $(addprefix $(OBJDIR)/,*))
 
 
