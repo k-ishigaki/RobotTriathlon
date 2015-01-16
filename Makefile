@@ -1,29 +1,29 @@
 # commands depend on OS
-ifeq (($OS),Windows_NT)
-	RM := del
+ifeq ($(OS),Windows_NT)
+	RM = del /Q
 # windows separator "\" is defined only in this way
-	SEPARATOR != echo "\\"
+	FixPath = $(subst /,\,$1)
 else
 # -f option is force remove (no confirmation)
-	RM := rm -f
-	SEPARATOR := /
+	RM = rm -f
+	FixPath = $1
 endif
 # target name
-TARGET = release
+TARGET := release
 # compiler command
 CC := xc8
-# compiler options
-CFLAGS = --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none
 # Link options
-LDFLAGS = 
+LDFLAGS := 
 # library paths
-LIBS = 
+LIBS := 
 # include paths
 INCLUDE := include
 # sourse files directory
 SRCDIR := src
 # intermediate files directory
 OBJDIR := bin
+# compiler options
+CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none
 # source files
 SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
@@ -39,17 +39,11 @@ all:$(TARGET)
 -include $(DEPS)
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(CC) $(CFLAGS) -O$@ $^
+	$(CC) $(CFLAGS) -O$(call FixPath,$@) $(call FixPath,$^)
 
 $(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) --pass1 $(SRCS)
-
-.PHONY: debug
-debug:
-	echo $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+	$(CC) $(CFLAGS) --pass1 $(call FixPath,$(SRCS))
 
 .PHONY: clean
 clean:
-	$(RM) $(wildcard $(addprefix $(OBJDIR)/,*))
-
-
+	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
