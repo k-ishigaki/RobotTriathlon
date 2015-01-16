@@ -12,8 +12,6 @@ endif
 TARGET := release
 # compiler command
 CC := xc8
-# compiler options
-CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none
 # Link options
 LDFLAGS := 
 # library paths
@@ -24,6 +22,8 @@ INCLUDE := include
 SRCDIR := src
 # intermediate files directory
 OBJDIR := bin
+# compiler options
+CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none
 # source files
 SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
@@ -39,11 +39,11 @@ all:$(TARGET)
 -include $(DEPS)
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(CC) $(CFLAGS) -O$@ $^
+	$(CC) $(CFLAGS) -O$(call FixPath,$@) $(call FixPath,$^)
 
 $(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) --pass1 $(SRCS)
+	$(CC) $(CFLAGS) --pass1 $(call FixPath,$(SRCS))
 
 .PHONY: clean
 clean:
-	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
+	echo $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
