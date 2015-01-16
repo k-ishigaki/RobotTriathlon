@@ -77,23 +77,6 @@ char EUSART_setBaudRate(Eusart *this, unsigned long baudRate) {
 	return 1;
 }
 
-unsigned long EUSART_getBaudRate(Eusart *this) {
-	// (baud rate) = F_OSC / (16 * (n + 1))
-	switch (this->id) {
-#if NUM_OF_EUSART == 1
-		case EUSART:
-			return OPERATING_FREQUENCY / (16 * (SPBRG + 1));
-#elif NUM_OF_EUSART == 2
-		case EUSART1:
-			return OPERATING_FREQUENCY / (16 * (SPBRG1 + 1));
-		case EUSART2:
-			return OPERATING_FREQUENCY / (16 * (SPBRG2 + 1));
-#endif
-		default:
-			return 0L;
-	}
-}
-
 void EUSART_enable(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1

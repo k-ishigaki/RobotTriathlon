@@ -15,13 +15,11 @@
 #if defined (_18F26K22)
 #define NUM_OF_EUSART 2
 #else
-#error your device has no definition of NUM_OF_EUSART, \
-please add definition of your device here.
+#error please add definition of your device here.
 #endif
 
-// EUSARTのオブジェクト（構造体）
-// EUSART.cの中で実態が定義されている
-// Eusartの記述を簡略化するためにtypedef
+// EUSARTのオブジェクト
+// EUSART.cで実体を定義
 typedef struct Eusart_t Eusart;
 
 // EUSARTが複数ある場合に、getEUSART関数の引数に指定する
@@ -55,13 +53,6 @@ void EUSART_reset(Eusart *this);
  * @return 設定できない値の場合は0
  */
 char EUSART_setBaudRate(Eusart *this, unsigned long baudRate);
-
-/**
- * 設定されているボーレートを取得する
- * @param this EUSARTのオブジェクト
- * @return ボーレート、整数値
- */
-unsigned long EUSART_getBaudRate(Eusart *this);
 
 /**
  * EUSARTを有効にする
