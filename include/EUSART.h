@@ -38,7 +38,7 @@ enum EusartIdentifier {
 /**
  * EUSARTのオブジェクトを返す
  * @param e EUSARTの識別子（複数ある場合は選択する必要あり）
- * @return EUSARTのオブジェクト
+ * @return EUSARTの構造体ポインタ，取得できない場合はNULL
  */
 Eusart* getEUSART(enum EusartIdentifier e);
 

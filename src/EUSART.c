@@ -4,6 +4,7 @@
  */
 
 #include <xc.h>
+#include <stdlib.h>
 #include "EUSART.h"
 #include "HardwareImplication.h"
 
@@ -15,13 +16,9 @@ struct Eusart_t{
 	enum EusartIdentifier id;
 };
 
-// Eusartの実体定義
-// mallocが使えないのである分の実体が予め用意される
-Eusart eusart[NUM_OF_EUSART];
-
 Eusart* getEUSART(enum EusartIdentifier e) {
-	// オブジェクトとIDの割り当て
-	Eusart *this = &eusart[e];
+	// 構造体ポインタの生成とIDの割り当て
+	Eusart *this = (Eusart*)malloc(sizeof(Eusart));
 	this->id = e;
 	return this;
 }
