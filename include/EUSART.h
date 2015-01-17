@@ -83,11 +83,4 @@ uint8_t EUSART_read(Eusart *this);
  */
 void EUSART_write(Eusart *this, uint8_t data);
 
-/**
- * 送信バッファが空かを確認する
- * @param this EUSARTのオブジェクト
- * @return 空の場合は1、空でない場合は0
- */
-uint8_t EUSART_isTSREmpty(Eusart *this);
-
 #endif /* EUSART_H */

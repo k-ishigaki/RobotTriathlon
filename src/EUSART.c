@@ -133,33 +133,20 @@ void EUSART_write(Eusart *this, uint8_t data) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
+			while (TXSTAbits.TRMT == 1);
 			TXREG = data;
 			return;
 #elif NUM_OF_EUSART == 2
 		case EUSART1:
+			while (TXSTA1bits.TRMT == 1);
 			TXREG1 = data;
 			return;
 		case EUSART2:
+			while (TXSTA2bits.TRMT == 1);
 			TXREG2 = data;
 			return;
 #endif
 		default:
 			return;
-	}
-}
-
-uint8_t EUSART_isTSREmpty(Eusart *this) {
-	switch (this->id) {
-#if NUM_OF_EUSART == 1
-		case EUSART:
-			return TXSTAbits.TRMT;
-#elif NUM_OF_EUSART == 2
-		case EUSART1:
-			return TXSTA1bits.TRMT;
-		case EUSART2:
-			return TXSTA2bits.TRMT;
-#endif
-		default:
-			return 0;
 	}
 }
