@@ -47,7 +47,7 @@ Eusart* getEUSART(enum EusartIdentifier e);
  * エラーで動作しない場合に呼び出すこと
  * @param this EUSARTのオブジェクト
  */
-void EUSART_reset(Eusart *this);
+void EUSART_reset(Eusart* this);
 
 /**
  * ボーレートを設定する
@@ -55,32 +55,32 @@ void EUSART_reset(Eusart *this);
  * @param ボーレート、整数で指定
  * @return 設定できない値の場合は0
  */
-bool EUSART_setBaudRate(Eusart *this, uint_fast32_t baudRate);
+bool EUSART_setBaudRate(Eusart* this, uint_fast32_t baudRate);
 
 /**
  * EUSARTを有効にする
  * @param this EUSARTのオブジェクト
  */
-void EUSART_enable(Eusart *this);
+void EUSART_enable(Eusart* this);
 
 /**
  * EUSARTを無効にする
  * @param this EUSARTのオブジェクト
  */
-void EUSART_disable(Eusart *this);
+void EUSART_disable(Eusart* this);
 
 /**
  * 1byte受信する
  * @pram this EUSARTのオブジェクト
  * @return 受信データ
  */
-uint8_t EUSART_read(Eusart *this);
+uint8_t EUSART_read(Eusart* this);
 
 /**
  * 1byte送信する
  * @param this EUSARTのオブジェクト
  * @param data 送信するデータ
  */
-void EUSART_write(Eusart *this, uint8_t data);
+void EUSART_write(Eusart* this, uint8_t data);
 
 #endif /* EUSART_H */

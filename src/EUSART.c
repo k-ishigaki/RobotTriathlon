@@ -12,18 +12,18 @@
 #define DEFAULT_BAUD_RATE 9600
 
 // Eusart構造体の定義
-struct Eusart_t{
+struct Eusart_t {
 	enum EusartIdentifier id;
 };
 
 Eusart* getEUSART(enum EusartIdentifier e) {
 	// 構造体ポインタの生成とIDの割り当て
-	Eusart *this = (Eusart*)malloc(sizeof(Eusart));
+	Eusart* this = (Eusart*)malloc(sizeof(Eusart));
 	this->id = e;
 	return this;
 }
 
-void EUSART_reset(Eusart *this) {
+void EUSART_reset(Eusart* this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -43,7 +43,7 @@ void EUSART_reset(Eusart *this) {
 	}
 }
 
-bool EUSART_setBaudRate(Eusart *this, uint_fast32_t baudRate) {
+bool EUSART_setBaudRate(Eusart* this, uint_fast32_t baudRate) {
 	// ボーレートが設定できない値であるときは失敗
 	// OPERATING_FREQUENCYの設定によってはこの範囲内でも動作しないことがあるので注意
 	if (baudRate > 4000000L || baudRate < 300L) return false;
@@ -73,7 +73,7 @@ bool EUSART_setBaudRate(Eusart *this, uint_fast32_t baudRate) {
 	return true;
 }
 
-void EUSART_enable(Eusart *this) {
+void EUSART_enable(Eusart* this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -93,7 +93,7 @@ void EUSART_enable(Eusart *this) {
 	}
 }
 
-void EUSART_disable(Eusart *this) {
+void EUSART_disable(Eusart* this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -113,7 +113,7 @@ void EUSART_disable(Eusart *this) {
 	}
 }
 
-uint8_t EUSART_read(Eusart *this) {
+uint8_t EUSART_read(Eusart* this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -129,7 +129,7 @@ uint8_t EUSART_read(Eusart *this) {
 	}
 }
 
-void EUSART_write(Eusart *this, uint8_t data) {
+void EUSART_write(Eusart* this, uint8_t data) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
