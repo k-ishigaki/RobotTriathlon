@@ -6,6 +6,9 @@
  * とりあえずは使わない機能（同期通信など）を省いて、基本機能のみ抑える
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #ifndef EUSART_H
 #define EUSART_H
 
@@ -52,7 +55,7 @@ void EUSART_reset(Eusart *this);
  * @param ボーレート、整数で指定
  * @return 設定できない値の場合は0
  */
-char EUSART_setBaudRate(Eusart *this, unsigned long baudRate);
+bool EUSART_setBaudRate(Eusart *this, uint_fast32_t baudRate);
 
 /**
  * EUSARTを有効にする
@@ -71,20 +74,20 @@ void EUSART_disable(Eusart *this);
  * @pram this EUSARTのオブジェクト
  * @return 受信データ
  */
-char EUSART_read(Eusart *this);
+uint8_t EUSART_read(Eusart *this);
 
 /**
  * 1byte送信する
  * @param this EUSARTのオブジェクト
  * @param data 送信するデータ
  */
-void EUSART_write(Eusart *this, char data);
+void EUSART_write(Eusart *this, uint8_t data);
 
 /**
  * 送信バッファが空かを確認する
  * @param this EUSARTのオブジェクト
  * @return 空の場合は1、空でない場合は0
  */
-char EUSART_isTSREmpty(Eusart *this);
+uint8_t EUSART_isTSREmpty(Eusart *this);
 
 #endif /* EUSART_H */

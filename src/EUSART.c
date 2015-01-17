@@ -4,7 +4,6 @@
  */
 
 #include <xc.h>
-#include <stdio.h>
 #include "EUSART.h"
 #include "HardwareImplication.h"
 
@@ -47,18 +46,18 @@ void EUSART_reset(Eusart *this) {
 	}
 }
 
-char EUSART_setBaudRate(Eusart *this, unsigned long baudRate) {
+bool EUSART_setBaudRate(Eusart *this, uint_fast32_t baudRate) {
 	// ボーレートが設定できない値であるときは失敗
 	// OPERATING_FREQUENCYの設定によってはこの範囲内でも動作しないことがあるので注意
-	if (baudRate > 4000000L || baudRate < 300L) return 0;
+	if (baudRate > 4000000L || baudRate < 300L) return false;
 	// (baud rate) = F_OSC / (16 * (n + 1))
 	// n = F_OSC / (16 * (baud rate)) - 1
 	unsigned int n = OPERATING_FREQUENCY / (16 * baudRate) - 1;
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
-			TXSTAbits.BRGH = 0;			// Low Speed
-			BAUDCONbits.BRG16 = 1;  		// 16-bit Baud Rate Generater
+			TXSTAbits.BRGH = 0;			 // Low Speed
+			BAUDCONbits.BRG16 = 1;			 // 16-bit Baud Rate Generater
 			SPBRG = n;
 			break;
 #elif NUM_OF_EUSART == 2
@@ -74,7 +73,7 @@ char EUSART_setBaudRate(Eusart *this, unsigned long baudRate) {
 			break;
 #endif
 	}
-	return 1;
+	return true;
 }
 
 void EUSART_enable(Eusart *this) {
@@ -117,7 +116,7 @@ void EUSART_disable(Eusart *this) {
 	}
 }
 
-char EUSART_read(Eusart *this) {
+uint8_t EUSART_read(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -129,11 +128,11 @@ char EUSART_read(Eusart *this) {
 			return RCREG2;
 #endif
 		default:
-			return 0x00;
+			return 0;
 	}
 }
 
-void EUSART_write(Eusart *this, char data) {
+void EUSART_write(Eusart *this, uint8_t data) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -152,7 +151,7 @@ void EUSART_write(Eusart *this, char data) {
 	}
 }
 
-char EUSART_isTSREmpty(Eusart *this) {
+uint8_t EUSART_isTSREmpty(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
