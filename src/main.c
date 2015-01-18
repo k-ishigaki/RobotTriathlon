@@ -3,7 +3,7 @@
 /**
  * ロボットトライアスロン用のプログラム
  */
-int main(void){	// use int type for CCI interface
+int main(void) {	// use int type for CCI interface
 	di();	// disable interrupt
 	ei();	// enable interrupt
 }
