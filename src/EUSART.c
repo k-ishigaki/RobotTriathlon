@@ -113,7 +113,7 @@ void EUSART_disable(Eusart *this) {
 	}
 }
 
-uint8_t EUSART_read(Eusart *this) {
+uint_fast8_t EUSART_read(Eusart *this) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:
@@ -129,7 +129,7 @@ uint8_t EUSART_read(Eusart *this) {
 	}
 }
 
-void EUSART_write(Eusart *this, uint8_t data) {
+void EUSART_write(Eusart *this, uint_fast8_t data) {
 	switch (this->id) {
 #if NUM_OF_EUSART == 1
 		case EUSART:

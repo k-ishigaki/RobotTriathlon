@@ -74,13 +74,13 @@ void EUSART_disable(Eusart *this);
  * @pram this EUSARTのオブジェクト
  * @return 受信データ
  */
-uint8_t EUSART_read(Eusart *this);
+uint_fast8_t EUSART_read(Eusart *this);
 
 /**
  * 1byte送信する
  * @param this EUSARTのオブジェクト
  * @param data 送信するデータ
  */
-void EUSART_write(Eusart *this, uint8_t data);
+void EUSART_write(Eusart *this, uint_fast8_t data);
 
 #endif /* EUSART_H */
