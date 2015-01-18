@@ -1,12 +1,12 @@
 /*
- * ボーレートの設定をするためにはHardwareImplication.hの
+ * ボーレートの設定をするためにはHardware.hの
  * 動作周波数が正しい値である必要がある
  */
 
 #include <xc.h>
 #include <stdlib.h>
 #include "EUSART.h"
-#include "HardwareImplication.h"
+#include "Hardware.h"
 
 // デフォルトのボーレート
 #define DEFAULT_BAUD_RATE 9600

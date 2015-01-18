@@ -1,5 +1,5 @@
 #include <xc.h>	// xc8 projects must use this header file
-#include "configurationBits.h"	// configuration bits are defined in this header file
+#include "Hardware.h"
 /**
  * ロボットトライアスロン用のプログラム
  */
