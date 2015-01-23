@@ -11,7 +11,7 @@
 // デフォルトのボーレート
 #define DEFAULT_BAUD_RATE 9600
 
-// EUSARTの実体をする
+// EUSARTの実体を利用する
 #define USING_EUSART_SUBSTANCE
 
 
