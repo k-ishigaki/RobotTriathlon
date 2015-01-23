@@ -11,8 +11,8 @@
 // デフォルトのボーレート
 #define DEFAULT_BAUD_RATE 9600
 
-// EUSARTの実体を利用していることを宣言
-#define USE_EUSART_SUBSTANCE
+// EUSARTの実体をする
+#define USING_EUSART_SUBSTANCE
 
 
 #define EUSART_RESET(rcsta_spen) {rcsta_spen=0;rcsta_spen=1;}
