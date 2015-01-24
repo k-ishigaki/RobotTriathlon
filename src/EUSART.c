@@ -1,11 +1,15 @@
 /*
  * EUSARTモジュールの実体を定義する
  * それぞれのインスタンスで共有するコードはEUSART.substance.cに記述する
+ * .substance.cファイルの中で利用される変数はこのファイルで割り当てるが、
+ * 変数名の衝突が起こらないようにNAMESPACEマクロを用いている
  */
 #include <xc.h>
 #include "Hardware.h"
 #include "EUSART.h"
+
 // EUSARTの実体を利用する
+// EUSART.substance.cをインクルードするのに必要
 #define USING_EUSART_SUBSTANCE
 
 #define NAMESPACE(name) EUSART_##name
