@@ -9,6 +9,15 @@
 #ifndef EUSART_H
 #define EUSART_H
 
+#define PREFIX(name) EUSART_##name##Method
+
+typedef void (*PREFIX(reset))(void);
+typedef void (*PREFIX(setbaudRate))(unsigned long baudRate);
+typedef void (*PREFIX(enable))(void);
+typedef void (*PREFIX(disable))(void);
+typedef char (*PREFIX(read))(void);
+typedef void (*PREFIX(write))(char data);
+
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
 typedef struct {
@@ -16,30 +25,30 @@ typedef struct {
 	 * 現在の設定のまま、シリアルポートをリセットする
 	 * エラーで動作しない場合に呼び出すこと
 	 */
-	void (*reset)(void);
+	PREFIX(reset) reset;
 	/**
 	 * ボーレートを設定する
 	 * @param ボーレート、整数で指定
 	 */
-	void (*setBaudRate)(unsigned long baudRate);
+	PREFIX(setbaudRate) setbaudRate;
 	/**
 	 * EUSARTを有効にする
 	 */
-	void (*enable)(void);
+	PREFIX(enable) enable;
 	/**
 	 * EUSARTを無効にする
 	 */
-	void (*disable)(void);
+	PREFIX(disable) disable;
 	/**
 	 * 1byte受信する
 	 * @return 受信データ
 	 */
-	char (*read)(void);
+	PREFIX(read) read;
 	/**
 	 * 1byte送信する
 	 * @param data 送信するデータ
 	 */
-	void (*write)(char data);
+	PREFIX(write) write;
 } Eusart;
 
 /**
