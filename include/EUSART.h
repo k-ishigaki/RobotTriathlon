@@ -6,14 +6,12 @@
 #ifndef EUSART_H
 #define EUSART_H
 
-#define PREFIX(name) EUSART_##name##Method
-
-typedef void (*PREFIX(reset))(void);
-typedef void (*PREFIX(setbaudRate))(unsigned long baudRate);
-typedef void (*PREFIX(enable))(void);
-typedef void (*PREFIX(disable))(void);
-typedef char (*PREFIX(read))(void);
-typedef void (*PREFIX(write))(char data);
+typedef void (*EUSART_resetMethod)(void);
+typedef void (*EUSART_setbaudRateMethod)(unsigned long baudRate);
+typedef void (*EUSART_enableMethod)(void);
+typedef void (*EUSART_disableMethod)(void);
+typedef char (*EUSART_readMethod)(void);
+typedef void (*EUSART_writeMethod)(char data);
 
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
@@ -22,30 +20,30 @@ typedef struct {
 	 * 現在の設定のまま、シリアルポートをリセットする
 	 * エラーで動作しない場合に呼び出すこと
 	 */
-	PREFIX(reset) reset;
+	EUSART_resetMethod reset;
 	/**
 	 * ボーレートを設定する
 	 * @param ボーレート、整数で指定
 	 */
-	PREFIX(setbaudRate) setbaudRate;
+	EUSART_setbaudRateMethod setbaudRate;
 	/**
 	 * EUSARTを有効にする
 	 */
-	PREFIX(enable) enable;
+	EUSART_enableMethod enable;
 	/**
 	 * EUSARTを無効にする
 	 */
-	PREFIX(disable) disable;
+	EUSART_disableMethod disable;
 	/**
 	 * 1byte受信する
 	 * @return 受信データ
 	 */
-	PREFIX(read) read;
+	EUSART_readMethod read;
 	/**
 	 * 1byte送信する
 	 * @param data 送信するデータ
 	 */
-	PREFIX(write) write;
+	EUSART_writeMethod write;
 } Eusart;
 
 /**
