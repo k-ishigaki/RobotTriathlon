@@ -8,12 +8,12 @@
 // 普通のソースコードからはインクルードできないようにする
 #ifdef USING_EUSART_SUBSTANCE
 
-void NAMESPACE(reset)() {
+static void NAMESPACE(reset)() {
 	NAMESPACE(rcsta)->SPEN = 0;
 	NAMESPACE(rcsta)->SPEN = 1;
 }
 
-void NAMESPACE(setBaudRate)(unsigned long baudRate) {
+static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
 	NAMESPACE(txsta)->BRGH = 0;
 	NAMESPACE(baudcon)->BRG16 = 1;
 	// (baud rate) = F_OSC / (16 * (n + 1))
@@ -21,28 +21,28 @@ void NAMESPACE(setBaudRate)(unsigned long baudRate) {
 	NAMESPACE(spbrg)->SPBRG = OPERATING_FREQUENCY / (16 * baudRate) - 1;
 }
 
-void NAMESPACE(enable)() {
+static void NAMESPACE(enable)() {
 	NAMESPACE(txsta)->TXEN = 1;
 	NAMESPACE(rcsta)->SPEN = 1;
 }
 
-void NAMESPACE(disable)() {
+static void NAMESPACE(disable)() {
 	NAMESPACE(txsta)->TXEN = 0;
 	NAMESPACE(rcsta)->SPEN = 0;
 }
 
-char NAMESPACE(read)() {
+static char NAMESPACE(read)() {
 	return NAMESPACE(rcreg)->RCREG;
 }
 
-void NAMESPACE(write)(char data) {
+static void NAMESPACE(write)(char data) {
 	while(NAMESPACE(txsta)->TRMT == 1) {
 		// wait for TSR empty
 	}
 	NAMESPACE(txreg)->TXREG = data;
 }
 
-Eusart NAMESPACE(eusart) = {
+static Eusart NAMESPACE(eusart) = {
 	NAMESPACE(reset),
 	NAMESPACE(setBaudRate),
 	NAMESPACE(enable),
