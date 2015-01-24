@@ -1,3 +1,7 @@
+/*
+ * EUSARTモジュールの実体を定義する
+ * それぞれのインスタンスで共有するコードはEUSART.substance.cに記述する
+ */
 #include <xc.h>
 #include "Hardware.h"
 #include "EUSART.h"
