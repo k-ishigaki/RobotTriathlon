@@ -15,5 +15,5 @@ TXREGbits_t* NAMESPACE(txreg) = (TXREGbits_t*)&TXREG2bits;
 #include "EUSART.substance.c"
 
 Eusart* getEUSART2() {
-	return &NAMESPACE(eusart);
+	return (Eusart*)&NAMESPACE(eusart);
 }
