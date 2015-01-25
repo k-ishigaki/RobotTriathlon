@@ -7,23 +7,23 @@
 #ifdef USING_GPIO_PORT_SUBSTANCE
 
 static void NAMESPACE(setAnalogInput)(unsigned char pattern) {
-	*NAMESPACE(ansel) = pattern;
-	*NAMESPACE(tris) = pattern;
+	*NAMESPACE(ansel) |= pattern;
+	*NAMESPACE(tris) |= pattern;
 }
 
 static void NAMESPACE(setAnalogOutput)(unsigned char pattern) {
-	*NAMESPACE(ansel) = pattern;
-	*NAMESPACE(tris) = ~pattern;
+	*NAMESPACE(ansel) |= pattern;
+	*NAMESPACE(tris) &= ~pattern;
 }
 
 static void NAMESPACE(setDigitalInput)(unsigned char pattern) {
-	*NAMESPACE(ansel) = ~pattern;
-	*NAMESPACE(tris) = pattern;
+	*NAMESPACE(ansel) &= ~pattern;
+	*NAMESPACE(tris) |= pattern;
 }
 
 static void NAMESPACE(setDigitalOutput)(unsigned char pattern) {
-	*NAMESPACE(ansel) = ~pattern;
-	*NAMESPACE(tris) = ~pattern;
+	*NAMESPACE(ansel) &= ~pattern;
+	*NAMESPACE(tris) &= ~pattern;
 }
 
 static unsigned char NAMESPACE(getValue)() {
