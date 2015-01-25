@@ -6,12 +6,12 @@
 #ifndef GPIO_PORT_H
 #define GPIO_PORT_H
 
-typedef void (*GPIOPort_setAnalogInput)(char pattern);
-typedef void (*GPIOPort_setAnalogOutput)(char pattern);
-typedef void (*GPIOPort_setDigitalInput)(char pattern);
-typedef void (*GPIOPort_setDigitalOutput)(char pattern);
-typedef void (*GPIOPort_getValue)(char patten);
-typedef void (*GPIOPort_setValue)(char patten);
+typedef void (*GPIOPort_setAnalogInput)(unsigned char pattern);
+typedef void (*GPIOPort_setAnalogOutput)(unsigned char pattern);
+typedef void (*GPIOPort_setDigitalInput)(unsigned char pattern);
+typedef void (*GPIOPort_setDigitalOutput)(unsigned char pattern);
+typedef unsigned char (*GPIOPort_getValue)(void);
+typedef void (*GPIOPort_setValue)(unsigned char pattern);
 
 // GPIO PORTのオブジェクト
 // PORTx.cで実体を定義
@@ -36,6 +36,18 @@ typedef struct {
 	 * @param pattern 1にした部分のみを設定する
 	 */
 	GPIOPort_setDigitalOutput setDigitalOutput;
+	/**
+	 * ポートの入力状態を返す
+	 * @return PORTxの内容をそのまま返す
+	 */
+	GPIOPort_getValue getValue;
+	/**
+	 * ポートの出力を設定する
+	 * @param pattern 1の部分をHIGH、0の部分をLOWに設定する
+	 */
+	GPIOPort_setValue setValue;
 } GPIOPort;
+
+GPIOPort* getPORTA(void);
 
 #endif /* GPIO_PORT_H */
