@@ -22,6 +22,30 @@ GPIOPort* getPORTA() {
 	return (GPIOPort*)&NAMESPACE(gpioPort);
 }
 
+#undef NAMESPACE
 
+#define NAMESPACE(name) PORTB_##name
+volatile unsigned char* NAMESPACE(ansel) = &ANSELB;
+volatile unsigned char* NAMESPACE(tris) = &TRISB;
+volatile unsigned char* NAMESPACE(port) = &PORTB;
+volatile unsigned char* NAMESPACE(lat) = &LATB;
 
+#include "GPIOPort.substance.c"
 
+GPIOPort* getPORTB() {
+	return (GPIOPort*)&NAMESPACE(gpioPort);
+}
+
+#undef NAMESPACE
+
+#define NAMESPACE(name) PORTC_##name
+volatile unsigned char* NAMESPACE(ansel) = &ANSELC;
+volatile unsigned char* NAMESPACE(tris) = &TRISC;
+volatile unsigned char* NAMESPACE(port) = &PORTC;
+volatile unsigned char* NAMESPACE(lat) = &LATC;
+
+#include "GPIOPort.substance.c"
+
+GPIOPort* getPORTC() {
+	return (GPIOPort*)&NAMESPACE(gpioPort);
+}
