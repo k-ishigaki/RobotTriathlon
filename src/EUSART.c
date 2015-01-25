@@ -6,7 +6,6 @@
  */
 #include <xc.h>
 #include "Hardware.h"
-#include "EUSART.h"
 
 // EUSARTの実体を利用する
 // EUSART.substance.cをインクルードするのに必要

@@ -48,8 +48,4 @@ typedef struct {
 	GPIOPort_setValue setValue;
 } GPIOPort;
 
-GPIOPort* getPORTA(void);
-GPIOPort* getPORTB(void);
-GPIOPort* getPORTC(void);
-
 #endif /* GPIO_PORT_H */

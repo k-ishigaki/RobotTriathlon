@@ -46,12 +46,4 @@ typedef struct {
 	EUSART_writeMethod write;
 } Eusart;
 
-/**
- * EUSARTのオブジェクトを返す
- * @return EUSARTの構造体ポインタ，取得できない場合はNULL
- */
-Eusart* getEUSART(void);
-Eusart* getEUSART1(void);
-Eusart* getEUSART2(void);
-
 #endif /* EUSART_H */

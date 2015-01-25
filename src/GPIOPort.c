@@ -6,7 +6,6 @@
  */
 #include <xc.h>
 #include "Hardware.h"
-#include "GPIOPort.h"
 
 #define USING_GPIO_PORT_SUBSTANCE
 
