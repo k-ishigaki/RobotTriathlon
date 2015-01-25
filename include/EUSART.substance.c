@@ -51,4 +51,4 @@ static Eusart NAMESPACE(eusart) = {
 	NAMESPACE(write),
 };
 
-#endif
+#endif /* USING_EUSART_SUBSTANCE */
