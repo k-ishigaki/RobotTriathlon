@@ -9,11 +9,20 @@
 
 #define USING_GPIO_PORT_SUBSTANCE
 
+#define PORTA_ansel ANSELA
+#define PORTA_tris TRISA
+#define PORTA_port PORTA
+#define PORTA_lat LATA
+#define PORTB_ansel ANSELB
+#define PORTB_tris TRISB
+#define PORTB_port PORTB
+#define PORTB_lat LATB
+#define PORTC_ansel ANSELC
+#define PORTC_tris TRISC
+#define PORTC_port PORTC
+#define PORTC_lat LATC
+
 #define NAMESPACE(name) PORTA_##name
-volatile unsigned char* NAMESPACE(ansel) = &ANSELA;
-volatile unsigned char* NAMESPACE(tris) = &TRISA;
-volatile unsigned char* NAMESPACE(port) = &PORTA;
-volatile unsigned char* NAMESPACE(lat) = &LATA;
 
 #include "GPIOPort.substance.c"
 
@@ -22,12 +31,7 @@ GPIOPort* getPORTA() {
 }
 
 #undef NAMESPACE
-
 #define NAMESPACE(name) PORTB_##name
-volatile unsigned char* NAMESPACE(ansel) = &ANSELB;
-volatile unsigned char* NAMESPACE(tris) = &TRISB;
-volatile unsigned char* NAMESPACE(port) = &PORTB;
-volatile unsigned char* NAMESPACE(lat) = &LATB;
 
 #include "GPIOPort.substance.c"
 
@@ -36,12 +40,7 @@ GPIOPort* getPORTB() {
 }
 
 #undef NAMESPACE
-
 #define NAMESPACE(name) PORTC_##name
-volatile unsigned char* NAMESPACE(ansel) = &ANSELC;
-volatile unsigned char* NAMESPACE(tris) = &TRISC;
-volatile unsigned char* NAMESPACE(port) = &PORTC;
-volatile unsigned char* NAMESPACE(lat) = &LATC;
 
 #include "GPIOPort.substance.c"
 
