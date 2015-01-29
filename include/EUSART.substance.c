@@ -9,37 +9,37 @@
 #ifdef USING_EUSART_SUBSTANCE
 
 static void NAMESPACE(reset)() {
-	NAMESPACE(rcsta)->SPEN = 0;
-	NAMESPACE(rcsta)->SPEN = 1;
+	NAMESPACE(rcsta).SPEN = 0;
+	NAMESPACE(rcsta).SPEN = 1;
 }
 
 static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
-	NAMESPACE(txsta)->BRGH = 0;
-	NAMESPACE(baudcon)->BRG16 = 1;
+	NAMESPACE(txsta).BRGH = 0;
+	NAMESPACE(baudcon).BRG16 = 1;
 	// (baud rate) = F_OSC / (16 * (n + 1))
 	// n = F_OSC / (16 * (baud rate)) - 1
-	NAMESPACE(spbrg)->SPBRG = OPERATING_FREQUENCY / (16 * baudRate) - 1;
+	NAMESPACE(spbrg) = OPERATING_FREQUENCY / (16 * baudRate) - 1;
 }
 
 static void NAMESPACE(enable)() {
-	NAMESPACE(txsta)->TXEN = 1;
-	NAMESPACE(rcsta)->SPEN = 1;
+	NAMESPACE(txsta).TXEN = 1;
+	NAMESPACE(rcsta).SPEN = 1;
 }
 
 static void NAMESPACE(disable)() {
-	NAMESPACE(txsta)->TXEN = 0;
-	NAMESPACE(rcsta)->SPEN = 0;
+	NAMESPACE(txsta).TXEN = 0;
+	NAMESPACE(rcsta).SPEN = 0;
 }
 
 static char NAMESPACE(read)() {
-	return NAMESPACE(rcreg)->RCREG;
+	return NAMESPACE(rcreg);
 }
 
 static void NAMESPACE(write)(char data) {
-	while(NAMESPACE(txsta)->TRMT == 1) {
+	while(NAMESPACE(txsta).TRMT == 1) {
 		// wait for TSR empty
 	}
-	NAMESPACE(txreg)->TXREG = data;
+	TXREG = data;
 }
 
 static Eusart NAMESPACE(eusart) = {
