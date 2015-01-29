@@ -29,7 +29,7 @@ SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
 OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
-DEPS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.d,$(notdir $(SRCS))))
+DEPS := $(OBJS:.p1=.d)
 
 # additional suffixes
 .SUFFIXES: .p1
@@ -41,8 +41,8 @@ all:$(TARGET)
 $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(CFLAGS) -O$(call FixPath,$@) $(call FixPath,$^)
 
-$(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) --pass1 $(call FixPath,$(SRCS))
+$(OBJDIR)/%.p1: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) --pass1 $(call FixPath,$<)
 
 .PHONY: clean
 clean:
