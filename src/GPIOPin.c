@@ -17,4 +17,8 @@
 #define HAS_ANALOG_INTERFACE
 #include "GPIOPin.substance.c"
 
+GPIOPin* getRA0() {
+	return &NAMESPACE(gpioPin);
+}
+
 
