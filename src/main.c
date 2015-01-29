@@ -9,6 +9,12 @@ int main(void) {	// use int type for CCI interface
 	GPIOPort* port = getPORTA();
 	port->setDigitalOutput(0xFF);
 	port->setValue(0xFF);
+	GPIOPin* gpioPin = getRA0();
+	DigitalPin* digitalPin = gpioPin->getDigitalPin();
+	digitalPin->setDigitalOutput();
+	digitalPin->setValue(1);
+	AnalogPin* analogPin = gpioPin->getAnalogPin();
+	analogPin->setAnalogInput();
 	di();	// disable interrupt
 	ei();	// enable interrupt
 }
