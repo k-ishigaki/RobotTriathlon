@@ -67,7 +67,6 @@ GPIOPin* getRC4(void);
 GPIOPin* getRC5(void);
 GPIOPin* getRC6(void);
 GPIOPin* getRC7(void);
-// PORTE
-GPIOPin* getRE3(void);
+// PORTE is normaly used for MCLR, so GPIO functions are not supported
 
 #endif /* HARDWARE_H */
