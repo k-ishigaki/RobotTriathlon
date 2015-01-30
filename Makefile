@@ -34,8 +34,6 @@ DEPS := $(OBJS:.p1=.d)
 # additional suffixes
 .SUFFIXES: .p1
 
--include $(DEPS)
-
 $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(CFLAGS) -O$(call FixPath,$@) $(call FixPath,$^)
 
@@ -48,3 +46,5 @@ all: clean $(TARGET)
 .PHONY: clean
 clean:
 	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
+
+-include $(DEPS)
