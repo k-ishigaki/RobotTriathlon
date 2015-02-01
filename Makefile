@@ -23,7 +23,7 @@ SRCDIR := src
 # intermediate files directory
 OBJDIR := bin
 # compiler options
-CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none --ERRFORMAT="%f:%l:%c:%n:%s"
+CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 # source files
 SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 # object files
