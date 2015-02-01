@@ -1,20 +1,39 @@
-#include <xc.h>	// xc8 projects must use this header file
-#include "Hardware.h"
-/**
+/*
  * ロボットトライアスロン用のプログラム
+ * とりあえずLチカ
  */
-int main(void) {	// use int type for CCI interface
-	Eusart* serial = getEUSART1();
-	serial->reset();
-	GPIOPort* port = getPORTA();
-	port->setDigitalOutput(0xFF);
-	port->setValue(0xFF);
-	GPIOPin* gpioPin = getRA0();
-	DigitalPin* digitalPin = gpioPin->getDigitalPin();
-	digitalPin->setDigitalOutput();
-	digitalPin->setValue(1);
-	AnalogPin* analogPin = gpioPin->getAnalogPin();
-	analogPin->setAnalogInput();
-	di();	// disable interrupt
-	ei();	// enable interrupt
+
+#include <xc.h>
+#include <stdbool.h>
+// Hardwareモジュールのインクルード
+#include "Hardware.h"
+
+#define _XTAL_FREQ 1000000L
+
+int main(void) {
+	DigitalPin* led = getRA0()->getDigitalPin();
+	led->setDigitalOutput();
+	while(true) {
+		led->setValue(true);
+		for (unsigned char i=0; i<100; i++) {
+			__delay_ms(10);
+		}
+		led->setValue(false);
+		for (unsigned char i=0; i<100; i++) {
+			__delay_ms(10);
+		}
+	}
+//	Eusart* serial = getEUSART1();
+//	serial->reset();
+//	GPIOPort* port = getPORTA();
+//	port->setDigitalOutput(0xFF);
+//	port->setValue(0xFF);
+//	GPIOPin* gpioPin = getRA0();
+//	DigitalPin* digitalPin = gpioPin->getDigitalPin();
+//	digitalPin->setDigitalOutput();
+//	digitalPin->setValue(1);
+//	AnalogPin* analogPin = gpioPin->getAnalogPin();
+//	analogPin->setAnalogInput();
+//	di();	// disable interrupt
+//	ei();	// enable interrupt
 }
