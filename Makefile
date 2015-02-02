@@ -1,7 +1,7 @@
 # commands depend on OS
 ifeq ($(OS),Windows_NT)
+# /Q option is force remove (no confirmation)
 	RM = del /Q
-# windows separator "\" is defined only in this way
 	FixPath = $(subst /,\,$1)
 else
 # -f option is force remove (no confirmation)
