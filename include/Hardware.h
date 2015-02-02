@@ -14,6 +14,14 @@
 // 動作周波数
 #define OPERATING_FREQUENCY	64000000L
 
+// Oscillator Module
+#include "OscillatorModule.h"
+/**
+ * Oscillator Moduleのオブジェクトを返す
+ * @return Oscillator Moduleの構造体ポインタ，取得できない場合はNULL
+ */
+OscillatorModule* getOscillatorModule(void);
+
 // GPIO Port
 #include "GPIOPort.h"
 /**
