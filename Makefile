@@ -61,5 +61,6 @@ clean:
 prog: $(TARGET)
 	echo "prease press Enter to program to device!!!"
 	$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
+	$(RM) $(wildcard MPLABXLog.*)
 
 -include $(DEPS)
