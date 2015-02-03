@@ -6,7 +6,7 @@ ifeq ($(OS),Windows_NT)
 # microchip mdb script file location
 	MDB = "C:\Program Files (x86)\Microchip\MPLABX\mplab_ide\bin\mdb.bat"
 # TEMP redirect target
-	TEMP_TARGET = NUL
+	TEMP_TARGET = $(TEMP)\microchip_mdb.log
 else
 # -f option is force remove (no confirmation)
 	RM = rm -f
@@ -14,7 +14,7 @@ else
 # microchip mdb script file location
 	MDB = /opt/microchip/mplabx/mplab_ide/bin/mdb.sh
 # TEMP redirect target
-	TEMP_TARGET = NULL
+	TEMP_TARGET = /tmp/microchip_mdb.log
 endif
 # target name
 TARGET := release
