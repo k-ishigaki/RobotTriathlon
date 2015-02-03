@@ -3,12 +3,18 @@ ifeq ($(OS),Windows_NT)
 # /Q option is force remove (no confirmation)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
+# microchip mdb script file location
 	MDB = "C:\Program Files (x86)\Microchip\MPLABX\mplab_ide\bin\mdb.bat"
+# TEMP redirect target
+	TEMP_TARGET = NUL
 else
 # -f option is force remove (no confirmation)
 	RM = rm -f
 	FixPath = $1
+# microchip mdb script file location
 	MDB = /opt/microchip/mplabx/mplab_ide/bin/mdb.sh
+# TEMP redirect target
+	TEMP_TARGET = NULL
 endif
 # target name
 TARGET := release
@@ -53,6 +59,6 @@ clean:
 
 .PHONY: prog
 prog:
-	$(MDB) $(call FixPath,$(MDB_SCRIPT))
+	$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
 
 -include $(DEPS)
