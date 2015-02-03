@@ -58,7 +58,7 @@ clean:
 	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
 
 .PHONY: prog
-prog:
+prog: $(TARGET)
 	echo "prease press Enter to program to device!!!"
 	$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
 
