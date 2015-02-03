@@ -55,12 +55,16 @@ all: clean $(TARGET)
 
 .PHONY: clean
 clean:
+# remove intermediate files
 	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
+	$(RM) funclist l.obj
 
 .PHONY: prog
 prog: $(TARGET)
+# it is nesessary to press Enter for MDB programing(windows MDB bug)
 	$(info prease press Enter to program to device!!!)
 	@$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
+# remove unuse intermediate files
 	$(RM) MPLABXLog.*
 
 -include $(DEPS)
