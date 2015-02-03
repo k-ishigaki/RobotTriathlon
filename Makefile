@@ -3,10 +3,12 @@ ifeq ($(OS),Windows_NT)
 # /Q option is force remove (no confirmation)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
+	MDB = "C:\Program Files (x86)\Microchip\MPLABX\mplab_ide\bin\mdb.bat"
 else
 # -f option is force remove (no confirmation)
 	RM = rm -f
 	FixPath = $1
+	MDB = /opt/microchip/mplabx/mplab_ide/bin/mdb.sh
 endif
 # target name
 TARGET := release
@@ -30,6 +32,8 @@ SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
 OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
 # dependency
 DEPS := $(OBJS:.p1=.d)
+# MDB script file
+MDB_SCRIPT := ./mdb.prog
 
 # additional suffixes
 .SUFFIXES: .p1
@@ -46,5 +50,9 @@ all: clean $(TARGET)
 .PHONY: clean
 clean:
 	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
+
+.PHONY: prog
+prog:
+	$(MDB) $(call FixPath,$(MDB_SCRIPT))
 
 -include $(DEPS)
