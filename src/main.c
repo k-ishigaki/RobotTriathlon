@@ -10,22 +10,17 @@
 
 #define _XTAL_FREQ 64000000L
 
+// function prototype
+void setup(void);
+void loop(void);
+
+// instance of Object
+DigitalPin* led;
+
 int main(void) {
-	OscillatorModule* oscillatorModule = getOscillatorModule();
-	oscillatorModule->getPhaseLockedLoop()->enablePLL();
-	oscillatorModule->getInternalOscillator()->setFrequency(16000000L);
-	oscillatorModule->selectSystemClock(PRIMARY);
-	DigitalPin* led = getRA0()->getDigitalPin();
-	led->setDigitalOutput();
-	while(true) {
-		led->setValue(true);
-		for (unsigned char i=0; i<100; i++) {
-			__delay_ms(10);
-		}
-		led->setValue(false);
-		for (unsigned char i=0; i<100; i++) {
-			__delay_ms(10);
-		}
+	setup();
+	while (true) {
+		loop();
 	}
 //	Eusart* serial = getEUSART1();
 //	serial->reset();
@@ -40,4 +35,26 @@ int main(void) {
 //	analogPin->setAnalogInput();
 //	di();	// disable interrupt
 //	ei();	// enable interrupt
+}
+
+void setup() {
+	// Oscillator settings
+	OscillatorModule* osc = getOscillatorModule();
+	osc->getPhaseLockedLoop()->enablePLL();
+	osc->getInternalOscillator()->setFrequency(16000000L);
+	osc->selectSystemClock(PRIMARY);
+	// LED Pin settings
+	led = getRA0()->getDigitalPin();
+	led->setDigitalOutput();
+}
+
+void loop() {
+	led->setValue(true);
+	for (unsigned char i=0; i<100; i++) {
+		__delay_ms(10);
+	}
+	led->setValue(false);
+	for (unsigned char i=0; i<100; i++) {
+		__delay_ms(10);
+	}
 }
