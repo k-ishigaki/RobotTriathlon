@@ -5,44 +5,38 @@
 #ifndef GPIO_PIN_H
 #define GPIO_PIN_H
 
-typedef void (*DigitalPin_setDigitalInput)();
-typedef void (*DigitalPin_setDigitalOutput)();
-typedef unsigned char (*DigitalPin_getValue)(void);
-typedef void (*DigitalPin_setValue)(unsigned char value);
-
-typedef void (*AnalogPin_setAnalogInput)();
-typedef void (*AnalogPin_setAnalogOutput)();
+#include <stdbool.h>
 
 typedef struct {
 	/**
 	 * デジタル入力に設定する
 	 */
-	DigitalPin_setDigitalInput setDigitalInput;
+	void (*setDigitalInput)(void);
 	/**
 	 * デジタル出力に設定する
 	 */
-	DigitalPin_setDigitalOutput setDigitalOutput;
+	void (*setDigitalOutput)(void);
 	/**
 	 * ピンの状態を取得する
-	 * @return PORTの値、LOWなら0、HIGHなら1
+	 * @return PORTの値、LOWならfalse、HIGHならtrue
 	 */
-	DigitalPin_getValue getValue;
+	bool (*getValue)(void);
 	/**
 	 * ピンの出力を設定する
-	 * @param 0ならLOW、1ならHIGHを設定
+	 * @param falseならLOW、trueならHIGHを設定
 	 */
-	DigitalPin_setValue setValue;
+	void (*setValue)(bool state);
 } DigitalPin;
 
 typedef struct {
 	/**
 	 * アナログ入力に設定する
 	 */
-	AnalogPin_setAnalogInput setAnalogInput;
+	void (*setAnalogInput)(void);
 	/**
 	 * アナログ出力に設定する
 	 */
-	AnalogPin_setAnalogOutput setAnalogOutput;
+	void (*setAnalogOutput)(void);
 } AnalogPin;
 
 typedef struct {
