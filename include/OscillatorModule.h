@@ -9,15 +9,12 @@
 #ifndef OSCILLATOR_MODULE_H
 #define OSCILLATOR_MODULE_H
 
-typedef void (*OscillatorModule_setMode)(int mode);
-typedef void (*InternalOscillator_selectFrequency)(int frequency);
-
 typedef struct {
 	/**
 	 * 内部オシレータの周波数を選択する
-	 * @param 周波数を示す列挙子(Hardware.hで定義)
+	 * @param 周波数(Hz)
 	 */
-	InternalOscillator_selectFrequency selectFrequency;
+	void (*setFrequency)(unsigned long frequency);
 } InternalOscillator;
 
 typedef struct {
@@ -25,7 +22,7 @@ typedef struct {
 	 * モードを選択する
 	 * @param モードを示す列挙子(Hardware.hで定義)
 	 */
-	OscillatorModule_setMode setMode;
+	void (*setMode)(int mode);
 	/**
 	 * 内部オシレータのオブジェクトを取得する
 	 * @return 内部オシレータのオブジェクト
