@@ -6,13 +6,6 @@
 #ifndef EUSART_H
 #define EUSART_H
 
-typedef void (*EUSART_resetInterface)(void);
-typedef void (*EUSART_setbaudRateInterface)(unsigned long baudRate);
-typedef void (*EUSART_enableInterface)(void);
-typedef void (*EUSART_disableInterface)(void);
-typedef char (*EUSART_readInterface)(void);
-typedef void (*EUSART_writeInterface)(char data);
-
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
 typedef struct {
@@ -20,30 +13,30 @@ typedef struct {
 	 * 現在の設定のまま、シリアルポートをリセットする
 	 * エラーで動作しない場合に呼び出すこと
 	 */
-	EUSART_resetInterface reset;
+	void (*reset)(void);
 	/**
 	 * ボーレートを設定する
 	 * @param ボーレート、整数で指定
 	 */
-	EUSART_setbaudRateInterface setbaudRate;
+	void (*setbaudRate)(unsigned long baudRate);
 	/**
 	 * EUSARTを有効にする
 	 */
-	EUSART_enableInterface enable;
+	void (*enable)(void);
 	/**
 	 * EUSARTを無効にする
 	 */
-	EUSART_disableInterface disable;
+	void (*disable)(void);
 	/**
 	 * 1byte受信する
 	 * @return 受信データ
 	 */
-	EUSART_readInterface read;
+	unsigned char (*read)(void);
 	/**
 	 * 1byte送信する
 	 * @param data 送信するデータ
 	 */
-	EUSART_writeInterface write;
+	void (*write)(unsigned char);
 } Eusart;
 
 #endif /* EUSART_H */
