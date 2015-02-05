@@ -8,9 +8,13 @@
 // Hardwareモジュールのインクルード
 #include "Hardware.h"
 
-#define _XTAL_FREQ 1000000L
+#define _XTAL_FREQ 64000000L
 
 int main(void) {
+	OscillatorModule* oscillatorModule = getOscillatorModule();
+	oscillatorModule->getPhaseLockedLoop()->enablePLL();
+	oscillatorModule->getInternalOscillator()->setFrequency(16000000L);
+	oscillatorModule->selectSystemClock(PRIMARY);
 	DigitalPin* led = getRA0()->getDigitalPin();
 	led->setDigitalOutput();
 	while(true) {
