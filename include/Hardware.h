@@ -21,6 +21,15 @@
  * @return Oscillator Moduleの構造体ポインタ，取得できない場合はNULL
  */
 OscillatorModule* getOscillatorModule(void);
+/**
+ * Oscillator ModuleのselectSystemClockメソッドの引数に指定できる列挙型
+ * hardware依存なのでOscillatorModule.hには書かず，ここで定義する
+ */
+typedef enum {
+	INTERNAL,	// internal oscillator block
+	SECONDARY,	// Secondary (SOSC) oscillator
+	PRIMARY,	// Primary clock (determined by FOSC<3:0> in CONFIG1H) 
+} OscillatorModule_clockSource;
 
 // GPIO Port
 #include "GPIOPort.h"
