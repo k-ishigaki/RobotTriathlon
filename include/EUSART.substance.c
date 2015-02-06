@@ -36,7 +36,7 @@ static char NAMESPACE(read)() {
 }
 
 static void NAMESPACE(write)(char data) {
-	while(NAMESPACE(txsta).TRMT == 1) {
+	while(NAMESPACE(txsta).TRMT == 0) {
 		// wait for TSR empty
 	}
 	TXREG = data;
