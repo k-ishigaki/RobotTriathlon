@@ -6,6 +6,8 @@
 #ifndef EUSART_H
 #define EUSART_H
 
+#include <stdint.h>
+
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
 typedef struct {
@@ -16,7 +18,7 @@ typedef struct {
 	void (*reset)(void);
 	/**
 	 * ボーレートを設定する
-	 * @param ボーレート、整数で指定
+	 * @param baudRate ボーレート、整数で指定
 	 */
 	void (*setbaudRate)(unsigned long baudRate);
 	/**
@@ -31,12 +33,12 @@ typedef struct {
 	 * 1byte受信する
 	 * @return 受信データ
 	 */
-	unsigned char (*read)(void);
+	uint8_t (*read)(void);
 	/**
 	 * 1byte送信する
 	 * @param data 送信するデータ
 	 */
-	void (*write)(unsigned char);
+	void (*write)(uint8_t data);
 } Eusart;
 
 #endif /* EUSART_H */
