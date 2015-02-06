@@ -23,7 +23,7 @@ typedef struct {
 	bool (*getValue)(void);
 	/**
 	 * ピンの出力を設定する
-	 * @param falseならLOW、trueならHIGHを設定
+	 * @param state falseならLOW、trueならHIGHを設定
 	 */
 	void (*setValue)(bool state);
 } DigitalPin;
