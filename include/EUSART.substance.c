@@ -14,11 +14,11 @@ static void NAMESPACE(reset)() {
 }
 
 static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
-	NAMESPACE(txsta).BRGH = 0;
+	NAMESPACE(txsta).BRGH = 1;
 	NAMESPACE(baudcon).BRG16 = 1;
-	// (baud rate) = F_OSC / (16 * (n + 1))
-	// n = F_OSC / (16 * (baud rate)) - 1
-	NAMESPACE(spbrg) = OPERATING_FREQUENCY / (16 * baudRate) - 1;
+	// (baud rate) = F_OSC / (4 * (n + 1))
+	// n = F_OSC / (4 * (baud rate)) - 1
+	NAMESPACE(spbrg) = OPERATING_FREQUENCY / (4 * baudRate) - 1;
 }
 
 static void NAMESPACE(enable)() {
