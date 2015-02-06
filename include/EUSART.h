@@ -20,7 +20,7 @@ typedef struct {
 	 * ボーレートを設定する
 	 * @param baudRate ボーレート、整数で指定
 	 */
-	void (*setbaudRate)(unsigned long baudRate);
+	void (*setBaudRate)(unsigned long baudRate);
 	/**
 	 * EUSARTを有効にする
 	 */
