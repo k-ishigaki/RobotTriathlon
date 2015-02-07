@@ -16,8 +16,16 @@ else
 # TEMP redirect target
 	TEMP_TARGET = /tmp/microchip_mdb.log
 endif
+# processor name
+PROSESSOR_NAME := 18F26K22
+# include paths
+INCLUDE_DIRS := hardware/include apps/include
+# sourse files directory
+SRC_DIRS := hardware/src apps/src
 # compiler command
 CC := xc8
+# compiler options
+CFLAGS := --chip=$(PROSESSOR_NAME) --CCI $(addprefix -I,$(INCLUDE_DIRS)) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 # target directory
 TARGET_DIR := bin
 # target file
@@ -26,10 +34,6 @@ TARGET := $(TARGET_DIR)/release.hex
 LDFLAGS := 
 # library paths
 LIBS := 
-# include paths
-INCLUDE_DIRS := hardware/include apps/include
-# sourse files directory
-SRC_DIRS := hardware/src apps/src
 # source files
 SRCS := $(foreach src_dir,$(SRC_DIRS),$(wildcard $(addprefix $(src_dir)/,*.c)))
 # object files
@@ -40,8 +44,6 @@ OBJ_DIRS := $(addprefix $(TARGET_DIR)/,$(dir $(SRCS)))
 DEPS := $(SRCS:%.c=$(TARGET_DIR)/%.d)
 # MDB script file
 MDB_SCRIPT := ./mdb.prog
-# compiler options
-CFLAGS := --chip=18F26K22 --CCI $(addprefix -I,$(INCLUDE_DIRS)) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 
 # additional suffixes
 .SUFFIXES: .p1
@@ -71,11 +73,5 @@ prog: $(TARGET)
 	@$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
 # remove unuse intermediate files
 	$(RM) MPLABXLog.*
-
-debug:
-	$(info $(SRCS))
-	$(info  $(OBJS))
-	$(info $(DEPS))
-	mkdir $(call FixPath,$(OBJ_DIRS))
 
 -include $(DEPS)
