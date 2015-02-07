@@ -16,39 +16,42 @@ else
 # TEMP redirect target
 	TEMP_TARGET = /tmp/microchip_mdb.log
 endif
-# target name
-TARGET := release
 # compiler command
 CC := xc8
+# target directory
+TARGET_DIR := bin
+# target file
+TARGET := $(TARGET_DIR)/release.hex
 # Link options
 LDFLAGS := 
 # library paths
 LIBS := 
 # include paths
-INCLUDE := include
+INCLUDE_DIRS := hardware/include apps/include
 # sourse files directory
-SRCDIR := src
-# intermediate files directory
-OBJDIR := bin
-# compiler options
-CFLAGS := --chip=18F26K22 --CCI --outdir=$(OBJDIR) --objdir=$(OBJDIR) -I$(INCLUDE) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
+SRC_DIRS := hardware/src apps/src
 # source files
-SRCS := $(wildcard $(addprefix $(SRCDIR)/,*.c))
+SRCS := $(foreach src_dir,$(SRC_DIRS),$(wildcard $(addprefix $(src_dir)/,*.c)))
 # object files
-OBJS := $(addprefix $(OBJDIR)/,$(patsubst %.c,%.p1,$(notdir $(SRCS))))
+OBJS := $(SRCS:%.c=$(TARGET_DIR)/%.p1)
+# intermediate files directory
+OBJ_DIRS := $(addprefix $(TARGET_DIR)/,$(dir $(SRCS)))
 # dependency
-DEPS := $(OBJS:.p1=.d)
+DEPS := $(SRCS:%.c=$(TARGET_DIR)/%.d)
 # MDB script file
 MDB_SCRIPT := ./mdb.prog
+# compiler options
+CFLAGS := --chip=18F26K22 --CCI $(addprefix -I,$(INCLUDE_DIRS)) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 
 # additional suffixes
 .SUFFIXES: .p1
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(CC) $(CFLAGS) -O$(call FixPath,$@) $(call FixPath,$^)
+	$(CC) $(CFLAGS) --outdir=$(TARGET_DIR) -O$(call FixPath,$@) $(call FixPath,$^)
 
-$(OBJDIR)/%.p1: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) --pass1 $(call FixPath,$<)
+$(TARGET_DIR)/%.p1:%.c
+	$(info $(@D))
+	$(CC) $(CFLAGS) --outdir=$(call FixPath,$(@D)) --pass1 $(call FixPath,$<)
 
 .PHONY: all
 all: clean $(TARGET)
@@ -56,7 +59,9 @@ all: clean $(TARGET)
 .PHONY: clean
 clean:
 # remove intermediate files
-	$(RM) $(call FixPath,$(wildcard $(addprefix $(OBJDIR)/,*)))
+	$(RM) $(call FixPath,$(OBJS))
+	$(RM) $(call FixPath,$(DEPS))
+	$(RM) $(call FixPath,$(OBJS:%.p1=%.pre))
 	$(RM) funclist l.obj
 
 .PHONY: prog
@@ -66,5 +71,11 @@ prog: $(TARGET)
 	@$(MDB) $(call FixPath,$(MDB_SCRIPT)) > $(TEMP_TARGET) 2>&1
 # remove unuse intermediate files
 	$(RM) MPLABXLog.*
+
+debug:
+	$(info $(SRCS))
+	$(info  $(OBJS))
+	$(info $(DEPS))
+	mkdir $(call FixPath,$(OBJ_DIRS))
 
 -include $(DEPS)
