@@ -16,6 +16,7 @@ else
 # TEMP redirect target
 	TEMP_TARGET = /tmp/microchip_mdb.log
 endif
+
 # processor name
 PROSESSOR_NAME := 18F26K22
 # include paths
