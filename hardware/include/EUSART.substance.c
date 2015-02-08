@@ -14,11 +14,14 @@ static void NAMESPACE(reset)() {
 }
 
 static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
+	// errataによるとBRGH=1,BRG16=1を使わないとスタートビットを逃すことがあるらしい
 	NAMESPACE(txsta).BRGH = 1;
 	NAMESPACE(baudcon).BRG16 = 1;
 	// (baud rate) = F_OSC / (4 * (n + 1))
 	// n = F_OSC / (4 * (baud rate)) - 1
-	NAMESPACE(spbrg) = OPERATING_FREQUENCY / (4 * baudRate) - 1;
+	uint16_t regValue = OPERATING_FREQUENCY / (4 * (baudRate + 1));
+	NAMESPACE(spbrgh) = regValue >> 8;
+	NAMESPACE(spbrg) = regValue;
 }
 
 static void NAMESPACE(enable)() {
@@ -31,15 +34,15 @@ static void NAMESPACE(disable)() {
 	NAMESPACE(rcsta).SPEN = 0;
 }
 
-static char NAMESPACE(read)() {
+static uint8_t NAMESPACE(read)() {
 	return NAMESPACE(rcreg);
 }
 
-static void NAMESPACE(write)(char data) {
+static void NAMESPACE(write)(uint8_t data) {
 	while(NAMESPACE(txsta).TRMT == 0) {
 		// wait for TSR empty
 	}
-	TXREG = data;
+	NAMESPACE(txreg) = data;
 }
 
 static Eusart NAMESPACE(eusart) = {

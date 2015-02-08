@@ -15,6 +15,7 @@
 #define EUSART1_txsta TXSTA1bits
 #define EUSART1_baudcon BAUDCON1bits
 #define EUSART1_spbrg SPBRG1
+#define EUSART1_spbrgh SPBRGH1
 #define EUSART1_rcreg RCREG1
 #define EUSART1_txreg TXREG1
 
@@ -22,6 +23,7 @@
 #define EUSART2_txsta TXSTA2bits
 #define EUSART2_baudcon BAUDCON2bits
 #define EUSART2_spbrg SPBRG2
+#define EUSART2_spbrgh SPBRGH2
 #define EUSART2_rcreg RCREG2
 #define EUSART2_txreg TXREG2
 
