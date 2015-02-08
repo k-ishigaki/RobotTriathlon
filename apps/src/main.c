@@ -35,11 +35,12 @@ void setup() {
 	// LED Pin settings
 	led = getRA0()->getDigitalPin();
 	led->setDigitalOutput();
+	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),
 			getRC6()->getDigitalPin(),
 			getEUSART1(),
-			9600);
+			115200);
 }
 
 void loop() {
