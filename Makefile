@@ -53,7 +53,6 @@ $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(CFLAGS) --outdir=$(TARGET_DIR) -O$(call FixPath,$@) $(call FixPath,$^)
 
 $(TARGET_DIR)/%.p1:%.c
-	$(info $(@D))
 	$(CC) $(CFLAGS) --outdir=$(call FixPath,$(@D)) --pass1 $(call FixPath,$<)
 
 .PHONY: all
