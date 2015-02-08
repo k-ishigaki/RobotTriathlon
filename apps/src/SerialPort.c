@@ -44,7 +44,8 @@ SerialPort* getSerialPort(
 	NAMESPACE(rxPin) = rxPin;
 	NAMESPACE(txPin) = txPin;
 	NAMESPACE(uart) = uart;
-	NAMESPACE(rxPin)->setDigitalInput();
+	// rxのピンもデジタル出力にする必要がある
+	NAMESPACE(rxPin)->setDigitalOutput();
 	NAMESPACE(txPin)->setDigitalOutput();
 	NAMESPACE(uart)->setBaudRate(baudRate);
 	NAMESPACE(uart)->enable();
