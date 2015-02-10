@@ -26,7 +26,7 @@ SRC_DIRS := hardware/src apps/src
 # compiler command
 CC := xc8
 # compiler options
-CFLAGS := --chip=$(PROSESSOR_NAME) --CCI $(addprefix -I,$(INCLUDE_DIRS)) --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
+CFLAGS := --chip=$(PROSESSOR_NAME) --CCI $(addprefix -I,$(INCLUDE_DIRS)) --STACK=hybrid --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 # target directory
 TARGET_DIR := bin
 # target file
