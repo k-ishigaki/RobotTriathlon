@@ -38,9 +38,10 @@ typedef struct {
 	uint8_t (*getValue)(void);
 	/**
 	 * ポートの出力を設定する
-	 * @param pattern 1の部分をHIGH、0の部分をLOWに設定する
+	 * @param pattern 1にした部分にのみvalueを適用する
+	 * @param value 1の部分をHIGH、0の部分をLOWに設定する
 	 */
-	void (*setValue)(uint8_t pattern);
+	void (*setValue)(uint8_t pattern, uint8_t value);
 } GPIOPort;
 
 #endif /* GPIO_PORT_H */
