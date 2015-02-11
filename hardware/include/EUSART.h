@@ -8,6 +8,20 @@
 
 #include <stdint.h>
 
+// EUSARTの割り込みリスナ
+typedef struct {
+	/**
+	 * 受信時に呼び出される
+	 * @param data 受信したデータ
+	 */
+	void (*onReceived)(uint8_t data);
+	/**
+	 * 送信完了時に呼び出される
+	 * @return 次に送信するデータ、送信しない場合は0を返すこと
+	 */
+	uint8_t (*onTransmitted)(void);
+} EusartInterruptListener;
+
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
 typedef struct {
@@ -29,6 +43,28 @@ typedef struct {
 	 * EUSARTを無効にする
 	 */
 	void (*disable)(void);
+	/**
+	 * 割り込みリスナを登録する
+	 * 登録できるのは1つだけ
+	 * @param listener EUSARTモジュールの割り込みリスナ
+	 */
+	void (*addInterruptListener)(EusartInterruptListener* listener);
+	/**
+	 * 受信割り込みを有効にする
+	 */
+	void (*enableRXInterrupt)(void);
+	/**
+	 * 受信割り込みを無効にする
+	 */
+	void (*disableRXInterrupt)(void);
+	/**
+	 * 送信割り込みを有効にする
+	 */
+	void (*enableTXInterrupt)(void);
+	/**
+	 * 送信割り込みを無効にする
+	 */
+	void (*disableTXInterrupt)(void);
 	/**
 	 * 1byte受信する
 	 * @return 受信データ
