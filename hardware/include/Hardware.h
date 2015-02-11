@@ -50,6 +50,12 @@ GPIOPort* getPORTC(void);
 Eusart* getEUSART(void);	// alias of getEUSART1
 Eusart* getEUSART1(void);
 Eusart* getEUSART2(void);
+/**
+ * EUSARTの割り込みハンドラ
+ * 割り込みを利用するときに割り込み中に呼び出すこと
+ */
+void EUSART1_handleInterrupt(void);
+void EUSART2_handleInterrupt(void);
 
 // GPIO Pin
 #include "GPIOPin.h"
