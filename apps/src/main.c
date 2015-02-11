@@ -41,6 +41,20 @@ void setup() {
 			getRC6()->getDigitalPin(),
 			getEUSART1(),
 			115200);
+	// interrupt settings
+	RCONbits.IPEN = 1;
+	IPR1bits.RC1IP = 0;
+	IPR1bits.TX1IP = 0;
+	INTCONbits.GIEL = 1;
+	INTCONbits.GIEH = 1;
+}
+
+void interrupt high_priority isr_high() {
+	// do nothing
+}
+
+void interrupt low_priority isr_low() {
+	EUSART1_handleInterrupt();
 }
 
 void loop() {
