@@ -18,6 +18,10 @@
 #define EUSART1_spbrgh SPBRGH1
 #define EUSART1_rcreg RCREG1
 #define EUSART1_txreg TXREG1
+#define EUSART1_rcif PIR1bits.RC1IF
+#define EUSART1_txif PIR1bits.TX1IF
+#define EUSART1_rcie PIE1bits.RC1IE
+#define EUSART1_txie PIE1bits.TX1IE
 
 #define EUSART2_rcsta RCSTA2bits
 #define EUSART2_txsta TXSTA2bits
@@ -26,6 +30,10 @@
 #define EUSART2_spbrgh SPBRGH2
 #define EUSART2_rcreg RCREG2
 #define EUSART2_txreg TXREG2
+#define EUSART2_rcif PIR3bits.RC2IF
+#define EUSART2_txif PIR3bits.TX2IF
+#define EUSART2_rcie PIE3bits.RC2IE
+#define EUSART2_txie PIE3bits.TX2IE
 
 #define NAMESPACE(name) EUSART1_##name
 #include "EUSART.substance.c"

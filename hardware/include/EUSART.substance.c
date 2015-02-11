@@ -8,6 +8,8 @@
 // 普通のソースコードからはインクルードできないようにする
 #ifdef USING_EUSART_SUBSTANCE
 
+EusartInterruptListener* NAMESPACE(listener);
+
 static void NAMESPACE(reset)() {
 	NAMESPACE(rcsta).SPEN = 0;
 	NAMESPACE(rcsta).SPEN = 1;
@@ -27,11 +29,33 @@ static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
 static void NAMESPACE(enable)() {
 	NAMESPACE(txsta).TXEN = 1;
 	NAMESPACE(rcsta).SPEN = 1;
+	NAMESPACE(rcsta).CREN = 1;
 }
 
 static void NAMESPACE(disable)() {
 	NAMESPACE(txsta).TXEN = 0;
 	NAMESPACE(rcsta).SPEN = 0;
+	NAMESPACE(rcsta).CREN = 0;
+}
+
+static void NAMESPACE(addInterruptListener)(EusartInterruptListener* listener) {
+	NAMESPACE(listener) = listener;
+}
+
+static void NAMESPACE(enableRXInterrupt)() {
+	NAMESPACE(rcie) = 1;
+}
+
+static void NAMESPACE(disableRXInterrupt)() {
+	NAMESPACE(rcie) = 0;
+}
+
+static void NAMESPACE(enableTXInterrupt)() {
+	NAMESPACE(txie) = 1;
+}
+
+static void NAMESPACE(disableTXInterrupt)() {
+	NAMESPACE(txie) = 0;
 }
 
 static uint8_t NAMESPACE(read)() {
@@ -50,8 +74,32 @@ static Eusart NAMESPACE(eusart) = {
 	NAMESPACE(setBaudRate),
 	NAMESPACE(enable),
 	NAMESPACE(disable),
+	NAMESPACE(addInterruptListener),
+	NAMESPACE(enableRXInterrupt),
+	NAMESPACE(disableRXInterrupt),
+	NAMESPACE(enableTXInterrupt),
+	NAMESPACE(disableTXInterrupt),
 	NAMESPACE(read),
 	NAMESPACE(write),
 };
+
+void NAMESPACE(handleInterrupt)() {
+	if ((NAMESPACE(rcie) == 1) && (NAMESPACE(rcif) == 1)) {
+		while (NAMESPACE(rcif) == 1) {
+			// 受信バッファがなくなるまで読みだす
+			NAMESPACE(listener)->onReceived(NAMESPACE(read)());
+		}
+	}
+	if ((NAMESPACE(txie) == 1) && (NAMESPACE(txif) == 1)) {
+		uint8_t nextData = NAMESPACE(listener)->onTransmitted();
+		if (nextData == 0) {
+			// 0の場合は送信をやめる
+			NAMESPACE(txie) = 0;
+		} else {
+			// 0以外の場合は送信を続ける
+			NAMESPACE(write)(nextData);
+		}
+	}
+}
 
 #endif /* USING_EUSART_SUBSTANCE */
