@@ -4,8 +4,25 @@
 #define NAMESPACE(name) SerialPort_##name
 
 Eusart* NAMESPACE(uart);
-DigitalPin* NAMESPACE(rxPin);
-DigitalPin* NAMESPACE(txPin);
+
+static void NAMESPACE(onReceived)(uint8_t data) {
+	DigitalPin* testPin = getRA1()->getDigitalPin();
+	testPin->setDigitalOutput();
+	if (data == 'A') {
+		testPin->setValue(true);
+	} else {
+		testPin->setValue(false);
+	}
+}
+
+static uint8_t NAMESPACE(onTransmitted)() {
+	return 0;
+}
+
+EusartInterruptListener NAMESPACE(listener) = {
+	NAMESPACE(onReceived),
+	NAMESPACE(onTransmitted),
+};
 
 static uint8_t NAMESPACE(read)() {
 	return NAMESPACE(uart)->read();
@@ -41,14 +58,14 @@ SerialPort* getSerialPort(
 		DigitalPin* txPin,
 		Eusart* uart,
 		unsigned long baudRate) {
-	NAMESPACE(rxPin) = rxPin;
-	NAMESPACE(txPin) = txPin;
 	NAMESPACE(uart) = uart;
-	// rxのピンもデジタル出力にする必要がある
-	NAMESPACE(rxPin)->setDigitalOutput();
-	NAMESPACE(txPin)->setDigitalOutput();
+	// rxのピンもデジタル入力にする必要がある
+	rxPin->setDigitalInput();
+	txPin->setDigitalInput();
 	NAMESPACE(uart)->setBaudRate(baudRate);
 	NAMESPACE(uart)->enable();
+	NAMESPACE(uart)->addInterruptListener(&NAMESPACE(listener));
+	NAMESPACE(uart)->enableRXInterrupt();
 	return &NAMESPACE(serialPort);
 }
 
