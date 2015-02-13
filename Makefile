@@ -26,7 +26,10 @@ SRC_DIRS := hardware/src apps/src
 # compiler command
 CC := xc8
 # compiler options
-CFLAGS := --chip=$(PROSESSOR_NAME) --CCI $(addprefix -I,$(INCLUDE_DIRS)) --STACK=hybrid --asmlist --opt=none --errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
+CFLAGS := --chip=$(PROSESSOR_NAME) \
+	--CCI $(addprefix -I,$(INCLUDE_DIRS)) \
+	--stack=hybrid --asmlist --opt=none \
+	--errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 # target directory
 TARGET_DIR := bin
 # target file
@@ -38,7 +41,7 @@ LIBS :=
 # source files
 SRCS := $(foreach src_dir,$(SRC_DIRS),$(wildcard $(addprefix $(src_dir)/,*.c)))
 # object files
-OBJS := $(addprefix bin/,$(SRCS:%.c=%.p1))
+OBJS := $(addprefix $(TARGET_DIR)/,$(SRCS:%.c=%.p1))
 # intermediate files directory
 OBJ_DIRS := $(dir $(OBJS))
 # dependency
@@ -52,7 +55,7 @@ MDB_SCRIPT := ./mdb.prog
 $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(CFLAGS) --outdir=$(TARGET_DIR) -O$(call FixPath,$@) $(call FixPath,$^)
 
-$(addprefix $(TARGET_DIR)/,%.p1):%.c
+$(TARGET_DIR)/%.p1:%.c
 	$(CC) $(CFLAGS) --outdir=$(call FixPath,$(@D)) --pass1 $(call FixPath,$<)
 
 .PHONY: all
