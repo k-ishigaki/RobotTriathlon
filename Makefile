@@ -38,11 +38,11 @@ LIBS :=
 # source files
 SRCS := $(foreach src_dir,$(SRC_DIRS),$(wildcard $(addprefix $(src_dir)/,*.c)))
 # object files
-OBJS := $(SRCS:%.c=$(TARGET_DIR)/%.p1)
+OBJS := $(addprefix bin/,$(SRCS:%.c=%.p1))
 # intermediate files directory
 OBJ_DIRS := $(dir $(OBJS))
 # dependency
-DEPS := $(SRCS:%.c=$(TARGET_DIR)/%.d)
+DEPS := $(OBJS:%.p1=%.d)
 # MDB script file
 MDB_SCRIPT := ./mdb.prog
 
@@ -52,7 +52,7 @@ MDB_SCRIPT := ./mdb.prog
 $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(CFLAGS) --outdir=$(TARGET_DIR) -O$(call FixPath,$@) $(call FixPath,$^)
 
-$(TARGET_DIR)/%.p1:%.c
+$(addprefix $(TARGET_DIR)/,%.p1):%.c
 	$(CC) $(CFLAGS) --outdir=$(call FixPath,$(@D)) --pass1 $(call FixPath,$<)
 
 .PHONY: all
