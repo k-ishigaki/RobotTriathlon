@@ -40,7 +40,7 @@ SRCS := $(foreach src_dir,$(SRC_DIRS),$(wildcard $(addprefix $(src_dir)/,*.c)))
 # object files
 OBJS := $(SRCS:%.c=$(TARGET_DIR)/%.p1)
 # intermediate files directory
-OBJ_DIRS := $(addprefix $(TARGET_DIR)/,$(dir $(SRCS)))
+OBJ_DIRS := $(dir $(OBJS))
 # dependency
 DEPS := $(SRCS:%.c=$(TARGET_DIR)/%.d)
 # MDB script file
@@ -64,6 +64,8 @@ clean:
 	$(RM) $(call FixPath,$(OBJS))
 	$(RM) $(call FixPath,$(DEPS))
 	$(RM) $(call FixPath,$(OBJS:%.p1=%.pre))
+	$(RM) $(call FixPath,bin/release.*)
+	$(RM) $(call FixPath,bin/startup.*)
 	$(RM) funclist l.obj
 
 .PHONY: prog
