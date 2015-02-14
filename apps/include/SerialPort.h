@@ -12,7 +12,7 @@
 typedef struct {
 	/**
 	 * ストリームから1byte読み込む
-	 * @return 読み込んだデータ
+	 * @return 読み込んだデータ，データがない場合は0を返す
 	 */
 	uint8_t (*read)(void);
 } ByteInputStream;
@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
 	/**
 	 * ストリームに1byte書き込む
-	 * @param data 書き込むデータ
+	 * @param data 書き込むデータ，0を書き込んでも送信しない
 	 */
 	void (*write)(uint8_t data);
 } ByteOutputStream;
