@@ -133,12 +133,10 @@ SerialPort* getSerialPort(
 	NAMESPACE(uart)->addInterruptListener(&NAMESPACE(listener));
 	NAMESPACE(uart)->enableRXInterrupt();
 	// リングバッファの初期化
-	for (unsigned char i=0; i<BUF_SIZE; i++) {
-		NAMESPACE(receiveBuffer)[i] = 0;
-		NAMESPACE(transmitBuffer)[i] = 0;
-	}
 	NAMESPACE(receiveBufferIndex) = 0;
 	NAMESPACE(transmitBufferIndex) = 0;
+	NAMESPACE(availableReadCounter) = 0;
+	NAMESPACE(stillTransmittingCounter) = 0;
 	return &NAMESPACE(serialPort);
 }
 
