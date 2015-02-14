@@ -58,14 +58,15 @@ void interrupt low_priority isr_low() {
 }
 
 void loop() {
-	led->setValue(true);
-	serial->getByteOutputStream()->write('A');
+	static bool value = true;
+	led->setValue(value);
+	value = !value;
 	for (unsigned char i=0; i<100; i++) {
 		__delay_ms(10);
 	}
-	led->setValue(false);
-	serial->getByteOutputStream()->write('B');
-	for (unsigned char i=0; i<100; i++) {
-		__delay_ms(10);
+	uint8_t data = serial->getByteInputStream()->read();
+	while (data != 0) {
+		serial->getByteOutputStream()->write(data);
+		data = serial->getByteInputStream()->read();
 	}
 }
