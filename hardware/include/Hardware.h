@@ -92,4 +92,31 @@ GPIOPin* getRC6(void);
 GPIOPin* getRC7(void);
 // PORTE is normaly used for MCLR, so GPIO functions are not supported
 
+// Timer Module
+#include "TimerModule.h"
+/**
+ * Timer Moduleのオブジェクトを返す
+ * @return Timer Moduleの構造体ポインタ
+ */
+// 8 or 16 bit timer
+TimerModule* getTimer0(void);
+// 16 bit timer
+TimerModule* getTimer1(void);
+TimerModule* getTimer3(void);
+TimerModule* getTimer5(void);
+// 8 bit timer
+TimerModule* getTimer2(void);
+TimerModule* getTimer4(void);
+TimerModule* getTimer6(void);
+/**
+ * Timer ModuleのselectClockSourceの引数に指定できる列挙型
+ * タイマの種類によって異なるので注意
+ */
+typedef enum {
+	CRYSTAL_OSCILLATOR,	// Crystal Oscillator on SOSCI/SOSCO pins
+	EXTERNAL_CLOCK,		// External Clock from TxCKI pin (on the rising edge)
+	SYSTEM_CLOCK,		// system clock (FOSC)
+	INSTRUCTION_CLOCK,	// instruction clock (FOSC/4)
+} TimerModule_clockSource;
+
 #endif /* HARDWARE_H */
