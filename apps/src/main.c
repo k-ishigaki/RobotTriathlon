@@ -43,8 +43,6 @@ void setup() {
 			115200);
 	// interrupt settings
 	RCONbits.IPEN = 1;
-	IPR1bits.RC1IP = 0;
-	IPR1bits.TX1IP = 0;
 	INTCONbits.GIEL = 1;
 	INTCONbits.GIEH = 1;
 }

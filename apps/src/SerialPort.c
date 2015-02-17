@@ -132,6 +132,8 @@ SerialPort* getSerialPort(
 	NAMESPACE(uart)->enable();
 	NAMESPACE(uart)->addInterruptListener(&NAMESPACE(listener));
 	NAMESPACE(uart)->enableRXInterrupt();
+	NAMESPACE(uart)->setRXInterruptPriority(LOW_PRIORITY);
+	NAMESPACE(uart)->setTXInterruptPriority(LOW_PRIORITY);
 	// リングバッファの初期化
 	NAMESPACE(receiveBufferIndex) = 0;
 	NAMESPACE(transmitBufferIndex) = 0;
