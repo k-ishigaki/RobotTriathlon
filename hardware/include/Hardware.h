@@ -14,8 +14,18 @@
 // 動作周波数
 #define OPERATING_FREQUENCY	64000000L
 
+/**
+ * 割り込み優先度の定数
+ * setInterruptPriorityメソッドに指定すること
+ */
+typedef enum {
+	LOW_PRIORITY,
+	HIGH_PRIORITY,
+} Hardware_InterruptPriority;
+
 // Oscillator Module
 #include "OscillatorModule.h"
+
 /**
  * Oscillator Moduleのオブジェクトを返す
  * @return Oscillator Moduleの構造体ポインタ，取得できない場合はNULL
@@ -108,6 +118,13 @@ TimerModule* getTimer5(void);
 TimerModule* getTimer2(void);
 TimerModule* getTimer4(void);
 TimerModule* getTimer6(void);
+/**
+ * Timerxの割り込みハンドラ
+ */
+void Timer1_handleInterrpt(void);
+void Timer3_handleInterrpt(void);
+void Timer5_handleInterrpt(void);
+
 /**
  * Timer ModuleのselectClockSourceの引数に指定できる列挙型
  * タイマの種類によって異なるので注意
