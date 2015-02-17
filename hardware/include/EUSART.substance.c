@@ -11,31 +11,31 @@
 EusartInterruptListener* NAMESPACE(listener);
 
 static void NAMESPACE(reset)() {
-	NAMESPACE(rcsta).SPEN = 0;
-	NAMESPACE(rcsta).SPEN = 1;
+	NAMESPACE(RCSTAx).SPEN = 0;
+	NAMESPACE(RCSTAx).SPEN = 1;
 }
 
 static void NAMESPACE(setBaudRate)(unsigned long baudRate) {
 	// errataによるとBRGH=1,BRG16=1を使わないとスタートビットを逃すことがあるらしい
-	NAMESPACE(txsta).BRGH = 1;
-	NAMESPACE(baudcon).BRG16 = 1;
+	NAMESPACE(TXSTAx).BRGH = 1;
+	NAMESPACE(BAUDCONx).BRG16 = 1;
 	// (baud rate) = F_OSC / (4 * (n + 1))
 	// n = F_OSC / (4 * (baud rate)) - 1
 	uint16_t regValue = OPERATING_FREQUENCY / (4 * (baudRate + 1));
-	NAMESPACE(spbrgh) = regValue >> 8;
-	NAMESPACE(spbrg) = regValue;
+	NAMESPACE(SPBRGHx).SPx(BRGH) = regValue >> 8;
+	NAMESPACE(SPBRGx).SPx(BRG) = regValue;
 }
 
 static void NAMESPACE(enable)() {
-	NAMESPACE(txsta).TXEN = 1;
-	NAMESPACE(rcsta).SPEN = 1;
-	NAMESPACE(rcsta).CREN = 1;
+	NAMESPACE(TXSTAx).TXEN = 1;
+	NAMESPACE(RCSTAx).SPEN = 1;
+	NAMESPACE(RCSTAx).CREN = 1;
 }
 
 static void NAMESPACE(disable)() {
-	NAMESPACE(txsta).TXEN = 0;
-	NAMESPACE(rcsta).SPEN = 0;
-	NAMESPACE(rcsta).CREN = 0;
+	NAMESPACE(TXSTAx).TXEN = 0;
+	NAMESPACE(RCSTAx).SPEN = 0;
+	NAMESPACE(RCSTAx).CREN = 0;
 }
 
 static void NAMESPACE(addInterruptListener)(EusartInterruptListener* listener) {
@@ -43,30 +43,30 @@ static void NAMESPACE(addInterruptListener)(EusartInterruptListener* listener) {
 }
 
 static void NAMESPACE(enableRXInterrupt)() {
-	NAMESPACE(rcie) = 1;
+	NAMESPACE(PIEx).RCx(IE) = 1;
 }
 
 static void NAMESPACE(disableRXInterrupt)() {
-	NAMESPACE(rcie) = 0;
+	NAMESPACE(PIEx).RCx(IE) = 0;
 }
 
 static void NAMESPACE(enableTXInterrupt)() {
-	NAMESPACE(txie) = 1;
+	NAMESPACE(PIEx).TXx(IE) = 1;
 }
 
 static void NAMESPACE(disableTXInterrupt)() {
-	NAMESPACE(txie) = 0;
+	NAMESPACE(PIEx).TXx(IE) = 0;
 }
 
 static uint8_t NAMESPACE(read)() {
-	return NAMESPACE(rcreg);
+	return NAMESPACE(RCREGx).RCx(REG);
 }
 
 static void NAMESPACE(write)(uint8_t data) {
-	while(NAMESPACE(txsta).TRMT == 0) {
+	while(NAMESPACE(TXSTAx).TRMT == 0) {
 		// wait for TSR empty
 	}
-	NAMESPACE(txreg) = data;
+	NAMESPACE(TXREGx).TXx(REG) = data;
 }
 
 static Eusart NAMESPACE(eusart) = {
@@ -83,23 +83,32 @@ static Eusart NAMESPACE(eusart) = {
 	NAMESPACE(write),
 };
 
+Eusart* NAMESPACE(getter)() {
+	return &NAMESPACE(eusart);
+}
+
 void NAMESPACE(handleInterrupt)() {
-	if ((NAMESPACE(rcie) == 1) && (NAMESPACE(rcif) == 1)) {
-		while (NAMESPACE(rcif) == 1) {
+	if ((NAMESPACE(PIEx).RCx(IE) == 1) && (NAMESPACE(PIRx).RCx(IF) == 1)) {
+		while (NAMESPACE(PIRx).RCx(IF) == 1) {
 			// 受信バッファがなくなるまで読みだす
 			NAMESPACE(listener)->onReceived(NAMESPACE(read)());
 		}
 	}
-	if ((NAMESPACE(txie) == 1) && (NAMESPACE(txif) == 1)) {
+	if ((NAMESPACE(PIEx).TXx(IE) == 1) && (NAMESPACE(PIRx).TXx(IF) == 1)) {
 		uint8_t nextData = NAMESPACE(listener)->onTransmitted();
 		if (nextData == 0) {
 			// 0の場合は送信をやめる
-			NAMESPACE(txie) = 0;
+			NAMESPACE(PIEx).TXx(IE) = 0;
 		} else {
 			// 0以外の場合は送信を続ける
 			NAMESPACE(write)(nextData);
 		}
 	}
 }
+
+#undef RCx
+#undef TXx
+#undef SPx
+#undef NAMESPACE
 
 #endif /* USING_EUSART_SUBSTANCE */
