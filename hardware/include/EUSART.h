@@ -58,6 +58,11 @@ typedef struct {
 	 */
 	void (*disableRXInterrupt)(void);
 	/**
+	 * 受信割り込みの優先度を設定する
+	 * @param 優先度を表す列挙型定数、Hardware.hで定義
+	 */
+	void (*setRXInterruptPriority)(int);
+	/**
 	 * 送信割り込みを有効にする
 	 */
 	void (*enableTXInterrupt)(void);
@@ -65,6 +70,11 @@ typedef struct {
 	 * 送信割り込みを無効にする
 	 */
 	void (*disableTXInterrupt)(void);
+	/**
+	 * 送信割り込みの優先度を設定する
+	 * @param 優先度を表す列挙型定数、Hardware.hで定義
+	 */
+	void (*setTXInterruptPriority)(int);
 	/**
 	 * 1byte受信する
 	 * @return 受信データ

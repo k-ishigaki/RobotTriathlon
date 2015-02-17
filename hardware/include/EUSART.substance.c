@@ -50,12 +50,34 @@ static void NAMESPACE(disableRXInterrupt)() {
 	NAMESPACE(PIEx).RCx(IE) = 0;
 }
 
+static void NAMESPACE(setRXInterruptPriority)(int priority) {
+	switch ((Hardware_InterruptPriority)priority) {
+		case LOW_PRIORITY:
+			NAMESPACE(IPRx).RCx(IP) = 0;
+			break;
+		case HIGH_PRIORITY:
+			NAMESPACE(IPRx).RCx(IP) = 1;
+			break;
+	}
+}
+
 static void NAMESPACE(enableTXInterrupt)() {
 	NAMESPACE(PIEx).TXx(IE) = 1;
 }
 
 static void NAMESPACE(disableTXInterrupt)() {
 	NAMESPACE(PIEx).TXx(IE) = 0;
+}
+
+static void NAMESPACE(setTXInterruptPriority)(int priority) {
+	switch ((Hardware_InterruptPriority)priority) {
+		case LOW_PRIORITY:
+			NAMESPACE(IPRx).TXx(IP) = 0;
+			break;
+		case HIGH_PRIORITY:
+			NAMESPACE(IPRx).TXx(IP) = 1;
+			break;
+	}
 }
 
 static uint8_t NAMESPACE(read)() {
@@ -77,8 +99,10 @@ static Eusart NAMESPACE(eusart) = {
 	NAMESPACE(addInterruptListener),
 	NAMESPACE(enableRXInterrupt),
 	NAMESPACE(disableRXInterrupt),
+	NAMESPACE(setRXInterruptPriority),
 	NAMESPACE(enableTXInterrupt),
 	NAMESPACE(disableTXInterrupt),
+	NAMESPACE(setTXInterruptPriority),
 	NAMESPACE(read),
 	NAMESPACE(write),
 };
