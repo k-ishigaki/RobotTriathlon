@@ -5,16 +5,16 @@
 TimerModuleInterruptListener* NAMESPACE(listener);
 
 static void NAMESPACE(enable)() {
-	NAMESPACE(txcon).TMR1ON = 1;
+	NAMESPACE(TxCON).TMRx(ON) = 1;
 }
 
 static void NAMESPACE(disable)() {
-	NAMESPACE(txcon).TMR1ON = 0;
+	NAMESPACE(TxCON).TMRx(ON) = 0;
 }
 
 static void NAMESPACE(reset)() {
-	NAMESPACE(txcon).TMR1ON = 0;
-	NAMESPACE(txcon).TMR1ON = 1;
+	NAMESPACE(TxCON).TMRx(ON) = 0;
+	NAMESPACE(TxCON).TMRx(ON) = 1;
 }
 
 static void NAMESPACE(addInterruptListener)(TimerModuleInterruptListener* listener) {
@@ -22,31 +22,31 @@ static void NAMESPACE(addInterruptListener)(TimerModuleInterruptListener* listen
 }
 
 static void NAMESPACE(enableInterrupt)() {
-	NAMESPACE(if) = 0;
-	NAMESPACE(ie) = 1;
+	NAMESPACE(PIRx).TMRx(IF) = 0;
+	NAMESPACE(PIEx).TMRx(IE) = 1;
 }
 
 static void NAMESPACE(disableInterrupt)() {
-	NAMESPACE(ie) = 0;
-	NAMESPACE(if) = 0;
+	NAMESPACE(PIEx).TMRx(IE) = 0;
+	NAMESPACE(PIRx).TMRx(IF) = 0;
 }
 
 #ifdef IS_16BIT_TIMER /* 16 bit Timer */
 static void NAMESPACE(selectClockSource)(int source) {
 	switch ((TimerModule_clockSource)source) {
 		case CRYSTAL_OSCILLATOR:
-			NAMESPACE(txcon).T1SOSCEN = 1;
-			NAMESPACE(txcon).TMR1CS = 0b10;
+			NAMESPACE(TxCON).Tx(SOSCEN) = 1;
+			NAMESPACE(TxCON).TMRx(CS) = 0b10;
 			break;
 		case EXTERNAL_CLOCK:
-			NAMESPACE(txcon).T1SOSCEN = 0;
-			NAMESPACE(txcon).TMR1CS = 0b10;
+			NAMESPACE(TxCON).Tx(SOSCEN) = 0;
+			NAMESPACE(TxCON).TMRx(CS) = 0b10;
 			break;
 		case SYSTEM_CLOCK:
-			NAMESPACE(txcon).TMR1CS = 0b01;
+			NAMESPACE(TxCON).TMRx(CS) = 0b01;
 			break;
 		case INSTRUCTION_CLOCK:
-			NAMESPACE(txcon).TMR1CS = 0b00;
+			NAMESPACE(TxCON).TMRx(CS) = 0b00;
 			break;
 	}
 }
@@ -54,30 +54,30 @@ static void NAMESPACE(selectClockSource)(int source) {
 static void NAMESPACE(setPrescalerValue)(uint16_t division) {
 	switch (division) {
 		case 1:
-			NAMESPACE(txcon).T1CKPS = 0b00;
+			NAMESPACE(TxCON).Tx(CKPS) = 0b00;
 			break;
 		case 2:
-			NAMESPACE(txcon).T1CKPS = 0b01;
+			NAMESPACE(TxCON).Tx(CKPS) = 0b01;
 			break;
 		case 4:
-			NAMESPACE(txcon).T1CKPS = 0b10;
+			NAMESPACE(TxCON).Tx(CKPS) = 0b10;
 			break;
 		case 8:
-			NAMESPACE(txcon).T1CKPS = 0b11;
+			NAMESPACE(TxCON).Tx(CKPS) = 0b11;
 			break;
 	}
 }
 
 static void NAMESPACE(setCount)(uint16_t count) {
-	NAMESPACE(txcon).T1RD16 = 1;
-	NAMESPACE(tmrl) = count;
-	NAMESPACE(tmrh) = count << 8;
+	NAMESPACE(TxCON).Tx(RD16) = 1;
+	NAMESPACE(TMRxL).TMRx(L) = count;
+	NAMESPACE(TMRxH).TMRx(H) = count << 8;
 }
 
 static uint16_t NAMESPACE(getCount)() {
-	NAMESPACE(txcon).T1RD16 = 1;
-	uint8_t tmrl = NAMESPACE(tmrl);
-	uint8_t tmrh = NAMESPACE(tmrh);
+	NAMESPACE(TxCON).Tx(RD16) = 1;
+	uint8_t tmrl = NAMESPACE(TMRxL).TMRx(L);
+	uint8_t tmrh = NAMESPACE(TMRxH).TMRx(H);
 	return tmrl + ((uint16_t)tmrh << 8);
 }
 
@@ -99,7 +99,7 @@ static TimerModule NAMESPACE(timerModule) = {
 #elif IS_8BIT_TIMER /* 8 bit Timer */
 static void NAMESPACE(setPostscalerValue)(uint16_t division) {
 	if (divition >= 0 && division <= 16) {
-		NAMESPACE(txcon).T2OUTPS = division;
+		NAMESPACE(TxCON).T2OUTPS = division;
 	}
 }
 
@@ -107,7 +107,14 @@ static void NAMESPACE(setPostscalerValue)(uint16_t division) {
 
 #endif
 
+TimerModule* NAMESPACE(getter)() {
+	return &NAMESPACE(timerModule);
+}
 
 #undef IS_16BIT_TIMER
 #undef IS_8BIT_TIMER
+#undef NAMESPACE
+#undef TMRx
+#undef Tx
+
 #endif /* USING_TIMER_MODULE_SUBSTANCE */
