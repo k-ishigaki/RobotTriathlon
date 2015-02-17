@@ -22,6 +22,9 @@ static void NAMESPACE(addInterruptListener)(TimerModuleInterruptListener* listen
 }
 
 static void NAMESPACE(enableInterrupt)() {
+	// 割り込みを有効にする前にTMRxL, TMRxH, TMRxIFはクリアしなければならない
+	NAMESPACE(TMRxL).TMRx(L) = 0;
+	NAMESPACE(TMRxH).TMRx(H) = 0;
 	NAMESPACE(PIRx).TMRx(IF) = 0;
 	NAMESPACE(PIEx).TMRx(IE) = 1;
 }
@@ -29,6 +32,17 @@ static void NAMESPACE(enableInterrupt)() {
 static void NAMESPACE(disableInterrupt)() {
 	NAMESPACE(PIEx).TMRx(IE) = 0;
 	NAMESPACE(PIRx).TMRx(IF) = 0;
+}
+
+static void NAMESPACE(setInterruptPriority)(int priority) {
+	switch ((Hardware_InterruptPriority)priority) {
+		case LOW_PRIORITY:
+			NAMESPACE(IPRx).TMRx(IP) = 0;
+			break;
+		case HIGH_PRIORITY:
+			NAMESPACE(IPRx).TMRx(IP) = 1;
+			break;
+	}
 }
 
 #ifdef IS_16BIT_TIMER /* 16 bit Timer */
@@ -88,6 +102,7 @@ static TimerModule NAMESPACE(timerModule) = {
 	NAMESPACE(addInterruptListener),
 	NAMESPACE(enableInterrupt),
 	NAMESPACE(disableInterrupt),
+	NAMESPACE(setInterruptPriority),
 	NAMESPACE(selectClockSource),
 	NAMESPACE(setPrescalerValue),
 	NULL,
@@ -109,6 +124,15 @@ static void NAMESPACE(setPostscalerValue)(uint16_t division) {
 
 TimerModule* NAMESPACE(getter)() {
 	return &NAMESPACE(timerModule);
+}
+
+void NAMESPACE(handleInterrupt)() {
+	if (NAMESPACE(PIEx).TMRx(IE) == 1 && NAMESPACE(PIRx).TMRx(IF) == 1) {
+		// フラグは手動でクリアする必要がある
+		NAMESPACE(PIRx).TMRx(IF) = 0;
+		// タイマの値を取得する
+		NAMESPACE(listener)->onInterrupt();
+	}
 }
 
 #undef IS_16BIT_TIMER
