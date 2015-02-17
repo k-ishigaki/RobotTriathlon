@@ -17,6 +17,7 @@
 #define Timer1_TMRxH TMR1Hbits
 #define Timer1_PIEx PIE1bits
 #define Timer1_PIRx PIR1bits
+#define Timer1_IPRx IPR1bits
 // getter function name
 #define Timer1_getter getTimer1
 // string concatenation
@@ -35,6 +36,7 @@
 #define Timer3_TMRxH TMR3Hbits
 #define Timer3_PIEx PIE2bits
 #define Timer3_PIRx PIR2bits
+#define Timer3_IPRx IPR2bits
 // getter function name
 #define Timer3_getter getTimer3
 // string concatenation
@@ -53,6 +55,7 @@
 #define Timer5_TMRxH TMR5Hbits
 #define Timer5_PIEx PIE5bits
 #define Timer5_PIRx PIR5bits
+#define Timer5_IPRx IPR5bits
 // getter function name
 #define Timer5_getter getTimer5
 // string concatenation
