@@ -11,42 +11,47 @@
 // EUSART.substance.cをインクルードするのに必要
 #define USING_EUSART_SUBSTANCE
 
-#define EUSART1_rcsta RCSTA1bits
-#define EUSART1_txsta TXSTA1bits
-#define EUSART1_baudcon BAUDCON1bits
-#define EUSART1_spbrg SPBRG1
-#define EUSART1_spbrgh SPBRGH1
-#define EUSART1_rcreg RCREG1
-#define EUSART1_txreg TXREG1
-#define EUSART1_rcif PIR1bits.RC1IF
-#define EUSART1_txif PIR1bits.TX1IF
-#define EUSART1_rcie PIE1bits.RC1IE
-#define EUSART1_txie PIE1bits.TX1IE
-
-#define EUSART2_rcsta RCSTA2bits
-#define EUSART2_txsta TXSTA2bits
-#define EUSART2_baudcon BAUDCON2bits
-#define EUSART2_spbrg SPBRG2
-#define EUSART2_spbrgh SPBRGH2
-#define EUSART2_rcreg RCREG2
-#define EUSART2_txreg TXREG2
-#define EUSART2_rcif PIR3bits.RC2IF
-#define EUSART2_txif PIR3bits.TX2IF
-#define EUSART2_rcie PIE3bits.RC2IE
-#define EUSART2_txie PIE3bits.TX2IE
-
+// Eusart1
+// register
+#define EUSART1_RCSTAx RCSTA1bits
+#define EUSART1_TXSTAx TXSTA1bits
+#define EUSART1_BAUDCONx BAUDCON1bits
+#define EUSART1_SPBRGx SPBRG1bits
+#define EUSART1_SPBRGHx SPBRGH1bits
+#define EUSART1_RCREGx RCREG1bits
+#define EUSART1_TXREGx TXREG1bits
+#define EUSART1_PIRx PIR1bits
+#define EUSART1_PIEx PIE1bits
+#define EUSART1_IPRx IPR1bits
+// getter function name
+#define EUSART1_getter getEUSART1
+// string concatenation
+#define RCx(name) RC1##name
+#define TXx(name) TX1##name
+#define SPx(name) SP1##name
 #define NAMESPACE(name) EUSART1_##name
-#include "EUSART.substance.c"
-Eusart* getEUSART() {
-	return (Eusart*)&NAMESPACE(eusart);
-}
-Eusart* getEUSART1() {
-	return (Eusart*)&NAMESPACE(eusart);
-}
 
-#undef NAMESPACE
-#define NAMESPACE(name) EUSART2_##name
 #include "EUSART.substance.c"
-Eusart* getEUSART2() {
-	return (Eusart*)&NAMESPACE(eusart);
-}
+
+// Eusart2
+// register
+#define EUSART2_RCSTAx RCSTA2bits
+#define EUSART2_TXSTAx TXSTA2bits
+#define EUSART2_BAUDCONx BAUDCON2bits
+#define EUSART2_SPBRGx SPBRG2bits
+#define EUSART2_SPBRGHx SPBRGH2bits
+#define EUSART2_RCREGx RCREG2bits
+#define EUSART2_TXREGx TXREG2bits
+#define EUSART2_PIRx PIR3bits
+#define EUSART2_PIEx PIE3bits
+#define EUSART2_IPRx IPR3bits
+// getter function name
+#define EUSART2_getter getEUSART2
+// string concatenation
+#define RCx(name) RC2##name
+#define TXx(name) TX2##name
+#define SPx(name) SP2##name
+#define NAMESPACE(name) EUSART2_##name
+
+#include "EUSART.substance.c"
+
