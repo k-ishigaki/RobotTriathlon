@@ -10,9 +10,9 @@
 typedef struct {
 	/**
 	 * 割り込みハンドラ
-	 * @return 割り込み時のカウンタ値
+	 * オーバーフロー割り込みのみをサポート
 	 */
-	void (*onInterrupt)(uint16_t);
+	void (*onInterrupt)(void);
 } TimerModuleInterruptListener;
 
 /**
