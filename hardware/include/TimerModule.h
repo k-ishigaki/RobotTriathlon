@@ -44,6 +44,11 @@ typedef struct {
 	 * 割り込みを無効にする
 	 */
 	void (*disableInterrupt)(void);
+	/**
+	 * 割り込みの優先度を設定する
+	 * 優先度に指定できる列挙型定数はHardware.hで定義
+	 */
+	void (*setInterruptPriority)(int);
 	// --------- これ以降は各モジュール依存 ----------
 	/**
 	 * タイマのクロックソースを指定する
