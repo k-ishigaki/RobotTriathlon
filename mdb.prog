@@ -1,7 +1,6 @@
 Device PIC18F26K22
-set poweroptions.powerenable true
 set voltagevalue 5.0
-set system.disableerrormsg false
+set system.disableerrormsg true
 Hwtool PICkit3 -p
 Program "./bin/release.hex"
 Quit
