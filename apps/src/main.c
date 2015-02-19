@@ -16,7 +16,7 @@ void setup(void);
 void loop(void);
 
 // instance of Object
-DigitalPin* led;
+DigitalOutputPin* led;
 SerialPort* serial;
 TimerModule* timer;
 
@@ -49,8 +49,7 @@ void setup() {
 	osc->getInternalOscillator()->setFrequency(16000000L);
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
-	led = getRA0()->getDigitalPin();
-	led->setDigitalOutput();
+	led = getRA0()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),

@@ -126,8 +126,8 @@ SerialPort* getSerialPort(
 		unsigned long baudRate) {
 	NAMESPACE(uart) = uart;
 	// rxのピンもデジタル入力にする必要がある
-	rxPin->setDigitalInput();
-	txPin->setDigitalInput();
+	rxPin->setDirection(false);
+	txPin->setDirection(false);
 	NAMESPACE(uart)->setBaudRate(baudRate);
 	NAMESPACE(uart)->enable();
 	NAMESPACE(uart)->addInterruptListener(&NAMESPACE(listener));

@@ -9,22 +9,44 @@
 
 typedef struct {
 	/**
-	 * デジタル入力に設定する
+	 * ピンの状態を取得する
+	 * @return HIGHならtrue，LOWならfalse
 	 */
-	void (*setDigitalInput)(void);
+	bool (*getValue)(void);
+} DigitalPullupedInputPin;
+
+typedef struct {
 	/**
-	 * デジタル出力に設定する
+	 * ピンの状態を取得する
+	 * @return HIGHならtrue，LOWならfalse
 	 */
-	void (*setDigitalOutput)(void);
+	bool (*getValue)(void);
 	/**
-	 * 内部プルアップを有効にする
-	 * 有効にするためにはINTCONxでポートごとの内部プルアップを有効にする必要がある
+	 * プルアップ入力ピンを取得する
+	 * @return DigitalPullupedInputPinのインターフェース
 	 */
-	void (*enableInternalPullup)(void);
+	DigitalPullupedInputPin* (*getPullupedPin)(void);
+} DigitalInputPin;
+
+typedef struct {
 	/**
-	 * 内部プルアップを無効にする
+	 * 出力状態を取得する
+	 * @return HIGHならtrue，LOWならfalse
 	 */
-	void (*disableInternalPullup)(void);
+	bool (*getValue)(void);
+	/**
+	 * 出力状態を設定する
+	 * @param trueならHIGH，falseならLOWを設定
+	 */
+	void (*setValue)(bool);
+} DigitalOutputPin;
+
+typedef struct {
+	/**
+	 * 入出力の方向を設定する
+	 * @param 方向，trueで出力，falseで入力
+	 */
+	void (*setDirection)(bool);
 	/**
 	 * ピンの状態を取得する
 	 * 出力に設定されているときは出力状態を，
@@ -41,18 +63,26 @@ typedef struct {
 
 typedef struct {
 	/**
-	 * アナログ入力に設定する
+	 * 入出力方向を設定する
+	 * DAC出力を行うときに一応呼び出すこと（ほとんどの場合は呼ぶ必要はないが）
+	 * @param 方向，trueで出力，falseで入力
 	 */
-	void (*setAnalogInput)(void);
-	/**
-	 * アナログ出力に設定する
-	 */
-	void (*setAnalogOutput)(void);
+	void (*setDirection)(bool);
 } AnalogPin;
 
 typedef struct {
 	/**
-	 * デジタルピンのインターフェースを取得
+	 * デジタル入力ピンを取得
+	 * @return DigitalInputPinインターフェース
+	 */
+	DigitalInputPin* (*getDigitalInputPin)(void);
+	/**
+	 * デジタル出力ピンを取得
+	 * @return DigitalOutputPinインターフェース，持っていない場合はNULL
+	 */
+	DigitalOutputPin* (*getDigitalOutputPin)(void);
+	/**
+	 * デジタルピン（入出力可能ピン）を取得
 	 * @return DigitalPinインターフェース
 	 */
 	DigitalPin* (*getDigitalPin)(void);
