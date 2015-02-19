@@ -17,8 +17,14 @@ typedef struct {
 	 */
 	void (*setDigitalOutput)(void);
 	/**
+	 * 内部プルアップを有効にする
+	 */
+	//void (*enableInternalPullup)(void);
+	/**
 	 * ピンの状態を取得する
-	 * @return PORTの値、LOWならfalse、HIGHならtrue
+	 * 出力に設定されているときは出力状態を，
+	 * 入力に設定されているときは入力状態を返す
+	 * @return LOWならfalse、HIGHならtrue
 	 */
 	bool (*getValue)(void);
 	/**
