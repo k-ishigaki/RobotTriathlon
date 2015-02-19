@@ -7,7 +7,7 @@
 #define TIMER_MODULE_H
 
 /**
- * TimerModuleの割り込みリスナ
+ * 割り込みリスナ
  */
 typedef struct {
 	/**
@@ -17,6 +17,9 @@ typedef struct {
 	void (*onInterrupt)(void);
 } TimerModule_InterruptListener;
 
+/**
+ * 割り込みコントローラ
+ */
 typedef struct {
 	/**
 	 * 割り込みを有効にする
@@ -38,6 +41,9 @@ typedef struct {
 	void (*addInterruptListener)(TimerModule_InterruptListener*);
 } TimerModule_InterruptController;
 
+/**
+ * 8ビットタイマ
+ */
 typedef struct {
 	/**
 	 * カウント値を取得する
@@ -68,6 +74,9 @@ typedef struct {
 	void (*setPeriodCount)(uint8_t);
 } TimerModule_8bitTimer;
 
+/**
+ * 16ビットタイマ
+ */
 typedef struct {
 	/**
 	 * カウント値を取得する
@@ -88,7 +97,7 @@ typedef struct {
 } TimerModule_16bitTimer;
 
 /**
- * TimerModuleのインターフェース
+ * タイマモジュール
  */
 typedef struct {
 	/**
