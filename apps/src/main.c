@@ -18,6 +18,22 @@ void loop(void);
 // instance of Object
 DigitalPin* led;
 SerialPort* serial;
+TimerModule* timer;
+
+
+static void onTimerInterrupt() {
+	static int count = 0;
+	// 30回毎にLEDを点滅させる
+	
+	count++;
+	if (count == 30) {
+		count = 0;
+	}
+}
+
+static TimerModuleInterruptListener listener = {
+	onTimerInterrupt,
+};
 
 int main(void) {
 	setup();
@@ -41,6 +57,15 @@ void setup() {
 			getRC6()->getDigitalPin(),
 			getEUSART1(),
 			115200);
+	// Timer settings
+	// テストとして約30Hzで割り込みさせる
+	timer = getTimer1();
+	timer->selectClockSource(INSTRUCTION_CLOCK);
+	timer->setPrescalerValue(8);
+	timer->addInterruptListener(&listener);
+	timer->setInterruptPriority(LOW_PRIORITY);
+	timer->enableInterrupt();
+	timer->enable();
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -53,6 +78,7 @@ void interrupt high_priority isr_high() {
 
 void interrupt low_priority isr_low() {
 	EUSART1_handleInterrupt();
+	Timer1_handleInterrupt();
 }
 
 void loop() {
