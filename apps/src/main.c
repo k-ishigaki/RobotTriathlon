@@ -61,10 +61,10 @@ void setup() {
 	// テストとして約30Hzで割り込みさせる
 	timer = getTimer1();
 	timer->selectClockSource(INSTRUCTION_CLOCK);
-	timer->setPrescalerValue(8);
-	timer->addInterruptListener(&listener);
-	timer->setInterruptPriority(LOW_PRIORITY);
-	timer->enableInterrupt();
+	timer->get16bitTimer()->setPrescalerValue(8);
+	timer->getInterruptController()->addInterruptListener(&listener);
+	timer->getInterruptController()->setInterruptPriority(LOW_PRIORITY);
+	timer->getInterruptController()->enableInterrupt();
 	timer->enable();
 	// interrupt settings
 	RCONbits.IPEN = 1;

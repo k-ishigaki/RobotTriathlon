@@ -1,5 +1,7 @@
 /*
  * タイマモジュールのインターフェース定義
+ * 8ビットタイマと16ビットタイマでインターフェースが異なるので
+ * 分けている
  */
 #ifndef TIMER_MODULE_H
 #define TIMER_MODULE_H
@@ -15,27 +17,7 @@ typedef struct {
 	void (*onInterrupt)(void);
 } TimerModule_InterruptListener;
 
-/**
- * TimerModuleのインターフェース
- */
 typedef struct {
-	/**
-	 * タイマを有効にする
-	 */
-	void (*enable)(void);
-	/**
-	 * タイマを無効にする
-	 */
-	void (*disable)(void);
-	/**
-	 * タイマをリセットする
-	 */
-	void (*reset)(void);
-	/**
-	 * 割り込みリスナを登録する
-	 * @param 割り込みリスナ
-	 */
-	void (*addInterruptListener)(TimerModule_InterruptListener*);
 	/**
 	 * 割り込みを有効にする
 	 */
@@ -49,7 +31,74 @@ typedef struct {
 	 * 優先度に指定できる列挙型定数はHardware.hで定義
 	 */
 	void (*setInterruptPriority)(int);
-	// --------- これ以降は各モジュール依存 ----------
+	/**
+	 * 割り込みリスナを登録する
+	 * @param 割り込みリスナ
+	 */
+	void (*addInterruptListener)(TimerModule_InterruptListener*);
+} TimerModule_InterruptController;
+
+typedef struct {
+	/**
+	 * カウント値を取得する
+	 * @return 取得したカウント値
+	 */
+	uint8_t (*getCount)(void);
+	/**
+	 * カウント値を設定する
+	 * @param 設定するカウント値
+	 */
+	void (*setCount)(uint8_t);
+	/**
+	 * プレスケーラ値を設定する
+	 * 対応している値はデータシートを参照すること
+	 * @param プレスケーラ値，無効な値の時は何もしない
+	 */
+	void (*setPrescalerValue)(uint8_t);
+	/**
+	 * ポストスケーラ値を設定する
+	 * 対応している値はデータシートを参照すること
+	 * @param ポストスケーラ値，無効な値の時は何もしない
+	 */
+	void (*setPostscalerValue)(uint16_t);
+	/**
+	 * 割り込み時カウンタ値を設定する
+	 * @param 割り込み時カウンタ値
+	 */
+	void (*setPeriodCount)(uint8_t);
+} TimerModule_8bitTimer;
+
+typedef struct {
+	/**
+	 * カウント値を取得する
+	 * @return 取得したカウント値
+	 */
+	uint16_t (*getCount)(void);
+	/**
+	 * カウント値を設定する
+	 * @param 設定するカウント値
+	 */
+	void (*setCount)(uint16_t);
+	/**
+	 * プレスケーラ値を設定する
+	 * 対応している値はデータシートを参照すること
+	 * @param プレスケーラ値，無効な値の時は何もしない
+	 */
+	void (*setPrescalerValue)(uint8_t);
+} TimerModule_16bitTimer;
+
+/**
+ * TimerModuleのインターフェース
+ */
+typedef struct {
+	/**
+	 * タイマを有効にする
+	 */
+	void (*enable)(void);
+	/**
+	 * タイマを無効にする
+	 */
+	void (*disable)(void);
 	/**
 	 * タイマのクロックソースを指定する
 	 * 引数にはHardware.hの列挙型定数を入れること
@@ -57,33 +106,20 @@ typedef struct {
 	 */
 	void (*selectClockSource)(int);
 	/**
-	 * プリスケーラ値を設定する
-	 * 対応しているプリスケーラ値はデータシートまたはソースコードで確認すること
-	 * @param プリスケーラ値
+	 * 割り込みコントローラを取得する
+	 * @return TimerModule_InterruptControllerのインスタンス
 	 */
-	void (*setPrescalerValue)(uint16_t);
+	TimerModule_InterruptController* (*getInterruptController)(void);
 	/**
-	 * ポストスケーラ値を設定する
-	 * 対応しているポストスケーラ値はデータシートまたはソースコードで確認すること
-	 * @param ポストスケーラ値
+	 * 8ビットタイマを取得する
+	 * @return TimerModule_8bitTimerのインスタンス
 	 */
-	void (*setPostscalerValue)(uint16_t);
+	TimerModule_8bitTimer* (*get8bitTimer)(void);
 	/**
-	 * カウント値を設定する
-	 * 8ビットと16ビットで設定できる値の範囲が異なることに注意
-	 * @param カウント値
+	 * 16ビットタイマを取得する
+	 * @return TimerModule_16bitTimerのインスタンス
 	 */
-	void (*setCount)(uint16_t);
-	/**
-	 * カウント値を取得する
-	 * @return カウント値
-	 */
-	uint16_t (*getCount)(void);
-	/**
-	 * 割り込み時カウンタ値を設定する
-	 * @param 割り込み時カウンタ値
-	 */
-	void (*setPeriodCount)(uint16_t);
+	TimerModule_16bitTimer* (*get16bitTimer)(void);
 } TimerModule;
 
 #endif /* TIMER_MODULE_H */
