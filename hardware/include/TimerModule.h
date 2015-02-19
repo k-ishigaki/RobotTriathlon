@@ -13,7 +13,7 @@ typedef struct {
 	 * オーバーフロー割り込みのみをサポート
 	 */
 	void (*onInterrupt)(void);
-} TimerModuleInterruptListener;
+} TimerModule_InterruptListener;
 
 /**
  * TimerModuleのインターフェース
@@ -35,7 +35,7 @@ typedef struct {
 	 * 割り込みリスナを登録する
 	 * @param 割り込みリスナ
 	 */
-	void (*addInterruptListener)(TimerModuleInterruptListener*);
+	void (*addInterruptListener)(TimerModule_InterruptListener*);
 	/**
 	 * 割り込みを有効にする
 	 */

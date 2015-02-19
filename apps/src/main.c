@@ -31,7 +31,7 @@ static void onTimerInterrupt() {
 	}
 }
 
-static TimerModuleInterruptListener listener = {
+static TimerModule_InterruptListener listener = {
 	onTimerInterrupt,
 };
 
