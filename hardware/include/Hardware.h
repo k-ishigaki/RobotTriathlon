@@ -121,9 +121,9 @@ TimerModule* getTimer6(void);
 /**
  * Timerxの割り込みハンドラ
  */
-void Timer1_handleInterrpt(void);
-void Timer3_handleInterrpt(void);
-void Timer5_handleInterrpt(void);
+void Timer1_handleInterrupt(void);
+void Timer3_handleInterrupt(void);
+void Timer5_handleInterrupt(void);
 
 /**
  * Timer ModuleのselectClockSourceの引数に指定できる列挙型
