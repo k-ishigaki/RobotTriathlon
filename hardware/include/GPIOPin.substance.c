@@ -6,45 +6,45 @@
 
 static void NAMESPACE(setDigitalInput)() {
 	// input
-	NAMESPACE(tris) = 1;
+	NAMESPACE(TRISx) = 1;
 #ifdef HAS_ANALOG_INTERFACE
 	// digital
-	NAMESPACE(ansel) = 0;
-#endif
+	NAMESPACE(ANSELx) = 0;
+#endif /* HAS_ANALOG_INTERFACE */
 }
 
 static void NAMESPACE(setDigitalOutput)() {
 	// output
-	NAMESPACE(tris) = 0;
+	NAMESPACE(TRISx) = 0;
 #ifdef HAS_ANALOG_INTERFACE
 	// digital
-	NAMESPACE(ansel) = 0;
-#endif
+	NAMESPACE(ANSELx) = 0;
+#endif /* HAS_ANALOG_INTERFACE */
 }
 
 static unsigned char NAMESPACE(getValue)() {
-	return NAMESPACE(port);
+	return NAMESPACE(PORTx);
 }
 
 static void NAMESPACE(setValue)(unsigned char value) {
-	NAMESPACE(lat) = value;
+	NAMESPACE(LATx) = value;
 }
 
 #ifdef HAS_ANALOG_INTERFACE
 static void NAMESPACE(setAnalogInput)() {
 	// input
-	NAMESPACE(tris) = 1;
+	NAMESPACE(TRISx) = 1;
 	// analog
-	NAMESPACE(ansel) = 1;
+	NAMESPACE(ANSELx) = 1;
 }
 
 static void NAMESPACE(setAnalogOutput)() {
 	// output
-	NAMESPACE(tris) = 0;
+	NAMESPACE(TRISx) = 0;
 	// analog
-	NAMESPACE(ansel) = 1;
+	NAMESPACE(ANSELx) = 1;
 }
-#endif
+#endif /* HAS_ANALOG_INTERFACE */
 
 static DigitalPin NAMESPACE(digitalPin) = {
 	NAMESPACE(setDigitalInput),
@@ -58,7 +58,7 @@ static AnalogPin NAMESPACE(analogPin) = {
 	NAMESPACE(setAnalogInput),
 	NAMESPACE(setAnalogOutput),
 };
-#endif
+#endif /* HAS_ANALOG_INTERFACE */
 
 static DigitalPin* NAMESPACE(getDigitalPin)() {
 	return &NAMESPACE(digitalPin);
@@ -68,7 +68,7 @@ static DigitalPin* NAMESPACE(getDigitalPin)() {
 static AnalogPin* NAMESPACE(getAnalogPin)() {
 	return &NAMESPACE(analogPin);
 }
-#endif
+#endif /* HAS_ANALOG_INTERFACE */
 
 static GPIOPin NAMESPACE(gpioPin) = {
 	NAMESPACE(getDigitalPin),
@@ -76,9 +76,9 @@ static GPIOPin NAMESPACE(gpioPin) = {
 	NAMESPACE(getAnalogPin),
 #else
 	NULL,
-#endif
+#endif /* HAS_ANALOG_INTERFACE */
 };
 
 #undef HAS_ANALOG_INTERFACE
 
-#endif
+#endif /* USING_GPIO_PIN_SUBSTANCE */

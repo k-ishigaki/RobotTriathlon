@@ -7,42 +7,42 @@
 
 #define USING_GPIO_PIN_SUBSTANCE
 
-#define RA0_tris TRISAbits.TRISA0
-#define RA0_ansel ANSELAbits.ANSA0
-#define RA0_port PORTAbits.RA0
-#define RA0_lat LATAbits.LATA0
+#define RA0_TRISx TRISAbits.TRISA0
+#define RA0_ANSELx ANSELAbits.ANSA0
+#define RA0_PORTx PORTAbits.RA0
+#define RA0_LATx LATAbits.LATA0
 
-#define RA1_tris TRISAbits.TRISA1
-#define RA1_ansel ANSELAbits.ANSA1
-#define RA1_port PORTAbits.RA1
-#define RA1_lat LATAbits.LATA1
+#define RA1_TRISx TRISAbits.TRISA1
+#define RA1_ANSELx ANSELAbits.ANSA1
+#define RA1_PORTx PORTAbits.RA1
+#define RA1_LATx LATAbits.LATA1
 
-#define RA2_tris TRISAbits.TRISA2
-#define RA2_ansel ANSELAbits.ANSA2
-#define RA2_port PORTAbits.RA2
-#define RA2_lat LATAbits.LATA2
+#define RA2_TRISx TRISAbits.TRISA2
+#define RA2_ANSELx ANSELAbits.ANSA2
+#define RA2_PORTx PORTAbits.RA2
+#define RA2_LATx LATAbits.LATA2
 
-#define RA3_tris TRISAbits.TRISA3
-#define RA3_ansel ANSELAbits.ANSA3
-#define RA3_port PORTAbits.RA3
-#define RA3_lat LATAbits.LATA3
+#define RA3_TRISx TRISAbits.TRISA3
+#define RA3_ANSELx ANSELAbits.ANSA3
+#define RA3_PORTx PORTAbits.RA3
+#define RA3_LATx LATAbits.LATA3
 
-#define RA4_tris TRISAbits.TRISA4
-#define RA4_port PORTAbits.RA4
-#define RA4_lat LATAbits.LATA4
+#define RA4_TRISx TRISAbits.TRISA4
+#define RA4_PORTx PORTAbits.RA4
+#define RA4_LATx LATAbits.LATA4
 
-#define RA5_tris TRISAbits.TRISA5
-#define RA5_ansel ANSELAbits.ANSA5
-#define RA5_port PORTAbits.RA5
-#define RA5_lat LATAbits.LATA5
+#define RA5_TRISx TRISAbits.TRISA5
+#define RA5_ANSELx ANSELAbits.ANSA5
+#define RA5_PORTx PORTAbits.RA5
+#define RA5_LATx LATAbits.LATA5
 
-#define RA6_tris TRISAbits.TRISA6
-#define RA6_port PORTAbits.RA6
-#define RA6_lat LATAbits.LATA6
+#define RA6_TRISx TRISAbits.TRISA6
+#define RA6_PORTx PORTAbits.RA6
+#define RA6_LATx LATAbits.LATA6
 
-#define RA7_tris TRISAbits.TRISA7
-#define RA7_port PORTAbits.RA7
-#define RA7_lat LATAbits.LATA7
+#define RA7_TRISx TRISAbits.TRISA7
+#define RA7_PORTx PORTAbits.RA7
+#define RA7_LATx LATAbits.LATA7
 
 #undef NAMESPACE
 #define NAMESPACE(name) RA0_##name
@@ -105,43 +105,43 @@ GPIOPin* getRA7() {
 	return &NAMESPACE(gpioPin);
 }
 
-#define RB0_tris TRISBbits.TRISB0
-#define RB0_ansel ANSELBbits.ANSB0
-#define RB0_port PORTBbits.RB0
-#define RB0_lat LATBbits.LATB0
+#define RB0_TRISx TRISBbits.TRISB0
+#define RB0_ANSELx ANSELBbits.ANSB0
+#define RB0_PORTx PORTBbits.RB0
+#define RB0_LATx LATBbits.LATB0
 
-#define RB1_tris TRISBbits.TRISB1
-#define RB1_ansel ANSELBbits.ANSB1
-#define RB1_port PORTBbits.RB1
-#define RB1_lat LATBbits.LATB1
+#define RB1_TRISx TRISBbits.TRISB1
+#define RB1_ANSELx ANSELBbits.ANSB1
+#define RB1_PORTx PORTBbits.RB1
+#define RB1_LATx LATBbits.LATB1
 
-#define RB2_tris TRISBbits.TRISB2
-#define RB2_ansel ANSELBbits.ANSB2
-#define RB2_port PORTBbits.RB2
-#define RB2_lat LATBbits.LATB2
+#define RB2_TRISx TRISBbits.TRISB2
+#define RB2_ANSELx ANSELBbits.ANSB2
+#define RB2_PORTx PORTBbits.RB2
+#define RB2_LATx LATBbits.LATB2
 
-#define RB3_tris TRISBbits.TRISB3
-#define RB3_ansel ANSELBbits.ANSB3
-#define RB3_port PORTBbits.RB3
-#define RB3_lat LATBbits.LATB3
+#define RB3_TRISx TRISBbits.TRISB3
+#define RB3_ANSELx ANSELBbits.ANSB3
+#define RB3_PORTx PORTBbits.RB3
+#define RB3_LATx LATBbits.LATB3
 
-#define RB4_tris TRISBbits.TRISB4
-#define RB4_ansel ANSELBbits.ANSB4
-#define RB4_port PORTBbits.RB4
-#define RB4_lat LATBbits.LATB4
+#define RB4_TRISx TRISBbits.TRISB4
+#define RB4_ANSELx ANSELBbits.ANSB4
+#define RB4_PORTx PORTBbits.RB4
+#define RB4_LATx LATBbits.LATB4
 
-#define RB5_tris TRISBbits.TRISB5
-#define RB5_ansel ANSELBbits.ANSB5
-#define RB5_port PORTBbits.RB5
-#define RB5_lat LATBbits.LATB5
+#define RB5_TRISx TRISBbits.TRISB5
+#define RB5_ANSELx ANSELBbits.ANSB5
+#define RB5_PORTx PORTBbits.RB5
+#define RB5_LATx LATBbits.LATB5
 
-#define RB6_tris TRISBbits.TRISB6
-#define RB6_port PORTBbits.RB6
-#define RB6_lat LATBbits.LATB6
+#define RB6_TRISx TRISBbits.TRISB6
+#define RB6_PORTx PORTBbits.RB6
+#define RB6_LATx LATBbits.LATB6
 
-#define RB7_tris TRISBbits.TRISB7
-#define RB7_port PORTBbits.RB7
-#define RB7_lat LATBbits.LATB7
+#define RB7_TRISx TRISBbits.TRISB7
+#define RB7_PORTx PORTBbits.RB7
+#define RB7_LATx LATBbits.LATB7
 
 #undef NAMESPACE
 #define NAMESPACE(name) RB0_##name
@@ -205,43 +205,43 @@ GPIOPin* getRB7() {
 	return &NAMESPACE(gpioPin);
 }
 
-#define RC0_tris TRISCbits.TRISC0
-#define RC0_port PORTCbits.RC0
-#define RC0_lat LATCbits.LATC0
+#define RC0_TRISx TRISCbits.TRISC0
+#define RC0_PORTx PORTCbits.RC0
+#define RC0_LATx LATCbits.LATC0
 
-#define RC1_tris TRISCbits.TRISC1
-#define RC1_port PORTCbits.RC1
-#define RC1_lat LATCbits.LATC1
+#define RC1_TRISx TRISCbits.TRISC1
+#define RC1_PORTx PORTCbits.RC1
+#define RC1_LATx LATCbits.LATC1
 
-#define RC2_tris TRISCbits.TRISC2
-#define RC2_ansel ANSELCbits.ANSC2
-#define RC2_port PORTCbits.RC2
-#define RC2_lat LATCbits.LATC2
+#define RC2_TRISx TRISCbits.TRISC2
+#define RC2_ANSELx ANSELCbits.ANSC2
+#define RC2_PORTx PORTCbits.RC2
+#define RC2_LATx LATCbits.LATC2
 
-#define RC3_tris TRISCbits.TRISC3
-#define RC3_ansel ANSELCbits.ANSC3
-#define RC3_port PORTCbits.RC3
-#define RC3_lat LATCbits.LATC3
+#define RC3_TRISx TRISCbits.TRISC3
+#define RC3_ANSELx ANSELCbits.ANSC3
+#define RC3_PORTx PORTCbits.RC3
+#define RC3_LATx LATCbits.LATC3
 
-#define RC4_tris TRISCbits.TRISC4
-#define RC4_ansel ANSELCbits.ANSC4
-#define RC4_port PORTCbits.RC4
-#define RC4_lat LATCbits.LATC4
+#define RC4_TRISx TRISCbits.TRISC4
+#define RC4_ANSELx ANSELCbits.ANSC4
+#define RC4_PORTx PORTCbits.RC4
+#define RC4_LATx LATCbits.LATC4
 
-#define RC5_tris TRISCbits.TRISC5
-#define RC5_ansel ANSELCbits.ANSC5
-#define RC5_port PORTCbits.RC5
-#define RC5_lat LATCbits.LATC5
+#define RC5_TRISx TRISCbits.TRISC5
+#define RC5_ANSELx ANSELCbits.ANSC5
+#define RC5_PORTx PORTCbits.RC5
+#define RC5_LATx LATCbits.LATC5
 
-#define RC6_tris TRISCbits.TRISC6
-#define RC6_ansel ANSELCbits.ANSC6
-#define RC6_port PORTCbits.RC6
-#define RC6_lat LATCbits.LATC6
+#define RC6_TRISx TRISCbits.TRISC6
+#define RC6_ANSELx ANSELCbits.ANSC6
+#define RC6_PORTx PORTCbits.RC6
+#define RC6_LATx LATCbits.LATC6
 
-#define RC7_tris TRISCbits.TRISC7
-#define RC7_ansel ANSELCbits.ANSC7
-#define RC7_port PORTCbits.RC7
-#define RC7_lat LATCbits.LATC7
+#define RC7_TRISx TRISCbits.TRISC7
+#define RC7_ANSELx ANSELCbits.ANSC7
+#define RC7_PORTx PORTCbits.RC7
+#define RC7_LATx LATCbits.LATC7
 
 #undef NAMESPACE
 #define NAMESPACE(name) RC0_##name
