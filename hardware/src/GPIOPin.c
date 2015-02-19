@@ -7,301 +7,347 @@
 
 #define USING_GPIO_PIN_SUBSTANCE
 
-#define RA0_TRISx TRISAbits.TRISA0
-#define RA0_ANSELx ANSELAbits.ANSA0
-#define RA0_PORTx PORTAbits.RA0
-#define RA0_LATx LATAbits.LATA0
+#define TRISxx xx(TRIS)
+#define ANSxx xx(ANS)
+#define LATxx xx(LAT)
+#define Rxx xx(R)
+#define WPUxx xx(WPU)
 
-#define RA1_TRISx TRISAbits.TRISA1
-#define RA1_ANSELx ANSELAbits.ANSA1
-#define RA1_PORTx PORTAbits.RA1
-#define RA1_LATx LATAbits.LATA1
-
-#define RA2_TRISx TRISAbits.TRISA2
-#define RA2_ANSELx ANSELAbits.ANSA2
-#define RA2_PORTx PORTAbits.RA2
-#define RA2_LATx LATAbits.LATA2
-
-#define RA3_TRISx TRISAbits.TRISA3
-#define RA3_ANSELx ANSELAbits.ANSA3
-#define RA3_PORTx PORTAbits.RA3
-#define RA3_LATx LATAbits.LATA3
-
-#define RA4_TRISx TRISAbits.TRISA4
-#define RA4_PORTx PORTAbits.RA4
-#define RA4_LATx LATAbits.LATA4
-
-#define RA5_TRISx TRISAbits.TRISA5
-#define RA5_ANSELx ANSELAbits.ANSA5
-#define RA5_PORTx PORTAbits.RA5
-#define RA5_LATx LATAbits.LATA5
-
-#define RA6_TRISx TRISAbits.TRISA6
-#define RA6_PORTx PORTAbits.RA6
-#define RA6_LATx LATAbits.LATA6
-
-#define RA7_TRISx TRISAbits.TRISA7
-#define RA7_PORTx PORTAbits.RA7
-#define RA7_LATx LATAbits.LATA7
-
-#undef NAMESPACE
+// RA0
+#define HAS_ANALOG_INTERFACE
+// register
+#define RA0_TRISx TRISAbits
+#define RA0_ANSELx ANSELAbits
+#define RA0_PORTx PORTAbits
+#define RA0_LATx LATAbits
+// getter function name
+#define RA0_getter getRA0
+// string concatenation
 #define NAMESPACE(name) RA0_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##A0
 #include "GPIOPin.substance.c"
-GPIOPin* getRA0() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA1
+#define HAS_ANALOG_INTERFACE
+// register
+#define RA1_TRISx TRISAbits
+#define RA1_ANSELx ANSELAbits
+#define RA1_PORTx PORTAbits
+#define RA1_LATx LATAbits
+// getter function name
+#define RA1_getter getRA1
+// string concatenation
 #define NAMESPACE(name) RA1_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##A1
 #include "GPIOPin.substance.c"
-GPIOPin* getRA1() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA2
+#define HAS_ANALOG_INTERFACE
+// register
+#define RA2_TRISx TRISAbits
+#define RA2_ANSELx ANSELAbits
+#define RA2_PORTx PORTAbits
+#define RA2_LATx LATAbits
+// getter function name
+#define RA2_getter getRA2
+// string concatenation
 #define NAMESPACE(name) RA2_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##A2
 #include "GPIOPin.substance.c"
-GPIOPin* getRA2() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA3
+#define HAS_ANALOG_INTERFACE
+// register
+#define RA3_TRISx TRISAbits
+#define RA3_ANSELx ANSELAbits
+#define RA3_PORTx PORTAbits
+#define RA3_LATx LATAbits
+// getter function name
+#define RA3_getter getRA3
+// string concatenation
 #define NAMESPACE(name) RA3_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##A3
 #include "GPIOPin.substance.c"
-GPIOPin* getRA3() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA4
+// register
+#define RA4_TRISx TRISAbits
+#define RA4_PORTx PORTAbits
+#define RA4_LATx LATAbits
+// getter function name
+#define RA4_getter getRA4
+// string concatenation
 #define NAMESPACE(name) RA4_##name
+#define xx(name) name##A4
 #include "GPIOPin.substance.c"
-GPIOPin* getRA4() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA5
+#define HAS_ANALOG_INTERFACE
+// register
+#define RA5_TRISx TRISAbits
+#define RA5_ANSELx ANSELAbits
+#define RA5_PORTx PORTAbits
+#define RA5_LATx LATAbits
+// getter function name
+#define RA5_getter getRA5
+// string concatenation
 #define NAMESPACE(name) RA5_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##A5
 #include "GPIOPin.substance.c"
-GPIOPin* getRA5() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA6
+// register
+#define RA6_TRISx TRISAbits
+#define RA6_PORTx PORTAbits
+#define RA6_LATx LATAbits
+// getter function name
+#define RA6_getter getRA6
+// string concatenation
 #define NAMESPACE(name) RA6_##name
+#define xx(name) name##A6
 #include "GPIOPin.substance.c"
-GPIOPin* getRA6() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RA7
+// register
+#define RA7_TRISx TRISAbits
+#define RA7_PORTx PORTAbits
+#define RA7_LATx LATAbits
+// getter function name
+#define RA7_getter getRA7
+// string concatenation
 #define NAMESPACE(name) RA7_##name
+#define xx(name) name##A7
 #include "GPIOPin.substance.c"
-GPIOPin* getRA7() {
-	return &NAMESPACE(gpioPin);
-}
 
-#define RB0_TRISx TRISBbits.TRISB0
-#define RB0_ANSELx ANSELBbits.ANSB0
-#define RB0_PORTx PORTBbits.RB0
-#define RB0_LATx LATBbits.LATB0
-
-#define RB1_TRISx TRISBbits.TRISB1
-#define RB1_ANSELx ANSELBbits.ANSB1
-#define RB1_PORTx PORTBbits.RB1
-#define RB1_LATx LATBbits.LATB1
-
-#define RB2_TRISx TRISBbits.TRISB2
-#define RB2_ANSELx ANSELBbits.ANSB2
-#define RB2_PORTx PORTBbits.RB2
-#define RB2_LATx LATBbits.LATB2
-
-#define RB3_TRISx TRISBbits.TRISB3
-#define RB3_ANSELx ANSELBbits.ANSB3
-#define RB3_PORTx PORTBbits.RB3
-#define RB3_LATx LATBbits.LATB3
-
-#define RB4_TRISx TRISBbits.TRISB4
-#define RB4_ANSELx ANSELBbits.ANSB4
-#define RB4_PORTx PORTBbits.RB4
-#define RB4_LATx LATBbits.LATB4
-
-#define RB5_TRISx TRISBbits.TRISB5
-#define RB5_ANSELx ANSELBbits.ANSB5
-#define RB5_PORTx PORTBbits.RB5
-#define RB5_LATx LATBbits.LATB5
-
-#define RB6_TRISx TRISBbits.TRISB6
-#define RB6_PORTx PORTBbits.RB6
-#define RB6_LATx LATBbits.LATB6
-
-#define RB7_TRISx TRISBbits.TRISB7
-#define RB7_PORTx PORTBbits.RB7
-#define RB7_LATx LATBbits.LATB7
-
-#undef NAMESPACE
+// RB0
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB0_TRISx TRISBbits
+#define RB0_ANSELx ANSELBbits
+#define RB0_PORTx PORTBbits
+#define RB0_LATx LATBbits
+#define RB0_WPUx WPUBbits
+// getter function name
+#define RB0_getter getRB0
+// string concatenation
 #define NAMESPACE(name) RB0_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B0
 #include "GPIOPin.substance.c"
-GPIOPin* getRB0() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB1
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB1_TRISx TRISBbits
+#define RB1_ANSELx ANSELBbits
+#define RB1_PORTx PORTBbits
+#define RB1_LATx LATBbits
+#define RB1_WPUx WPUBbits
+// getter function name
+#define RB1_getter getRB1
+// string concatenation
 #define NAMESPACE(name) RB1_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B1
 #include "GPIOPin.substance.c"
-GPIOPin* getRB1() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB2
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB2_TRISx TRISBbits
+#define RB2_ANSELx ANSELBbits
+#define RB2_PORTx PORTBbits
+#define RB2_LATx LATBbits
+#define RB2_WPUx WPUBbits
+// getter function name
+#define RB2_getter getRB2
+// string concatenation
 #define NAMESPACE(name) RB2_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B2
 #include "GPIOPin.substance.c"
-GPIOPin* getRB2() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB3
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB3_TRISx TRISBbits
+#define RB3_ANSELx ANSELBbits
+#define RB3_PORTx PORTBbits
+#define RB3_LATx LATBbits
+#define RB3_WPUx WPUBbits
+// getter function name
+#define RB3_getter getRB3
+// string concatenation
 #define NAMESPACE(name) RB3_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B3
 #include "GPIOPin.substance.c"
-GPIOPin* getRB3() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB4
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB4_TRISx TRISBbits
+#define RB4_ANSELx ANSELBbits
+#define RB4_PORTx PORTBbits
+#define RB4_LATx LATBbits
+#define RB4_WPUx WPUBbits
+// getter function name
+#define RB4_getter getRB4
+// string concatenation
 #define NAMESPACE(name) RB4_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B4
 #include "GPIOPin.substance.c"
-GPIOPin* getRB4() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB5
+#define HAS_ANALOG_INTERFACE
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB5_TRISx TRISBbits
+#define RB5_ANSELx ANSELBbits
+#define RB5_PORTx PORTBbits
+#define RB5_LATx LATBbits
+#define RB5_WPUx WPUBbits
+// getter function name
+#define RB5_getter getRB5
+// string concatenation
 #define NAMESPACE(name) RB5_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##B5
 #include "GPIOPin.substance.c"
-GPIOPin* getRB5() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB6
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB6_TRISx TRISBbits
+#define RB6_PORTx PORTBbits
+#define RB6_LATx LATBbits
+#define RB6_WPUx WPUBbits
+// getter function name
+#define RB6_getter getRB6
+// string concatenation
 #define NAMESPACE(name) RB6_##name
+#define xx(name) name##B6
 #include "GPIOPin.substance.c"
-GPIOPin* getRB6() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RB7
+#define HAS_WEAK_INTERNAL_PULLUP
+// register
+#define RB7_TRISx TRISBbits
+#define RB7_PORTx PORTBbits
+#define RB7_LATx LATBbits
+#define RB7_WPUx WPUBbits
+// getter function name
+#define RB7_getter getRB7
+// string concatenation
 #define NAMESPACE(name) RB7_##name
+#define xx(name) name##B7
 #include "GPIOPin.substance.c"
-GPIOPin* getRB7() {
-	return &NAMESPACE(gpioPin);
-}
 
-#define RC0_TRISx TRISCbits.TRISC0
-#define RC0_PORTx PORTCbits.RC0
-#define RC0_LATx LATCbits.LATC0
-
-#define RC1_TRISx TRISCbits.TRISC1
-#define RC1_PORTx PORTCbits.RC1
-#define RC1_LATx LATCbits.LATC1
-
-#define RC2_TRISx TRISCbits.TRISC2
-#define RC2_ANSELx ANSELCbits.ANSC2
-#define RC2_PORTx PORTCbits.RC2
-#define RC2_LATx LATCbits.LATC2
-
-#define RC3_TRISx TRISCbits.TRISC3
-#define RC3_ANSELx ANSELCbits.ANSC3
-#define RC3_PORTx PORTCbits.RC3
-#define RC3_LATx LATCbits.LATC3
-
-#define RC4_TRISx TRISCbits.TRISC4
-#define RC4_ANSELx ANSELCbits.ANSC4
-#define RC4_PORTx PORTCbits.RC4
-#define RC4_LATx LATCbits.LATC4
-
-#define RC5_TRISx TRISCbits.TRISC5
-#define RC5_ANSELx ANSELCbits.ANSC5
-#define RC5_PORTx PORTCbits.RC5
-#define RC5_LATx LATCbits.LATC5
-
-#define RC6_TRISx TRISCbits.TRISC6
-#define RC6_ANSELx ANSELCbits.ANSC6
-#define RC6_PORTx PORTCbits.RC6
-#define RC6_LATx LATCbits.LATC6
-
-#define RC7_TRISx TRISCbits.TRISC7
-#define RC7_ANSELx ANSELCbits.ANSC7
-#define RC7_PORTx PORTCbits.RC7
-#define RC7_LATx LATCbits.LATC7
-
-#undef NAMESPACE
+// RC0
+// register
+#define RC0_TRISx TRISCbits
+#define RC0_PORTx PORTCbits
+#define RC0_LATx LATCbits
+// getter function name
+#define RC0_getter getRC0
+// string concatenation
 #define NAMESPACE(name) RC0_##name
+#define xx(name) name##C0
 #include "GPIOPin.substance.c"
-GPIOPin* getRC0() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC1
+// register
+#define RC1_TRISx TRISCbits
+#define RC1_PORTx PORTCbits
+#define RC1_LATx LATCbits
+// getter function name
+#define RC1_getter getRC1
+// string concatenation
 #define NAMESPACE(name) RC1_##name
+#define xx(name) name##C1
 #include "GPIOPin.substance.c"
-GPIOPin* getRC1() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC2
+#define HAS_ANALOG_INTERFACE
+// register
+#define RC2_TRISx TRISCbits
+#define RC2_ANSELx ANSELCbits
+#define RC2_PORTx PORTCbits
+#define RC2_LATx LATCbits
+// getter function name
+#define RC2_getter getRC2
+// string concatenation
 #define NAMESPACE(name) RC2_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##C2
 #include "GPIOPin.substance.c"
-GPIOPin* getRC2() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC3
+#define HAS_ANALOG_INTERFACE
+// register
+#define RC3_TRISx TRISCbits
+#define RC3_ANSELx ANSELCbits
+#define RC3_PORTx PORTCbits
+#define RC3_LATx LATCbits
+// getter function name
+#define RC3_getter getRC3
+// string concatenation
 #define NAMESPACE(name) RC3_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##C3
 #include "GPIOPin.substance.c"
-GPIOPin* getRC3() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC4
+#define HAS_ANALOG_INTERFACE
+// register
+#define RC4_TRISx TRISCbits
+#define RC4_ANSELx ANSELCbits
+#define RC4_PORTx PORTCbits
+#define RC4_LATx LATCbits
+// getter function name
+#define RC4_getter getRC4
+// string concatenation
 #define NAMESPACE(name) RC4_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##C4
 #include "GPIOPin.substance.c"
-GPIOPin* getRC4() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC5
+#define HAS_ANALOG_INTERFACE
+// register
+#define RC5_TRISx TRISCbits
+#define RC5_ANSELx ANSELCbits
+#define RC5_PORTx PORTCbits
+#define RC5_LATx LATCbits
+// getter function name
+#define RC5_getter getRC5
+// string concatenation
 #define NAMESPACE(name) RC5_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##C5
 #include "GPIOPin.substance.c"
-GPIOPin* getRC5() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
+// RC6
+#define HAS_ANALOG_INTERFACE
+// register
+#define RC6_TRISx TRISCbits
+#define RC6_ANSELx ANSELCbits
+#define RC6_PORTx PORTCbits
+#define RC6_LATx LATCbits
+// getter function name
+#define RC6_getter getRC6
+// string concatenation
 #define NAMESPACE(name) RC6_##name
-#define HAS_ANALOG_INTERFACE
+#define xx(name) name##C6
 #include "GPIOPin.substance.c"
-GPIOPin* getRC6() {
-	return &NAMESPACE(gpioPin);
-}
 
-#undef NAMESPACE
-#define NAMESPACE(name) RC7_##name
+// RC7
 #define HAS_ANALOG_INTERFACE
+// register
+#define RC7_TRISx TRISCbits
+#define RC7_ANSELx ANSELCbits
+#define RC7_PORTx PORTCbits
+#define RC7_LATx LATCbits
+// getter function name
+#define RC7_getter getRC7
+// string concatenation
+#define NAMESPACE(name) RC7_##name
+#define xx(name) name##C7
 #include "GPIOPin.substance.c"
-GPIOPin* getRC7() {
-	return &NAMESPACE(gpioPin);
-}
 

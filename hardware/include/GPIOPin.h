@@ -18,8 +18,13 @@ typedef struct {
 	void (*setDigitalOutput)(void);
 	/**
 	 * 内部プルアップを有効にする
+	 * 有効にするためにはINTCONxでポートごとの内部プルアップを有効にする必要がある
 	 */
-	//void (*enableInternalPullup)(void);
+	void (*enableInternalPullup)(void);
+	/**
+	 * 内部プルアップを無効にする
+	 */
+	void (*disableInternalPullup)(void);
 	/**
 	 * ピンの状態を取得する
 	 * 出力に設定されているときは出力状態を，

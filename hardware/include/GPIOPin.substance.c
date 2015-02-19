@@ -6,49 +6,66 @@
 
 static void NAMESPACE(setDigitalInput)() {
 	// input
-	NAMESPACE(TRISx) = 1;
+	NAMESPACE(TRISx).TRISxx = 1;
 #ifdef HAS_ANALOG_INTERFACE
 	// digital
-	NAMESPACE(ANSELx) = 0;
+	NAMESPACE(ANSELx).ANSxx = 0;
 #endif /* HAS_ANALOG_INTERFACE */
 }
 
 static void NAMESPACE(setDigitalOutput)() {
 	// output
-	NAMESPACE(TRISx) = 0;
+	NAMESPACE(TRISx).TRISxx = 0;
 #ifdef HAS_ANALOG_INTERFACE
 	// digital
-	NAMESPACE(ANSELx) = 0;
+	NAMESPACE(ANSELx).ANSxx = 0;
 #endif /* HAS_ANALOG_INTERFACE */
 }
 
+#ifdef HAS_WEAK_INTERNAL_PULLUP
+static void NAMESPACE(enableInternalPullup)() {
+	NAMESPACE(WPUx).WPUxx = 1;
+}
+
+static void NAMESPACE(disableInternalPullup)() {
+	NAMESPACE(WPUx).WPUxx = 0;
+}
+#endif /* HAS_WEAK_INTERNAL_PULLUP */
+
 static unsigned char NAMESPACE(getValue)() {
-	return NAMESPACE(PORTx);
+	return NAMESPACE(PORTx).Rxx;
 }
 
 static void NAMESPACE(setValue)(unsigned char value) {
-	NAMESPACE(LATx) = value;
+	NAMESPACE(LATx).LATxx = value;
 }
 
 #ifdef HAS_ANALOG_INTERFACE
 static void NAMESPACE(setAnalogInput)() {
 	// input
-	NAMESPACE(TRISx) = 1;
+	NAMESPACE(TRISx).TRISxx = 1;
 	// analog
-	NAMESPACE(ANSELx) = 1;
+	NAMESPACE(ANSELx).ANSxx = 1;
 }
 
 static void NAMESPACE(setAnalogOutput)() {
 	// output
-	NAMESPACE(TRISx) = 0;
+	NAMESPACE(TRISx).TRISxx = 0;
 	// analog
-	NAMESPACE(ANSELx) = 1;
+	NAMESPACE(ANSELx).ANSxx = 1;
 }
 #endif /* HAS_ANALOG_INTERFACE */
 
 static DigitalPin NAMESPACE(digitalPin) = {
 	NAMESPACE(setDigitalInput),
 	NAMESPACE(setDigitalOutput),
+#ifdef HAS_WEAK_INTERNAL_PULLUP
+	NAMESPACE(enableInternalPullup),
+	NAMESPACE(disableInternalPullup),
+#else
+	NULL,
+	NULL,
+#endif /* HAS_WEAK_INTERNAL_PULLUP */
 	NAMESPACE(getValue),
 	NAMESPACE(setValue),
 };
@@ -79,6 +96,13 @@ static GPIOPin NAMESPACE(gpioPin) = {
 #endif /* HAS_ANALOG_INTERFACE */
 };
 
+GPIOPin* NAMESPACE(getter)() {
+	return &NAMESPACE(gpioPin);
+}
+
 #undef HAS_ANALOG_INTERFACE
+#undef HAS_WEAK_INTERNAL_PULLUP
+#undef NAMESPACE
+#undef xx
 
 #endif /* USING_GPIO_PIN_SUBSTANCE */
