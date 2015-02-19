@@ -72,7 +72,6 @@ static DigitalOutputPin* NAMESPACE(getDigitalOutputPin)() {
 // --------------------------------------------------------------------
 // DigitalPin
 // --------------------------------------------------------------------
-
 static bool NAMESPACE(DigitalPin_getValue)() {
 	if (NAMESPACE(TRISx).TRISxx == 1) {
 		return NAMESPACE(DigitalInputPin_getValue)();
@@ -99,7 +98,7 @@ static DigitalPin* NAMESPACE(getDigitalPin)() {
 }
 
 // --------------------------------------------------------------------
-// DigitalPin
+// AnalogPin
 // --------------------------------------------------------------------
 #ifdef HAS_ANALOG_INTERFACE
 static AnalogPin NAMESPACE(analogPin) = {
@@ -107,9 +106,7 @@ static AnalogPin NAMESPACE(analogPin) = {
 };
 
 static AnalogPin* NAMESPACE(getAnalogPin)() {
-#ifdef HAS_ANALOG_INTERFACE
 	NAMESPACE(ANSELx).ANSxx = 0;
-#endif
 	return &NAMESPACE(analogPin);
 }
 #endif
