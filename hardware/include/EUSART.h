@@ -20,7 +20,7 @@ typedef struct {
 	 * @return 次に送信するデータ、送信しない場合は0を返すこと
 	 */
 	uint8_t (*onTransmitted)(void);
-} EusartInterruptListener;
+} Eusart_InterruptListener;
 
 // EUSARTのオブジェクト
 // EUSART.cで実体を定義
@@ -48,7 +48,7 @@ typedef struct {
 	 * 登録できるのは1つだけ
 	 * @param listener EUSARTモジュールの割り込みリスナ
 	 */
-	void (*addInterruptListener)(EusartInterruptListener* listener);
+	void (*addInterruptListener)(Eusart_InterruptListener* listener);
 	/**
 	 * 受信割り込みを有効にする
 	 */

@@ -63,7 +63,7 @@ static uint8_t NAMESPACE(onTransmitted)() {
 	return nextData;
 }
 
-EusartInterruptListener NAMESPACE(listener) = {
+Eusart_InterruptListener NAMESPACE(listener) = {
 	NAMESPACE(onReceived),
 	NAMESPACE(onTransmitted),
 };

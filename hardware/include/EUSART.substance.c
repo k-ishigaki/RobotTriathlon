@@ -8,7 +8,7 @@
 // 普通のソースコードからはインクルードできないようにする
 #ifdef USING_EUSART_SUBSTANCE
 
-EusartInterruptListener* NAMESPACE(listener);
+Eusart_InterruptListener* NAMESPACE(listener);
 
 static void NAMESPACE(reset)() {
 	NAMESPACE(RCSTAx).SPEN = 0;
@@ -38,7 +38,7 @@ static void NAMESPACE(disable)() {
 	NAMESPACE(RCSTAx).CREN = 0;
 }
 
-static void NAMESPACE(addInterruptListener)(EusartInterruptListener* listener) {
+static void NAMESPACE(addInterruptListener)(Eusart_InterruptListener* listener) {
 	NAMESPACE(listener) = listener;
 }
 

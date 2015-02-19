@@ -2,7 +2,7 @@
 
 #include <xc.h>
 
-TimerModuleInterruptListener* NAMESPACE(listener);
+TimerModule_InterruptListener* NAMESPACE(listener);
 
 static void NAMESPACE(enable)() {
 	NAMESPACE(TxCON).TMRx(ON) = 1;
@@ -17,7 +17,7 @@ static void NAMESPACE(reset)() {
 	NAMESPACE(TxCON).TMRx(ON) = 1;
 }
 
-static void NAMESPACE(addInterruptListener)(TimerModuleInterruptListener* listener) {
+static void NAMESPACE(addInterruptListener)(TimerModule_InterruptListener* listener) {
 	NAMESPACE(listener) = listener;
 }
 
