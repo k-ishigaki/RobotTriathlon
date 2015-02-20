@@ -16,6 +16,7 @@ static DigitalPullupedInputPin NAMESPACE(digitalPullupedInputPin) = {
 };
 
 static DigitalPullupedInputPin* NAMESPACE(getPullupedPin)() {
+	INTCON2bits.NOT_RBPU = 0;
 	NAMESPACE(WPUx).WPUxx = 1;
 	return &NAMESPACE(digitalPullupedInputPin);
 }
