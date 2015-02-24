@@ -17,21 +17,27 @@ void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
+DigitalOutputPin* led2;
 SerialPort* serial;
 TimerModule* timer;
 
 
-static void onTimerInterrupt() {
+static uint16_t onTimerInterrupt() {
 	static int count = 0;
+	bool value;
+
 	// 30回毎にLEDを点滅させる
 	
 	count++;
 	if (count == 30) {
 		count = 0;
+		value = !led2->getValue();
+		led2->setValue(value);
 	}
+	return 0;
 }
 
-static TimerModule_InterruptListener listener = {
+static PeriodicInterruptListener listener = {
 	onTimerInterrupt,
 };
 
@@ -50,6 +56,7 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA0()->getDigitalOutputPin();
+	led2 = getRA1()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),
@@ -58,13 +65,11 @@ void setup() {
 			115200);
 	// Timer settings
 	// テストとして約30Hzで割り込みさせる
-	timer = getTimer1();
-	timer->selectClockSource(INSTRUCTION_CLOCK);
-	timer->get16bitTimer()->setPrescalerValue(8);
-	timer->getInterruptController()->addInterruptListener(&listener);
-	timer->getInterruptController()->setInterruptPriority(LOW_PRIORITY);
-	timer->getInterruptController()->enableInterrupt();
-	timer->enable();
+	timer = getTimer1(INSTRUCTION_CLOCK, SIXTEEN_BIT_TIMER_PRISCALER_1_8);
+	timer->getPeriodicInterruptController()->addInterruptListener(&listener);
+	timer->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
+	timer->getPeriodicInterruptController()->setPeriodCount(65535);
+	timer->start();
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -81,9 +86,10 @@ void interrupt low_priority isr_low() {
 }
 
 void loop() {
-	static bool value = true;
+	bool value;
+
+	value = !led->getValue();
 	led->setValue(value);
-	value = !value;
 	for (unsigned char i=0; i<100; i++) {
 		__delay_ms(10);
 	}
