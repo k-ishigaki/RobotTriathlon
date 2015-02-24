@@ -1,134 +1,82 @@
 /*
  * タイマモジュールのインターフェース定義
- * 8ビットタイマと16ビットタイマでインターフェースが異なるので
- * 分けている
+ * どのようなインターフェースを定義すればよいか推敲中
+ * とりあえず周期割り込みだけでも実装する
  */
 #ifndef TIMER_MODULE_H
 #define TIMER_MODULE_H
 
 /**
- * 割り込みリスナ
+ * 周期的割り込みリスナ
  */
 typedef struct {
 	/**
-	 * 割り込みハンドラ
-	 * オーバーフロー割り込みのみをサポート
+	 * 割り込みハンドラ．
+	 * 割り込み時に実行したい関数ポインタを登録すること．
+	 * 戻り値で次の割り込みまでのカウント数を指定する．
+	 * @return 次の割り込みまでのカウント数
 	 */
-	void (*onInterrupt)(void);
-} TimerModule_InterruptListener;
+	uint16_t (*onInterrupt)(void);
+} PeriodicInterruptListener;
 
 /**
- * 割り込みコントローラ
+ * 周期的割り込みコントローラ．
+ * カウント単位で割り込み周期を設定できる．
+ * setPeriodCountで割り込み時のカウントを設定して使うこと．
+ * 初期値はカウンタの最大値(8ビットなら255，16ビットなら65535)
+ * オーバーフローで1カウントなので，実際の周期は+1カウント．
+ * 実際に利用するにはaddInterruptListenerで割り込みリスナを登録し，
+ * enableInterruptで割り込みを有効にする必要がある．
  */
 typedef struct {
 	/**
-	 * 割り込みを有効にする
+	 * 割り込み時のカウントを設定する
+	 * @param 割り込み時のカウント，タイマのカウンタサイズによって最大値が異なることに注意
 	 */
-	void (*enableInterrupt)(void);
-	/**
-	 * 割り込みを無効にする
-	 */
-	void (*disableInterrupt)(void);
-	/**
-	 * 割り込みの優先度を設定する
-	 * 優先度に指定できる列挙型定数はHardware.hで定義
-	 */
-	void (*setInterruptPriority)(int);
+	void (*setPeriodCount)(uint16_t);
 	/**
 	 * 割り込みリスナを登録する
 	 * @param 割り込みリスナ
 	 */
-	void (*addInterruptListener)(TimerModule_InterruptListener*);
-} TimerModule_InterruptController;
-
-/**
- * 8ビットタイマ
- */
-typedef struct {
+	void (*addInterruptListener)(PeriodicInterruptListener*);
 	/**
-	 * カウント値を取得する
-	 * @return 取得したカウント値
+	 * 割り込みを有効にする
+	 * @param 優先度を表す列挙型，Hardware.hで定義
 	 */
-	uint8_t (*getCount)(void);
+	void (*enableInterrupt)(int priority);
 	/**
-	 * カウント値を設定する
-	 * @param 設定するカウント値
+	 * 割り込みを無効にする
 	 */
-	void (*setCount)(uint8_t);
-	/**
-	 * プレスケーラ値を設定する
-	 * 対応している値はデータシートを参照すること
-	 * @param プレスケーラ値，無効な値の時は何もしない
-	 */
-	void (*setPrescalerValue)(uint8_t);
-	/**
-	 * ポストスケーラ値を設定する
-	 * 対応している値はデータシートを参照すること
-	 * @param ポストスケーラ値，無効な値の時は何もしない
-	 */
-	void (*setPostscalerValue)(uint16_t);
-	/**
-	 * 割り込み時カウンタ値を設定する
-	 * @param 割り込み時カウンタ値
-	 */
-	void (*setPeriodCount)(uint8_t);
-} TimerModule_8bitTimer;
-
-/**
- * 16ビットタイマ
- */
-typedef struct {
-	/**
-	 * カウント値を取得する
-	 * @return 取得したカウント値
-	 */
-	uint16_t (*getCount)(void);
-	/**
-	 * カウント値を設定する
-	 * @param 設定するカウント値
-	 */
-	void (*setCount)(uint16_t);
-	/**
-	 * プレスケーラ値を設定する
-	 * 対応している値はデータシートを参照すること
-	 * @param プレスケーラ値，無効な値の時は何もしない
-	 */
-	void (*setPrescalerValue)(uint8_t);
-} TimerModule_16bitTimer;
+	void (*disableInterrupt)(void);
+} PeriodicInterruptController;
 
 /**
  * タイマモジュール
  */
 typedef struct {
 	/**
-	 * タイマを有効にする
+	 * タイマのカウントを有効にする．
 	 */
-	void (*enable)(void);
+	void (*start)(void);
 	/**
-	 * タイマを無効にする
+	 * タイマを一時停止する．
 	 */
-	void (*disable)(void);
+	void (*stop)(void);
 	/**
-	 * タイマのクロックソースを指定する
-	 * 引数にはHardware.hの列挙型定数を入れること
-	 * @param クロックソースを示す列挙型定数
+	 * タイマのカウントを取得する．
+	 * @return タイマの現在のカウント
 	 */
-	void (*selectClockSource)(int);
+	uint16_t (*getCount)(void);
 	/**
-	 * 割り込みコントローラを取得する
-	 * @return TimerModule_InterruptControllerのインスタンス
+	 * タイマのカウントを設定する．
+	 * @param 設定するカウント
 	 */
-	TimerModule_InterruptController* (*getInterruptController)(void);
+	void (*setCount)(uint16_t);
 	/**
-	 * 8ビットタイマを取得する
-	 * @return TimerModule_8bitTimerのインスタンス
+	 * 周期的割り込みコントローラを取得する
+	 * @return 周期的割り込みのコントローラ
 	 */
-	TimerModule_8bitTimer* (*get8bitTimer)(void);
-	/**
-	 * 16ビットタイマを取得する
-	 * @return TimerModule_16bitTimerのインスタンス
-	 */
-	TimerModule_16bitTimer* (*get16bitTimer)(void);
+	PeriodicInterruptController* (*getPeriodicInterruptController)(void);
 } TimerModule;
 
 #endif /* TIMER_MODULE_H */
