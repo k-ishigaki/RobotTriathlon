@@ -2,12 +2,33 @@
 
 #include <xc.h>
 
-// --------------------------------------------------------------------
-// TimerModule_InterruptController
-// --------------------------------------------------------------------
-TimerModule_InterruptListener* NAMESPACE(listener);
+// common variables
 
-static void NAMESPACE(enableInterrupt)() {
+// --------------------------------------------------------------------
+// PeriodicInterruptController
+// --------------------------------------------------------------------
+// field variables
+PeriodicInterruptListener* NAMESPACE(listener);
+unsigned long NAMESPACE(periodCount);
+
+// field methods
+static void NAMESPACE(setPeriodCount)(uint16_t periodCount) {
+	NAMESPACE(periodCount) = periodCount;
+}
+
+static void NAMESPACE(addInterruptListener)(PeriodicInterruptListener* listener) {
+	NAMESPACE(listener) = listener;
+}
+
+static void NAMESPACE(enableInterrupt)(int priority) {
+	switch ((Hardware_InterruptPriority)priority) {
+		case LOW_PRIORITY:
+			NAMESPACE(IPRx).TMRx(IP) = 0;
+			break;
+		case HIGH_PRIORITY:
+			NAMESPACE(IPRx).TMRx(IP) = 1;
+			break;
+	}
 	// 割り込みを有効にする前にTMRxL, TMRxH, TMRxIFはクリアしなければならない
 	NAMESPACE(TMRxL).TMRx(L) = 0;
 	NAMESPACE(TMRxH).TMRx(H) = 0;
@@ -20,74 +41,31 @@ static void NAMESPACE(disableInterrupt)() {
 	NAMESPACE(PIRx).TMRx(IF) = 0;
 }
 
-static void NAMESPACE(addInterruptListener)(TimerModule_InterruptListener* listener) {
-	NAMESPACE(listener) = listener;
-}
-
-static void NAMESPACE(setInterruptPriority)(int priority) {
-	switch ((Hardware_InterruptPriority)priority) {
-		case LOW_PRIORITY:
-			NAMESPACE(IPRx).TMRx(IP) = 0;
-			break;
-		case HIGH_PRIORITY:
-			NAMESPACE(IPRx).TMRx(IP) = 1;
-			break;
-	}
-}
-
-static TimerModule_InterruptController NAMESPACE(interruptController) = {
+// substance of interface
+static PeriodicInterruptController NAMESPACE(periodicInterruptController) = {
+	NAMESPACE(setPeriodCount),
+	NAMESPACE(addInterruptListener),
 	NAMESPACE(enableInterrupt),
 	NAMESPACE(disableInterrupt),
-	NAMESPACE(setInterruptPriority),
-	NAMESPACE(addInterruptListener),
 };
 
-static TimerModule_InterruptController* NAMESPACE(getInterruptController)() {
-	return &NAMESPACE(interruptController);
+// constructor
+static PeriodicInterruptController* NAMESPACE(getPeriodicInterruptController)() {
+	return &NAMESPACE(periodicInterruptController);
 }
+
 
 // --------------------------------------------------------------------
-// TimerModule_8bitTimer
+// TimerModule
 // --------------------------------------------------------------------
-#ifdef IS_8BIT_TIMER 
-static uint8_t NAMESPACE(getCount)() {
-	// TODO write code here
+static void NAMESPACE(start)() {
+	NAMESPACE(TxCON).TMRx(ON) = 1;
 }
 
-static void NAMESPACE(setCount)(uint8_t count) {
-	// TODO write code here
+static void NAMESPACE(stop)() {
+	NAMESPACE(TxCON).TMRx(ON) = 0;
 }
 
-static void NAMESPACE(setPrescalerValue)(uint16_t value) {
-	// TODO write code here
-}
-
-static void NAMESPACE(setPostscalerValue)(uint16_t divition) {
-	if (divition >= 0 && division <= 16) {
-		NAMESPACE(TxCON).T2OUTPS = division;
-	}
-}
-
-static void NAMESPACE(setPeriodCount)(uint8_t count) {
-	// TODO write code here
-}
-
-static TimerModule_8bitTimer NAMESPACE(8bitTimer) = {
-	NAMESPACE(getCount),
-	NAMESPACE(setCount),
-	NAMESPACE(setPrescalerValue),
-	NAMESPACE(setPostscalerValue),
-	NAMESPACE(setPeriodCount),
-}
-
-static TimerModule_8bitTimer* NAMESPACE(get8bitTimer)() {
-	return &NAMESPACE(8bitTimer);
-}
-# endif
-
-// --------------------------------------------------------------------
-// TimerModule_16bitTimer
-// --------------------------------------------------------------------
 #ifdef IS_16BIT_TIMER
 static uint16_t NAMESPACE(getCount)() {
 	NAMESPACE(TxCON).Tx(RD16) = 1;
@@ -101,49 +79,19 @@ static void NAMESPACE(setCount)(uint16_t count) {
 	NAMESPACE(TMRxL).TMRx(L) = count;
 	NAMESPACE(TMRxH).TMRx(H) = count << 8;
 }
-
-static void NAMESPACE(setPrescalerValue)(uint8_t division) {
-	switch (division) {
-		case 1:
-			NAMESPACE(TxCON).Tx(CKPS) = 0b00;
-			break;
-		case 2:
-			NAMESPACE(TxCON).Tx(CKPS) = 0b01;
-			break;
-		case 4:
-			NAMESPACE(TxCON).Tx(CKPS) = 0b10;
-			break;
-		case 8:
-			NAMESPACE(TxCON).Tx(CKPS) = 0b11;
-			break;
-	}
-}
-
-static TimerModule_16bitTimer NAMESPACE(16bitTimer) = {
-	NAMESPACE(getCount),
-	NAMESPACE(setCount),
-	NAMESPACE(setPrescalerValue),
-};
-
-static TimerModule_16bitTimer* NAMESPACE(get16bitTimer)() {
-	return &NAMESPACE(16bitTimer);
-}
 #endif
 
-// --------------------------------------------------------------------
-// TimerModule
-// --------------------------------------------------------------------
-static void NAMESPACE(enable)() {
-	NAMESPACE(TxCON).TMRx(ON) = 1;
-}
+static TimerModule NAMESPACE(timerModule) = {
+	NAMESPACE(start),
+	NAMESPACE(stop),
+	NAMESPACE(getCount),
+	NAMESPACE(setCount),
+	NAMESPACE(getPeriodicInterruptController),
+};
 
-static void NAMESPACE(disable)() {
-	NAMESPACE(TxCON).TMRx(ON) = 0;
-}
-
-static void NAMESPACE(selectClockSource)(int source) {
 #ifdef IS_16BIT_TIMER
-	switch ((TimerModule_clockSource)source) {
+TimerModule* NAMESPACE(getter)(SixteenBitTimer_ClockSource clockSource, SixteenBitTimer_Prescaler prescaler) {
+	switch (clockSource) {
 		case CRYSTAL_OSCILLATOR:
 			NAMESPACE(TxCON).Tx(SOSCEN) = 1;
 			NAMESPACE(TxCON).TMRx(CS) = 0b10;
@@ -159,33 +107,49 @@ static void NAMESPACE(selectClockSource)(int source) {
 			NAMESPACE(TxCON).TMRx(CS) = 0b00;
 			break;
 	}
-#endif
+	switch (prescaler) {
+		case SIXTEEN_BIT_TIMER_PRISCALER_1_1:
+			NAMESPACE(TxCON).Tx(CKPS) = 0b00;
+			break;
+		case SIXTEEN_BIT_TIMER_PRISCALER_1_2:
+			NAMESPACE(TxCON).Tx(CKPS) = 0b01;
+			break;
+		case SIXTEEN_BIT_TIMER_PRISCALER_1_4:
+			NAMESPACE(TxCON).Tx(CKPS) = 0b10;
+			break;
+		case SIXTEEN_BIT_TIMER_PRISCALER_1_8:
+			NAMESPACE(TxCON).Tx(CKPS) = 0b11;
+			break;
+	}
+	return &NAMESPACE(timerModule);
 }
-
-static TimerModule NAMESPACE(timerModule) = {
-	NAMESPACE(enable),
-	NAMESPACE(disable),
-	NAMESPACE(selectClockSource),
-	NAMESPACE(getInterruptController),
-#ifdef IS_8BIT_TIMER
-	NAMESPACE(get8bitTimer),
-	NULL,
-#elif defined IS_16BIT_TIMER
-	NULL,
-	NAMESPACE(get16bitTimer),
-#endif
-};
-
+#elif defined IS_8BIT_TIMER
 TimerModule* NAMESPACE(getter)() {
 	return &NAMESPACE(timerModule);
 }
+#else
+
+#endif
 
 void NAMESPACE(handleInterrupt)() {
 	if (NAMESPACE(PIEx).TMRx(IE) == 1 && NAMESPACE(PIRx).TMRx(IF) == 1) {
 		// フラグは手動でクリアする必要がある
 		NAMESPACE(PIRx).TMRx(IF) = 0;
-		// タイマの値を取得する
-		NAMESPACE(listener)->onInterrupt();
+		// 次回割り込みまでのカウント数を取得する
+		uint16_t nextPeriodCount = NAMESPACE(listener)->onInterrupt();
+		if (nextPeriodCount == 0) {
+			nextPeriodCount = NAMESPACE(periodCount);
+		} else {
+			NAMESPACE(periodCount) = nextPeriodCount;
+		}
+		// 次回割り込みが指定した値になるようにする
+		uint16_t nowCount = NAMESPACE(getCount)();
+		// count = nowCount + (MAXIMUM_COUNT - nextPeriodCount)
+#ifdef IS_16BIT_TIMER
+		NAMESPACE(setCount)(nowCount + (65535 - nextPeriodCount));
+#elif defined IS_8BIT_TIMER
+		NAMESPACE(setCount)(nowCount + (255 - nextPeriodCount));
+#endif
 	}
 }
 
