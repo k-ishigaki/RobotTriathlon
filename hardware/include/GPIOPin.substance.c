@@ -51,17 +51,20 @@ static DigitalInputPin* NAMESPACE(getDigitalInputPin)() {
 // --------------------------------------------------------------------
 // DigitalOutputPin
 // --------------------------------------------------------------------
+// field methods
 static bool NAMESPACE(DigitalOutputPin_getValue)() {
 	return NAMESPACE(LATx).LATxx;
 }
 
 static void NAMESPACE(DigitalPin_setValue)(bool);
 
+// substance of interface
 static DigitalOutputPin NAMESPACE(digitalOutputPin) = {
 	NAMESPACE(DigitalOutputPin_getValue),
 	NAMESPACE(DigitalPin_setValue),
 };
 
+// constructor
 static DigitalOutputPin* NAMESPACE(getDigitalOutputPin)() {
 #ifdef HAS_ANALOG_INTERFACE
 	NAMESPACE(ANSELx).ANSxx = 0;
