@@ -104,16 +104,42 @@ GPIOPin* getRC7(void);
 
 // Timer Module
 #include "TimerModule.h"
+
+
 /**
  * Timer Moduleのオブジェクトを返す
  * @return Timer Moduleの構造体ポインタ
  */
 // 8 or 16 bit timer
 TimerModule* getTimer0(void);
-// 16 bit timer
-TimerModule* getTimer1(void);
-TimerModule* getTimer3(void);
-TimerModule* getTimer5(void);
+
+/**
+ * Timer1,3,5のインスタンス生成時に設定するクロック源の設定
+ */
+typedef enum {
+	CRYSTAL_OSCILLATOR,	// Crystal Oscillator on SOSCI/SOSCO pins
+	EXTERNAL_CLOCK,		// External Clock from TxCKI pin (on the rising edge)
+	SYSTEM_CLOCK,		// system clock (FOSC)
+	INSTRUCTION_CLOCK,	// instruction clock (FOSC/4)
+} SixteenBitTimer_ClockSource;
+/**
+ * Timer1,3,5のインスタンス生成時に設定するプリスケーラの設定
+ */
+typedef enum {
+	SIXTEEN_BIT_TIMER_PRISCALER_1_1,
+	SIXTEEN_BIT_TIMER_PRISCALER_1_2,
+	SIXTEEN_BIT_TIMER_PRISCALER_1_4,
+	SIXTEEN_BIT_TIMER_PRISCALER_1_8,
+} SixteenBitTimer_Prescaler;
+/**
+ * Timer1,3,5のコンストラクタ
+ * @param クロックソースを表す列挙型定数
+ * @param プリスケーラを表す列挙型定数
+ */
+TimerModule* getTimer1(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
+TimerModule* getTimer3(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
+TimerModule* getTimer5(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
+
 // 8 bit timer
 TimerModule* getTimer2(void);
 TimerModule* getTimer4(void);
@@ -125,15 +151,5 @@ void Timer1_handleInterrupt(void);
 void Timer3_handleInterrupt(void);
 void Timer5_handleInterrupt(void);
 
-/**
- * Timer ModuleのselectClockSourceの引数に指定できる列挙型
- * タイマの種類によって異なるので注意
- */
-typedef enum {
-	CRYSTAL_OSCILLATOR,	// Crystal Oscillator on SOSCI/SOSCO pins
-	EXTERNAL_CLOCK,		// External Clock from TxCKI pin (on the rising edge)
-	SYSTEM_CLOCK,		// system clock (FOSC)
-	INSTRUCTION_CLOCK,	// instruction clock (FOSC/4)
-} TimerModule_clockSource;
 
 #endif /* HARDWARE_H */
