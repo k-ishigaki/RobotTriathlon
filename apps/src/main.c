@@ -23,18 +23,24 @@ TimerModule* timer;
 
 
 static uint16_t onTimerInterrupt() {
-	static int count = 0;
-	bool value;
+	static long periodCount = 10000;
+	static long dutyCount = 5000;
+	bool value = led2->getValue();
 
-	// 30回毎にLEDを点滅させる
-	
-	count++;
-	if (count == 30) {
-		count = 0;
-		value = !led2->getValue();
-		led2->setValue(value);
+	// 擬似的にPWMを発生させる
+	if (value == false) {
+		led2->setValue(true);
+		return dutyCount;
+	} else {
+		long previousDutyCount = dutyCount;
+
+		led2->setValue(false);
+		dutyCount -= 5;
+		if (dutyCount < 10) {
+			dutyCount = 5000;
+		}
+		return periodCount - previousDutyCount;
 	}
-	return 0;
 }
 
 static PeriodicInterruptListener listener = {
@@ -70,7 +76,7 @@ void setup() {
 			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
 	timer->getPeriodicInterruptController()->addInterruptListener(&listener);
 	timer->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
-	timer->getPeriodicInterruptController()->setPeriodCount(65535);
+	timer->getPeriodicInterruptController()->setPeriodCount(65536);
 	timer->start();
 	// interrupt settings
 	RCONbits.IPEN = 1;
