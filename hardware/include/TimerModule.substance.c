@@ -92,18 +92,18 @@ static TimerModule NAMESPACE(timerModule) = {
 #ifdef IS_16BIT_TIMER
 TimerModule* NAMESPACE(getter)(SixteenBitTimer_ClockSource clockSource, SixteenBitTimer_Prescaler prescaler) {
 	switch (clockSource) {
-		case CRYSTAL_OSCILLATOR:
+		case SIXTEEN_BIT_TIMER_CLOCKSOURCE_CRYSTAL_OSCILLATOR:
 			NAMESPACE(TxCON).Tx(SOSCEN) = 1;
 			NAMESPACE(TxCON).TMRx(CS) = 0b10;
 			break;
-		case EXTERNAL_CLOCK:
+		case SIXTEEN_BIT_TIMER_CLOCKSOURCE_EXTERNAL_CLOCK:
 			NAMESPACE(TxCON).Tx(SOSCEN) = 0;
 			NAMESPACE(TxCON).TMRx(CS) = 0b10;
 			break;
-		case SYSTEM_CLOCK:
+		case SIXTEEN_BIT_TIMER_CLOCKSOURCE_SYSTEM_CLOCK:
 			NAMESPACE(TxCON).TMRx(CS) = 0b01;
 			break;
-		case INSTRUCTION_CLOCK:
+		case SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK:
 			NAMESPACE(TxCON).TMRx(CS) = 0b00;
 			break;
 	}

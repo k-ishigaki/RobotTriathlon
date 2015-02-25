@@ -65,7 +65,9 @@ void setup() {
 			115200);
 	// Timer settings
 	// テストとして約30Hzで割り込みさせる
-	timer = getTimer1(INSTRUCTION_CLOCK, SIXTEEN_BIT_TIMER_PRISCALER_1_8);
+	timer = getTimer1(
+		SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
+		SIXTEEN_BIT_TIMER_PRISCALER_1_8);
 	timer->getPeriodicInterruptController()->addInterruptListener(&listener);
 	timer->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
 	timer->getPeriodicInterruptController()->setPeriodCount(65535);

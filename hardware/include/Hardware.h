@@ -117,10 +117,10 @@ TimerModule* getTimer0(void);
  * Timer1,3,5のインスタンス生成時に設定するクロック源の設定
  */
 typedef enum {
-	CRYSTAL_OSCILLATOR,	// Crystal Oscillator on SOSCI/SOSCO pins
-	EXTERNAL_CLOCK,		// External Clock from TxCKI pin (on the rising edge)
-	SYSTEM_CLOCK,		// system clock (FOSC)
-	INSTRUCTION_CLOCK,	// instruction clock (FOSC/4)
+	SIXTEEN_BIT_TIMER_CLOCKSOURCE_CRYSTAL_OSCILLATOR,	// Crystal Oscillator on SOSCI/SOSCO pins
+	SIXTEEN_BIT_TIMER_CLOCKSOURCE_EXTERNAL_CLOCK,		// External Clock from TxCKI pin (on the rising edge)
+	SIXTEEN_BIT_TIMER_CLOCKSOURCE_SYSTEM_CLOCK,		// system clock (FOSC)
+	SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,	// instruction clock (FOSC/4)
 } SixteenBitTimer_ClockSource;
 /**
  * Timer1,3,5のインスタンス生成時に設定するプリスケーラの設定
