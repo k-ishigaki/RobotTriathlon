@@ -24,22 +24,20 @@ TimerModule* timer;
 
 static uint16_t onTimerInterrupt() {
 	static long periodCount = 10000;
-	static long dutyCount = 5000;
+	static long dutyCount = 7000;
 	bool value = led2->getValue();
 
 	// 擬似的にPWMを発生させる
 	if (value == false) {
 		led2->setValue(true);
-		return dutyCount;
-	} else {
-		long previousDutyCount = dutyCount;
-
-		led2->setValue(false);
 		dutyCount -= 5;
 		if (dutyCount < 10) {
-			dutyCount = 5000;
+			dutyCount = 7000;
 		}
-		return periodCount - previousDutyCount;
+		return dutyCount;
+	} else {
+		led2->setValue(false);
+		return periodCount - dutyCount;
 	}
 }
 
