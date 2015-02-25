@@ -68,16 +68,16 @@ static void NAMESPACE(stop)() {
 
 #ifdef IS_16BIT_TIMER
 static uint16_t NAMESPACE(getCount)() {
-	NAMESPACE(TxCON).Tx(RD16) = 1;
+	// 読み込み順はL->Hとすること(16bit mode)
 	uint8_t tmrl = NAMESPACE(TMRxL).TMRx(L);
 	uint8_t tmrh = NAMESPACE(TMRxH).TMRx(H);
 	return tmrl + ((uint16_t)tmrh << 8);
 }
 
 static void NAMESPACE(setCount)(uint16_t count) {
-	NAMESPACE(TxCON).Tx(RD16) = 1;
-	NAMESPACE(TMRxL).TMRx(L) = count;
-	NAMESPACE(TMRxH).TMRx(H) = count << 8;
+	// 書き込み順はH->Lとすること(16bit mode)
+	TMR1H = count >> 8;
+	TMR1L = count;
 }
 #endif
 
@@ -91,6 +91,9 @@ static TimerModule NAMESPACE(timerModule) = {
 
 #ifdef IS_16BIT_TIMER
 TimerModule* NAMESPACE(getter)(SixteenBitTimer_ClockSource clockSource, SixteenBitTimer_Prescaler prescaler) {
+	// 16bit read/write mode enable
+	NAMESPACE(TxCON).Tx(RD16) = 1;
+	// select clock source
 	switch (clockSource) {
 		case SIXTEEN_BIT_TIMER_CLOCKSOURCE_CRYSTAL_OSCILLATOR:
 			NAMESPACE(TxCON).Tx(SOSCEN) = 1;
@@ -107,6 +110,7 @@ TimerModule* NAMESPACE(getter)(SixteenBitTimer_ClockSource clockSource, SixteenB
 			NAMESPACE(TxCON).TMRx(CS) = 0b00;
 			break;
 	}
+	// select prescaler value
 	switch (prescaler) {
 		case SIXTEEN_BIT_TIMER_PRISCALER_1_1:
 			NAMESPACE(TxCON).Tx(CKPS) = 0b00;
@@ -133,8 +137,6 @@ TimerModule* NAMESPACE(getter)() {
 
 void NAMESPACE(handleInterrupt)() {
 	if (NAMESPACE(PIEx).TMRx(IE) == 1 && NAMESPACE(PIRx).TMRx(IF) == 1) {
-		// フラグは手動でクリアする必要がある
-		NAMESPACE(PIRx).TMRx(IF) = 0;
 		// 次回割り込みまでのカウント数を取得する
 		uint16_t nextPeriodCount = NAMESPACE(listener)->onInterrupt();
 		if (nextPeriodCount == 0) {
@@ -146,10 +148,12 @@ void NAMESPACE(handleInterrupt)() {
 		uint16_t nowCount = NAMESPACE(getCount)();
 		// count = nowCount + (MAXIMUM_COUNT - nextPeriodCount)
 #ifdef IS_16BIT_TIMER
-		NAMESPACE(setCount)(nowCount + (65535 - nextPeriodCount));
+		NAMESPACE(setCount)(nowCount + (65536 - nextPeriodCount));
 #elif defined IS_8BIT_TIMER
-		NAMESPACE(setCount)(nowCount + (255 - nextPeriodCount));
+		NAMESPACE(setCount)(nowCount + (256 - nextPeriodCount));
 #endif
+		// フラグはタイマの値を書き換えたあとにクリアする
+		NAMESPACE(PIRx).TMRx(IF) = 0;
 	}
 }
 
