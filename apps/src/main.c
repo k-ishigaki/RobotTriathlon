@@ -19,26 +19,27 @@ void loop(void);
 DigitalOutputPin* led;
 DigitalOutputPin* led2;
 SerialPort* serial;
-TimerModule* timer;
+TimerModule* timer1;
+ECCPModule* ccp1;
 
+static uint16_t onCompareMatched() {
+	static long dutyCount = 0xFFF0;
+
+	dutyCount -= 100;
+	if (dutyCount < 100) {
+		dutyCount = 0xFFF0;
+	}
+	led2->setValue(false);
+	return dutyCount;
+}
+
+static CompareMatchInterruptListener cmListener = {
+	onCompareMatched,
+};
 
 static uint16_t onTimerInterrupt() {
-	static long periodCount = 10000;
-	static long dutyCount = 7000;
-	bool value = led2->getValue();
-
-	// 擬似的にPWMを発生させる
-	if (value == false) {
-		led2->setValue(true);
-		dutyCount -= 5;
-		if (dutyCount < 10) {
-			dutyCount = 7000;
-		}
-		return dutyCount;
-	} else {
-		led2->setValue(false);
-		return periodCount - dutyCount;
-	}
+	led2->setValue(true);
+	return 0;
 }
 
 static PeriodicInterruptListener listener = {
@@ -69,13 +70,18 @@ void setup() {
 			115200);
 	// Timer settings
 	// テストとして約30Hzで割り込みさせる
-	timer = getTimer1(
+	timer1 = getTimer1(
 			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
-			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
-	timer->getPeriodicInterruptController()->addInterruptListener(&listener);
-	timer->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
-	timer->getPeriodicInterruptController()->setPeriodCount(65536);
-	timer->start();
+			SIXTEEN_BIT_TIMER_PRISCALER_1_1);
+	timer1->getPeriodicInterruptController()->addInterruptListener(&listener);
+	timer1->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
+	timer1->getPeriodicInterruptController()->setPeriodCount(0xFFFF);
+	timer1->start();
+	// CCP settings
+	ccp1 = getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2);
+	ccp1->getCompareMatchInterruptController()->setCompareMatchCount(0xFFFF);
+	ccp1->getCompareMatchInterruptController()->addCompareMatchInterruptListener(&cmListener);
+	ccp1->getCompareMatchInterruptController()->enableCompareMatchInterrupt(HIGH_PRIORITY);
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -83,7 +89,7 @@ void setup() {
 }
 
 void interrupt high_priority isr_high() {
-	// do nothing
+	ECCP1_handleInterrupt();
 }
 
 void interrupt low_priority isr_low() {
