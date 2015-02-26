@@ -59,7 +59,7 @@ static ECCPModule NAMESPACE(eccpModule) = {
 };
 
 // constructor
-ECCPModule* getECCP1(ECCPModule_TimerSource timerSource) {
+ECCPModule* NAMESPACE(getter)(ECCPModule_TimerSource timerSource) {
 	switch (timerSource) {
 		case ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2:
 			NAMESPACE(CCPTMRSx).Cx(TSEL) = 0b00;
@@ -90,5 +90,12 @@ void NAMESPACE(handleInterrupt)() {
 		NAMESPACE(setCompareMatchCount)(compareMatchCount);
 	}
 }
+
+#undef IS_ECCP
+#undef IS_CCP
+#undef NAMESPACE
+#undef CCPx
+#undef Cx
+#undef CCPRx
 
 #endif /* USING_ECCP_MODULE_SUBSTANCE */
