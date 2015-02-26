@@ -4,6 +4,13 @@
 static PeriodicInterruptController* NAMESPACE(periodicInterruptController);
 static CompareMatchInterruptController* NAMESPACE(compareMatchInterruptController);
 static GPIOPort* NAMESPACE(gpioPort);
+static uint8_t NAMESPACE(freePattern);
+static uint8_t NAMESPACE(forwardPattern);
+static uint8_t NAMESPACE(backwardPattern);
+static uint8_t NAMESPACE(stopPattern);
+static MotorState NAMESPACE(motorState);
+
+
 
 // --------------------------------------------------------------------
 // PeriodicInterruptListener
@@ -78,6 +85,14 @@ MotorDriver* NAMESPACE(getter)(
 		uint8_t stopPattern) {
 	pic->addInterruptListener(&NAMESPACE(periodicInterruptListener));
 	cmic->addCompareMatchInterruptListener(&NAMESPACE(compareMatchInterruptListener));
+	NAMESPACE(periodicInterruptController) = pic;
+	NAMESPACE(compareMatchInterruptController) = cmic;
+	NAMESPACE(gpioPort) = port;
+	NAMESPACE(freePattern) = freePattern;
+	NAMESPACE(forwardPattern) = forwardPattern;
+	NAMESPACE(backwardPattern) = backwardPattern;
+	NAMESPACE(stopPattern) = stopPattern;
+	NAMESPACE(motorState) = FREE;
 	return &NAMESPACE(motorDriver);
 }
 
