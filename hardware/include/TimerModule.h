@@ -6,6 +6,8 @@
 #ifndef TIMER_MODULE_H
 #define TIMER_MODULE_H
 
+#include <stdint.h>
+
 /**
  * 周期的割り込みリスナ
  */

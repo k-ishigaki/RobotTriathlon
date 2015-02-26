@@ -1,6 +1,8 @@
 #ifndef ECCP_MODULE_H
 #define ECCP_MODULE_H
 
+#include <stdint.h>
+
 typedef struct {
 	/**
 	 * コンペアマッチ割り込みが発生した時に呼び出される．
