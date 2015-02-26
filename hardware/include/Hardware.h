@@ -23,7 +23,9 @@ typedef enum {
 	HIGH_PRIORITY,
 } Hardware_InterruptPriority;
 
+// --------------------------------------------------------------------
 // Oscillator Module
+// --------------------------------------------------------------------
 #include "OscillatorModule.h"
 
 /**
@@ -41,7 +43,9 @@ typedef enum {
 	PRIMARY,	// Primary clock (determined by FOSC<3:0> in CONFIG1H) 
 } OscillatorModule_clockSource;
 
+// --------------------------------------------------------------------
 // GPIO Port
+// --------------------------------------------------------------------
 #include "GPIOPort.h"
 /**
  * GPIO PORTのオブジェクトを返す
@@ -51,7 +55,9 @@ GPIOPort* getPORTA(void);
 GPIOPort* getPORTB(void);
 GPIOPort* getPORTC(void);
 
+// --------------------------------------------------------------------
 // EUSART
+// --------------------------------------------------------------------
 #include "EUSART.h"
 /**
  * EUSARTのオブジェクトを返す
@@ -67,7 +73,9 @@ Eusart* getEUSART2(void);
 void EUSART1_handleInterrupt(void);
 void EUSART2_handleInterrupt(void);
 
+// --------------------------------------------------------------------
 // GPIO Pin
+// --------------------------------------------------------------------
 #include "GPIOPin.h"
 /**
  * GPIOPinのオブジェクトを返す
@@ -102,9 +110,10 @@ GPIOPin* getRC6(void);
 GPIOPin* getRC7(void);
 // PORTE is normaly used for MCLR, so GPIO functions are not supported
 
+// --------------------------------------------------------------------
 // Timer Module
+// --------------------------------------------------------------------
 #include "TimerModule.h"
-
 
 /**
  * Timer Moduleのオブジェクトを返す
@@ -151,5 +160,35 @@ void Timer1_handleInterrupt(void);
 void Timer3_handleInterrupt(void);
 void Timer5_handleInterrupt(void);
 
+// --------------------------------------------------------------------
+// ECCP Module
+// --------------------------------------------------------------------
+#include "ECCPModule.h"
+
+/**
+ * ECCP Moduleのタイマソース
+ * Timer1,3,5から選択可能
+ */
+typedef enum {
+	ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2,
+	ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4,
+	ECCP_MODULE_TIMR_SOURCE_TIMER5_TIMER6,
+} ECCPModule_TimerSource;
+
+/**
+ * ECCP Moduleのオブジェクトを返す．
+ * @return ECCPModuleの構造体ポインタ
+ */
+// Enhanced CCP
+ECCPModule* getECCP1(ECCPModule_TimerSource);
+ECCPModule* getECCP2(ECCPModule_TimerSource);
+ECCPModule* getECCP3(ECCPModule_TimerSource);
+
+/**
+ * ECCPの割り込みハンドラ
+ */
+void ECCP1_handleInterrupt(void);
+void ECCP2_handleInterrupt(void);
+void ECCP3_handleInterrupt(void);
 
 #endif /* HARDWARE_H */
