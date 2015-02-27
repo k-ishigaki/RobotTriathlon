@@ -1,6 +1,8 @@
 #ifdef USING_ECCP_MODULE_SUBSTANCE
 
 #include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 // --------------------------------------------------------------------
 // CompareMatchInterruptController
@@ -10,8 +12,14 @@ CompareMatchInterruptListener* NAMESPACE(listener);
 
 // field methods
 static void NAMESPACE(setCompareMatchCount)(uint16_t count) {
+	// カウント更新中に割り込みが起こらないようにする
+	bool isInterruptEnable;
+
+	isInterruptEnable = NAMESPACE(PIEx).CCPx(IE);
+	NAMESPACE(PIEx).CCPx(IE) = 0;
 	NAMESPACE(CCPRxH).CCPRx(H) = count >> 8;
 	NAMESPACE(CCPRxL).CCPRx(L) = count;
+	NAMESPACE(PIEx).CCPx(IE) = isInterruptEnable;
 }
 
 static void NAMESPACE(addCompareMatchInterruptListener)(CompareMatchInterruptListener* listener){
