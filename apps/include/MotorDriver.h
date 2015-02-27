@@ -40,6 +40,7 @@ typedef struct {
  * @param 周期的割り込みコントローラ
  * @param コンペアマッチ割り込みコントローラ
  * @param 汎用入出力ポート
+ * @param 利用するピン
  * @param freeの時のパターン
  * @param forward時のパターン
  * @param backward時のパターン
@@ -52,11 +53,13 @@ MotorDriver* getLeftMotor(
 		uint8_t,
 		uint8_t,
 		uint8_t,
+		uint8_t,
 		uint8_t);
 MotorDriver* getRightMotor(
 		PeriodicInterruptController*,
 		CompareMatchInterruptController*,
 		GPIOPort*,
+		uint8_t,
 		uint8_t,
 		uint8_t,
 		uint8_t,

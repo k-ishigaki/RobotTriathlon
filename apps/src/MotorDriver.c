@@ -6,13 +6,6 @@
  */
 #include "MotorDriver.h"
 
-typedef enum {
-	FREE,
-	FORWARD,
-	BACKWARD,
-	STOP,
-} MotorState;
-
 #define USING_MOTOR_DRIVER_SUBSTANCE
 
 #define NAMESPACE(name) LeftMotor_##name
