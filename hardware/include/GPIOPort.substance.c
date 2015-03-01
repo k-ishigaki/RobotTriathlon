@@ -31,7 +31,7 @@ static uint8_t NAMESPACE(getValue)() {
 }
 
 static void NAMESPACE(setValue)(uint8_t pattern, uint8_t value) {
-	NAMESPACE(lat) = (NAMESPACE(lat) & (!pattern)) | (value & pattern);
+	NAMESPACE(lat) = (NAMESPACE(lat) & (~pattern)) | (value & pattern);
 }
 
 static GPIOPort NAMESPACE(gpioPort) = {
