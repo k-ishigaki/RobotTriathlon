@@ -8,43 +8,21 @@
 // Hardwareモジュールのインクルード
 #include "Hardware.h"
 #include "SerialPort.h"
+#include "MotorDriver.h"
 
 #define _XTAL_FREQ 64000000L
 
 // function prototype
 void setup(void);
+void setupMotorDriver(void);
 void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
-DigitalOutputPin* led2;
 SerialPort* serial;
-TimerModule* timer1;
-ECCPModule* ccp1;
 
-static uint16_t onCompareMatched() {
-	static long dutyCount = 0xFFF0;
-
-	dutyCount -= 100;
-	if (dutyCount < 100) {
-		dutyCount = 0xFFF0;
-	}
-	led2->setValue(false);
-	return dutyCount;
-}
-
-static CompareMatchInterruptListener cmListener = {
-	onCompareMatched,
-};
-
-static uint16_t onTimerInterrupt() {
-	led2->setValue(true);
-	return 0;
-}
-
-static PeriodicInterruptListener listener = {
-	onTimerInterrupt,
-};
+MotorDriver* leftMotor;
+MotorDriver* rightMotor;
 
 int main(void) {
 	setup();
@@ -61,27 +39,38 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA0()->getDigitalOutputPin();
-	led2 = getRA1()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),
 			getRC6()->getDigitalPin(),
 			getEUSART1(),
 			115200);
-	// Timer settings
-	// テストとして約30Hzで割り込みさせる
-	timer1 = getTimer1(
+	// gpio port settings
+
+	// initilize left motor
+	GPIOPort* portB = getPORTB();
+	portB->setDigitalOutput(0x0F);
+	TimerModule* timer3 = getTimer3(
 			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
 			SIXTEEN_BIT_TIMER_PRISCALER_1_1);
-	timer1->getPeriodicInterruptController()->addInterruptListener(&listener);
-	timer1->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
-	timer1->getPeriodicInterruptController()->setPeriodCount(0xFFFF);
-	timer1->start();
-	// CCP settings
-	ccp1 = getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2);
-	ccp1->getCompareMatchInterruptController()->setCompareMatchCount(0xFFFF);
-	ccp1->getCompareMatchInterruptController()->addCompareMatchInterruptListener(&cmListener);
-	ccp1->getCompareMatchInterruptController()->enableCompareMatchInterrupt(HIGH_PRIORITY);
+	timer3->start();
+	leftMotor = getLeftMotor(
+			timer3->getPeriodicInterruptController(),
+			getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
+			portB,
+			0x0F,
+			0x00, 0xFF, 0x0F, 0x00);
+	leftMotor->setForward();
+	// initilize right motor
+	portB->setDigitalOutput(0xF0);
+	rightMotor = getRightMotor(
+			timer3->getPeriodicInterruptController(),
+			getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
+			portB,
+			0xF0,
+			0x00, 0xFF, 0x0F, 0x00);
+	rightMotor->setForward();
+
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -89,19 +78,25 @@ void setup() {
 }
 
 void interrupt high_priority isr_high() {
-	ECCP1_handleInterrupt();
+	Timer3_handleInterrupt();
+	ECCP2_handleInterrupt();
+	ECCP3_handleInterrupt();
 }
 
 void interrupt low_priority isr_low() {
 	EUSART1_handleInterrupt();
-	Timer1_handleInterrupt();
 }
 
 void loop() {
-	bool value;
-
-	value = !led->getValue();
-	led->setValue(value);
+	bool value = led->getValue();
+	led->setValue(!value);
+	if (value == true) {
+		leftMotor->setPWMDutyValue(1000);
+		rightMotor->setPWMDutyValue(1000);
+	} else {
+		leftMotor->setPWMDutyValue(100);
+		rightMotor->setPWMDutyValue(100);
+	}
 	for (unsigned char i=0; i<100; i++) {
 		__delay_ms(10);
 	}

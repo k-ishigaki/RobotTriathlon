@@ -1,9 +1,7 @@
 #ifndef MOTOR_DRIVER_H
 #define MOTOR_DRIVER_H
 
-#include "GPIOPort.h"
-#include "ECCPModule.h"
-#include "TimerModule.h"
+#include "Hardware.h"
 
 #include <stdint.h>
 
@@ -34,9 +32,6 @@ typedef struct {
 
 /**
  * モータドライバのオブジェクトを取得する
- * 予め行っておくこと
- * - GPIOポートの内，使うピンをデジタル出力に設定
- * - 周期的割り込み，コンペアマッチ割り込みで利用するタイマを開始
  * @param 周期的割り込みコントローラ
  * @param コンペアマッチ割り込みコントローラ
  * @param 汎用入出力ポート
