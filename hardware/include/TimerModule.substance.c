@@ -8,7 +8,8 @@
 // PeriodicInterruptController
 // --------------------------------------------------------------------
 // field variables
-PeriodicInterruptListener* NAMESPACE(listener);
+PeriodicInterruptListener* NAMESPACE(listener)[2];
+int8_t NAMESPACE(numOfListener) = 0;
 unsigned long NAMESPACE(periodCount);
 
 // field methods
@@ -17,7 +18,8 @@ static void NAMESPACE(setPeriodCount)(uint16_t periodCount) {
 }
 
 static void NAMESPACE(addInterruptListener)(PeriodicInterruptListener* listener) {
-	NAMESPACE(listener) = listener;
+	NAMESPACE(listener)[NAMESPACE(numOfListener)] = listener;
+	NAMESPACE(numOfListener)++;
 }
 
 static void NAMESPACE(enableInterrupt)(int priority) {
@@ -138,19 +140,16 @@ TimerModule* NAMESPACE(getter)() {
 void NAMESPACE(handleInterrupt)() {
 	if (NAMESPACE(PIEx).TMRx(IE) == 1 && NAMESPACE(PIRx).TMRx(IF) == 1) {
 		// 次回割り込みまでのカウント数を取得する
-		uint16_t nextPeriodCount = NAMESPACE(listener)->onInterrupt();
-		if (nextPeriodCount == 0) {
-			nextPeriodCount = NAMESPACE(periodCount);
-		} else {
-			NAMESPACE(periodCount) = nextPeriodCount;
+		uint16_t nextPeriodCount;
+		// リスナ呼び出し
+		for (int8_t index = 0; index < NAMESPACE(numOfListener); index++) {
+			nextPeriodCount = NAMESPACE(listener)[index]->onInterrupt();
 		}
 		// 次回割り込みが指定した値になるようにする
-		uint16_t nowCount = NAMESPACE(getCount)();
-		// count = nowCount + (MAXIMUM_COUNT - nextPeriodCount)
 #ifdef IS_16BIT_TIMER
-		NAMESPACE(setCount)(nowCount + (65536 - nextPeriodCount));
+		NAMESPACE(setCount)(0xFFFF - nextPeriodCount);
 #elif defined IS_8BIT_TIMER
-		NAMESPACE(setCount)(nowCount + (256 - nextPeriodCount));
+		NAMESPACE(setCount)(0xFF - nextPeriodCount);
 #endif
 		// フラグはタイマの値を書き換えたあとにクリアする
 		NAMESPACE(PIRx).TMRx(IF) = 0;
