@@ -5,6 +5,9 @@
 
 #include <xc.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
 // Hardwareモジュールのインクルード
 #include "Hardware.h"
 #include "SerialPort.h"
@@ -23,6 +26,10 @@ SerialPort* serial;
 
 MotorDriver* leftMotor;
 MotorDriver* rightMotor;
+
+void putch(char data) {
+	serial->getByteOutputStream()->write(data);
+}
 
 int main(void) {
 	setup();
@@ -90,6 +97,7 @@ void interrupt low_priority isr_low() {
 void loop() {
 	bool value = led->getValue();
 	led->setValue(!value);
+	printf("test");
 	if (value == true) {
 		leftMotor->setPWMDutyValue(1000);
 		rightMotor->setPWMDutyValue(1000);
