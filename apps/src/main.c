@@ -35,7 +35,7 @@ void setup() {
 	// Oscillator settings
 	OscillatorModule* osc = getOscillatorModule();
 	osc->getPhaseLockedLoop()->enablePLL();
-	osc->getInternalOscillator()->setFrequency(16000000L);
+	osc->getInternalOscillator()->setFrequency(_XTAL_FREQ/4);
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA0()->getDigitalOutputPin();
