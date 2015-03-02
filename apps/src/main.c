@@ -13,6 +13,7 @@
 #include "SerialPort.h"
 #include "MotorDriver.h"
 #include "SpeedCounter.h"
+#include "MotionController.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -29,6 +30,9 @@ MotorDriver* leftMotor;
 MotorDriver* rightMotor;
 
 SpeedCounter* leftSpeedCounter;
+SpeedCounter* rightSpeedCounter;
+
+MotionController* motionController;
 
 void putch(char data) {
 	serial->getByteOutputStream()->write(data);
@@ -48,7 +52,7 @@ void setup() {
 	osc->getInternalOscillator()->setFrequency(_XTAL_FREQ/4);
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
-	led = getRA0()->getDigitalOutputPin();
+	led = getRA2()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),
@@ -89,13 +93,13 @@ void setup() {
 	VREFCON1bits.DACNSS = 0; // VSS is negative ref
 	VREFCON2bits.DACR = 16; // ~2.5V
 
-	AnalogPin* ra1 = getRA1()->getAnalogPin();
-	ra1->setDirection(false);
+	AnalogPin* ra0 = getRA0()->getAnalogPin();
+	ra0->setDirection(false);
 	ComparatorModule* comparator1 = getComparator1(
 			COMPARATOR_MODULE_REFERENCE_DAC,
 			COMPARATOR_MODULE_HYSTERESIS_ENABLE,
 			COMPARATOR_MODULE_SYNCHRONOUS_MODE_ASYNCHRONOUS);
-	comparator1->selectComparatorChannel(COMPARATOR_MODULE_CHANNEL_C12IN1);
+	comparator1->selectComparatorChannel(COMPARATOR_MODULE_CHANNEL_C12IN0);
 	TimerModule* timer1 = getTimer1(
 			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
 			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
@@ -103,6 +107,28 @@ void setup() {
 	leftSpeedCounter = getLeftSpeedCounter(
 			comparator1,
 			timer1->getPeriodicInterruptController());
+	AnalogPin* ra1 = getRA1()->getAnalogPin();
+	ra1->setDirection(false);
+	ComparatorModule* comparator2 = getComparator2(
+			COMPARATOR_MODULE_REFERENCE_DAC,
+			COMPARATOR_MODULE_HYSTERESIS_ENABLE,
+			COMPARATOR_MODULE_SYNCHRONOUS_MODE_ASYNCHRONOUS);
+	comparator2->selectComparatorChannel(COMPARATOR_MODULE_CHANNEL_C12IN1);
+	rightSpeedCounter = getRightSpeedCounter(
+			comparator2,
+			timer1->getPeriodicInterruptController());
+
+	TimerModule* timer5 = getTimer5(
+			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
+			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
+	timer5->start();
+	motionController = getMotionController(
+			timer5->getPeriodicInterruptController(),
+			leftMotor,
+			leftSpeedCounter,
+			rightMotor,
+			rightSpeedCounter);
+	motionController->moveStraight(50);
 
 	// interrupt settings
 	RCONbits.IPEN = 1;
@@ -116,24 +142,18 @@ void interrupt high_priority isr_high() {
 	ECCP2_handleInterrupt();
 	ECCP3_handleInterrupt();
 	Comparator1_handleInterrupt();
+	Comparator2_handleInterrupt();
 }
 
 void interrupt low_priority isr_low() {
+	Timer5_handleInterrupt();
 	EUSART1_handleInterrupt();
 }
 
 void loop() {
 	bool value = led->getValue();
 	led->setValue(!value);
-	printf("speed count = %d\r\n", leftSpeedCounter->getSpeedCount());
-	if (value == true) {
-		leftMotor->setPWMDutyValue(1000);
-		rightMotor->setPWMDutyValue(1000);
-	} else {
-		leftMotor->setPWMDutyValue(100);
-		rightMotor->setPWMDutyValue(100);
-	}
-	for (unsigned char i=0; i<100; i++) {
+	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
 	uint8_t data = serial->getByteInputStream()->read();
