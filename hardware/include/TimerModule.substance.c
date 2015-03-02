@@ -53,6 +53,7 @@ static PeriodicInterruptController NAMESPACE(periodicInterruptController) = {
 
 // constructor
 static PeriodicInterruptController* NAMESPACE(getPeriodicInterruptController)() {
+	NAMESPACE(periodCount) = 0xFFFF;
 	return &NAMESPACE(periodicInterruptController);
 }
 
@@ -145,12 +146,14 @@ void NAMESPACE(handleInterrupt)() {
 		for (int8_t index = 0; index < NAMESPACE(numOfListener); index++) {
 			nextPeriodCount = NAMESPACE(listener)[index]->onInterrupt();
 		}
-		// 次回割り込みが指定した値になるようにする
+		if (nextPeriodCount != 0) {
+			// 次回割り込みが指定した値になるようにする
 #ifdef IS_16BIT_TIMER
-		NAMESPACE(setCount)(0xFFFF - nextPeriodCount);
+			NAMESPACE(setCount)(0xFFFF - nextPeriodCount);
 #elif defined IS_8BIT_TIMER
-		NAMESPACE(setCount)(0xFF - nextPeriodCount);
+			NAMESPACE(setCount)(0xFF - nextPeriodCount);
 #endif
+		}
 		// フラグはタイマの値を書き換えたあとにクリアする
 		NAMESPACE(PIRx).TMRx(IF) = 0;
 	}
