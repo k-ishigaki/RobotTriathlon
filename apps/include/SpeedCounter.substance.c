@@ -9,7 +9,7 @@ uint8_t NAMESPACE(counter) = 0;
 // --------------------------------------------------------------------
 // field methods
 void NAMESPACE(onComparatorOutputChanged)(bool comparatorOutput) {
-	NAMESPACE(counter)++;
+	NAMESPACE(counter) += comparatorOutput;
 }
 
 // substance of interface
