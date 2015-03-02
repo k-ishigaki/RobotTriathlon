@@ -43,9 +43,11 @@ typedef struct {
 
 /**
  * マシンの移動インターフェースを取得する
- * @param MotorDriverのインターフェース
- * @param SpeedCounterのインターフェース
+ * @param 左のMotorDriverのインターフェース
+ * @param 左のSpeedCounterのインターフェース
+ * @param 右のMotorDriverのインターフェース
+ * @param 右のSpeedCounterのインターフェース
  */
-MotionController* getMotionController(MotorDriver*, SpeedCounter*);
+MotionController* getMotionController(MotorDriver*, SpeedCounter*, MotorDriver*, SpeedCounter*);
 
 #endif
