@@ -69,6 +69,7 @@ clean:
 	$(RM) $(call FixPath,$(OBJS:%.p1=%.pre))
 	$(RM) $(call FixPath,bin/release.*)
 	$(RM) $(call FixPath,bin/startup.*)
+	$(RM) $(call FixPath,MPLABXLog.*)
 	$(RM) funclist l.obj
 
 .PHONY: prog
