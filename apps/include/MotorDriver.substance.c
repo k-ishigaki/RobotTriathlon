@@ -102,10 +102,12 @@ static void NAMESPACE(setStop)() {
 
 static void NAMESPACE(setPWMDutyValue)(uint16_t dutyValue) {
 	uint16_t count;
-
+	
 	// dutyValueは0~1023
-	// compareMatchCountは0~65535
-	count = (dutyValue << 6);
+	// compareMatchCountは1~65535
+	dutyValue = dutyValue < 1 ? 1 : dutyValue;
+	dutyValue = dutyValue > 1023 ? 1023 : dutyValue;
+	count = dutyValue << 6;
 	if (NAMESPACE(compareMatchCountIndex) == 0) {
 		NAMESPACE(compareMatchCount)[1] = count;
 		NAMESPACE(compareMatchCountIndex) = 1;
