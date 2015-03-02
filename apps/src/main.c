@@ -12,6 +12,7 @@
 #include "Hardware.h"
 #include "SerialPort.h"
 #include "MotorDriver.h"
+#include "SpeedCounter.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -26,6 +27,8 @@ SerialPort* serial;
 
 MotorDriver* leftMotor;
 MotorDriver* rightMotor;
+
+SpeedCounter* leftSpeedCounter;
 
 void putch(char data) {
 	serial->getByteOutputStream()->write(data);
@@ -78,6 +81,29 @@ void setup() {
 			0x00, 0xFF, 0x0F, 0x00);
 	rightMotor->setForward();
 
+	// test for comparator
+	VREFCON1bits.DACEN = 1; // DAC enabled
+	VREFCON1bits.DACLPS = 0; // DAC Negative reference source
+	VREFCON1bits.DACOE = 0; // disconnected from the DACOUT pin
+	VREFCON1bits.DACPSS = 0b00; // VDD is positive ref
+	VREFCON1bits.DACNSS = 0; // VSS is negative ref
+	VREFCON2bits.DACR = 16; // ~2.5V
+
+	AnalogPin* ra1 = getRA1()->getAnalogPin();
+	ra1->setDirection(false);
+	ComparatorModule* comparator1 = getComparator1(
+			COMPARATOR_MODULE_REFERENCE_DAC,
+			COMPARATOR_MODULE_HYSTERESIS_ENABLE,
+			COMPARATOR_MODULE_SYNCHRONOUS_MODE_ASYNCHRONOUS);
+	comparator1->selectComparatorChannel(COMPARATOR_MODULE_CHANNEL_C12IN1);
+	TimerModule* timer1 = getTimer1(
+			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
+			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
+	timer1->start();
+	leftSpeedCounter = getLeftSpeedCounter(
+			comparator1,
+			timer1->getPeriodicInterruptController());
+
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -85,9 +111,11 @@ void setup() {
 }
 
 void interrupt high_priority isr_high() {
+	Timer1_handleInterrupt();
 	Timer3_handleInterrupt();
 	ECCP2_handleInterrupt();
 	ECCP3_handleInterrupt();
+	Comparator1_handleInterrupt();
 }
 
 void interrupt low_priority isr_low() {
@@ -97,7 +125,7 @@ void interrupt low_priority isr_low() {
 void loop() {
 	bool value = led->getValue();
 	led->setValue(!value);
-	printf("test");
+	printf("speed count = %d\r\n", leftSpeedCounter->getSpeedCount());
 	if (value == true) {
 		leftMotor->setPWMDutyValue(1000);
 		rightMotor->setPWMDutyValue(1000);
