@@ -191,4 +191,58 @@ void ECCP1_handleInterrupt(void);
 void ECCP2_handleInterrupt(void);
 void ECCP3_handleInterrupt(void);
 
+// --------------------------------------------------------------------
+// Comparator Module
+// --------------------------------------------------------------------
+#include "ComparatorModule.h"
+
+/**
+ * Comparator Moduleのリファレンス．
+ */
+typedef enum {
+	COMPARATOR_MODULE_REFERENCE_DAC,
+	COMPARATOR_MODULE_REFERENCE_FVR_BUF1,
+} ComparatorModule_Reference;
+/**
+ * Comparator Moduleのヒステリシス有効化．
+ */
+typedef enum {
+	COMPARATOR_MODULE_HYSTERESIS_DISABLE,
+	COMPARATOR_MODULE_HYSTERESIS_ENABLE,
+} ComparatorModule_Hysteresis;
+/**
+ * Comparator Moduleの同期モード．
+ */
+typedef enum {
+	COMPARATOR_MODULE_SYNCHRONOUS_MODE_ASYNCHRONOUS,
+	COMPARATOR_MODULE_SYNCHRONOUS_MODE_T1CLK,
+} ComparatorModule_SynchronousMode;
+/**
+ * コンパレータのチャンネル．
+ */
+typedef enum {
+	COMPARATOR_MODULE_CHANNEL_C12IN0,
+	COMPARATOR_MODULE_CHANNEL_C12IN1,
+	COMPARATOR_MODULE_CHANNEL_C12IN2,
+	COMPARATOR_MODULE_CHANNEL_C12IN3,
+} ComparatorModule_Channel;
+
+/**
+ * Comparator Moduleのオブジェクトを返す．
+ * @return ComparatorModuleの構造体ポインタ
+ */
+ComparatorModule* getComparator1(
+		ComparatorModule_Reference,
+		ComparatorModule_Hysteresis,
+		ComparatorModule_SynchronousMode);
+ComparatorModule* getComparator2(
+		ComparatorModule_Reference,
+		ComparatorModule_Hysteresis,
+		ComparatorModule_SynchronousMode);
+/**
+ * Comparator Moduleの割り込みハンドラ．
+ */
+void Comparator1_handleInterrupt(void);
+void Comparator2_handleInterrupt(void);
+
 #endif /* HARDWARE_H */
