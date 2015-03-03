@@ -14,6 +14,7 @@
 #include "MotorDriver.h"
 #include "SpeedCounter.h"
 #include "MotionController.h"
+#include "LineSensor.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -33,6 +34,9 @@ SpeedCounter* leftSpeedCounter;
 SpeedCounter* rightSpeedCounter;
 
 MotionController* motionController;
+
+I2CInterface* i2c;
+LineSensor* lineSensor;
 
 void putch(char data) {
 	serial->getByteOutputStream()->write(data);
@@ -55,15 +59,15 @@ void setup() {
 	led = getRA2()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
-			getRC7()->getDigitalPin(),
-			getRC6()->getDigitalPin(),
-			getEUSART1(),
+			getRB7()->getDigitalPin(),
+			getRB6()->getDigitalPin(),
+			getEUSART2(),
 			115200);
 	// gpio port settings
 
 	// initilize left motor
-	GPIOPort* portB = getPORTB();
-	portB->setDigitalOutput(0x0F);
+	GPIOPort* portC = getPORTC();
+	portC->setDigitalOutput(0xFF);
 	TimerModule* timer3 = getTimer3(
 			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
 			SIXTEEN_BIT_TIMER_PRISCALER_1_1);
@@ -71,21 +75,20 @@ void setup() {
 	leftMotor = getLeftMotor(
 			timer3->getPeriodicInterruptController(),
 			getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
-			portB,
+			portC,
 			0x0F,
 			0x00, 0xFF, 0x0F, 0x00);
 	leftMotor->setForward();
 	// initilize right motor
-	portB->setDigitalOutput(0xF0);
 	rightMotor = getRightMotor(
 			timer3->getPeriodicInterruptController(),
 			getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
-			portB,
+			portC,
 			0xF0,
 			0x00, 0xFF, 0x0F, 0x00);
 	rightMotor->setForward();
 
-	// test for comparator
+	// initilize encorder
 	VREFCON1bits.DACEN = 1; // DAC enabled
 	VREFCON1bits.DACLPS = 0; // DAC Negative reference source
 	VREFCON1bits.DACOE = 0; // disconnected from the DACOUT pin
@@ -130,6 +133,13 @@ void setup() {
 			rightSpeedCounter);
 	motionController->moveStraight(50);
 
+	// initilize i2c
+	i2c = getMSSP2(getRB2()->getDigitalPin(), getRB1()->getDigitalPin())->getI2CInterface();
+	// initilize line sensor
+	lineSensor = getLineSensor(i2c);
+	
+
+
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -147,12 +157,13 @@ void interrupt high_priority isr_high() {
 
 void interrupt low_priority isr_low() {
 	Timer5_handleInterrupt();
-	EUSART1_handleInterrupt();
+	EUSART2_handleInterrupt();
 }
 
 void loop() {
 	bool value = led->getValue();
 	led->setValue(!value);
+	printf("lineValue = %d\r\n", lineSensor->getLineValue());
 	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
