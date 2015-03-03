@@ -148,17 +148,57 @@ typedef enum {
 TimerModule* getTimer1(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
 TimerModule* getTimer3(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
 TimerModule* getTimer5(SixteenBitTimer_ClockSource, SixteenBitTimer_Prescaler);
-
-// 8 bit timer
-TimerModule* getTimer2(void);
-TimerModule* getTimer4(void);
-TimerModule* getTimer6(void);
 /**
- * Timerxの割り込みハンドラ
+ * Timer1,3,5の割り込みハンドラ
  */
 void Timer1_handleInterrupt(void);
 void Timer3_handleInterrupt(void);
 void Timer5_handleInterrupt(void);
+
+// 8 bit timer
+/**
+ * Timer2,4,6の生成に必要なプリスケーラの値．
+ */
+typedef enum {
+	EIGHT_BIT_TIMER_PRISCALER_1_1,
+	EIGHT_BIT_TIMER_PRISCALER_1_4,
+	EIGHT_BIT_TIMER_PRISCALER_1_16,
+} EightBitTimer_Priscaler;
+/**
+ * Timer2,4,6の生成に必要なポストスケーラの値．
+ */
+typedef enum {
+	EIGHT_BIT_TIMER_POSTSCALER_1_1,
+	EIGHT_BIT_TIMER_POSTSCALER_1_2,
+	EIGHT_BIT_TIMER_POSTSCALER_1_3,
+	EIGHT_BIT_TIMER_POSTSCALER_1_4,
+	EIGHT_BIT_TIMER_POSTSCALER_1_5,
+	EIGHT_BIT_TIMER_POSTSCALER_1_6,
+	EIGHT_BIT_TIMER_POSTSCALER_1_7,
+	EIGHT_BIT_TIMER_POSTSCALER_1_8,
+	EIGHT_BIT_TIMER_POSTSCALER_1_9,
+	EIGHT_BIT_TIMER_POSTSCALER_1_10,
+	EIGHT_BIT_TIMER_POSTSCALER_1_11,
+	EIGHT_BIT_TIMER_POSTSCALER_1_12,
+	EIGHT_BIT_TIMER_POSTSCALER_1_13,
+	EIGHT_BIT_TIMER_POSTSCALER_1_14,
+	EIGHT_BIT_TIMER_POSTSCALER_1_15,
+	EIGHT_BIT_TIMER_POSTSCALER_1_16,
+} EightBitTimer_Postscaler;
+/**
+ * 8ビットタイマのコンストラクタ．
+ * @param プリスケーラ値
+ * @param ポストスケーラ値
+ */
+TimerModule* getTimer2(EightBitTimer_Priscaler, EightBitTimer_Postscaler);
+TimerModule* getTimer4(EightBitTimer_Priscaler, EightBitTimer_Postscaler);
+TimerModule* getTimer6(EightBitTimer_Priscaler, EightBitTimer_Postscaler);
+/**
+ * Timer2,4,6の割り込みハンドラ
+ */
+void Timer2_handleInterrupt(void);
+void Timer4_handleInterrupt(void);
+void Timer6_handleInterrupt(void);
 
 // --------------------------------------------------------------------
 // ECCP Module
