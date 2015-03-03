@@ -65,3 +65,59 @@
 
 #include "TimerModule.substance.c"
 
+// Timer2
+// include substance.c as 8bit timer
+#define IS_8BIT_TIMER
+// register
+#define Timer2_TxCON T2CONbits
+#define Timer2_TMRx TMR2bits.TMR2
+#define Timer2_PRx PR2bits.PR2
+#define Timer2_PIEx PIE1bits
+#define Timer2_PIRx PIR1bits
+#define Timer2_IPRx IPR1bits
+// getter function name
+#define Timer2_getter getTimer2
+// string concatenation
+#define NAMESPACE(name) Timer2_##name
+#define TMRx(name) TMR2##name
+#define Tx(name) T2##name
+
+#include "TimerModule.substance.c"
+
+// Timer4
+// include substance.c as 8bit timer
+#define IS_8BIT_TIMER
+// register
+#define Timer4_TxCON T4CONbits
+#define Timer4_TMRx TMR4bits.TMR4
+#define Timer4_PRx PR4bits.PR4
+#define Timer4_PIEx PIE5bits
+#define Timer4_PIRx PIR5bits
+#define Timer4_IPRx IPR5bits
+// getter function name
+#define Timer4_getter getTimer4
+// string concatenation
+#define NAMESPACE(name) Timer4_##name
+#define TMRx(name) TMR4##name
+#define Tx(name) T4##name
+
+#include "TimerModule.substance.c"
+
+// Timer6
+// include substance.c as 8bit timer
+#define IS_8BIT_TIMER
+// register
+#define Timer6_TxCON T6CONbits
+#define Timer6_TMRx TMR6bits.TMR6
+#define Timer6_PRx PR6bits.PR6
+#define Timer6_PIEx PIE5bits
+#define Timer6_PIRx PIR5bits
+#define Timer6_IPRx IPR5bits
+// getter function name
+#define Timer6_getter getTimer6
+// string concatenation
+#define NAMESPACE(name) Timer6_##name
+#define TMRx(name) TMR6##name
+#define Tx(name) T6##name
+
+#include "TimerModule.substance.c"
