@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 #define MAXIMUM_PWM_DUTY_VALUE 1000
-#define KP 20
+#define KP 10
 #define KI 800
-#define KD 0
+#define KD 4
 
 #define NAMESPACE(name) MotionController_##name
 #define MotionController_getter getMotionController
@@ -72,13 +72,13 @@ static uint16_t NAMESPACE(onTimerOverflowed)() {
 	// 値の制限
 	leftPWMDutyValue = leftPWMDutyValue < 0 ? 0 : leftPWMDutyValue;
 	rightPWMDutyValue = rightPWMDutyValue < 0 ? 0 : rightPWMDutyValue;
-	printf("tar=%03d spe=%03d P=%03d I=%03d D=%03d dut=%03d\r\n",
-			NAMESPACE(leftTarget),
-			left,
-			leftProportional,
-			leftIntegration,
-			leftDerivative,
-			leftPWMDutyValue);
+	//printf("tar=%03d spe=%03d P=%03d I=%03d D=%03d dut=%03d\r\n",
+	//		NAMESPACE(leftTarget),
+	//		left,
+	//		leftProportional,
+	//		leftIntegration,
+	//		leftDerivative,
+	//		leftPWMDutyValue);
 	NAMESPACE(leftMotorDriver)->setPWMDutyValue(leftPWMDutyValue);
 	NAMESPACE(rightMotorDriver)->setPWMDutyValue(rightPWMDutyValue);
 	// 割り込み周期は変更しない
