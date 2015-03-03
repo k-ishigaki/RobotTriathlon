@@ -245,4 +245,15 @@ ComparatorModule* getComparator2(
 void Comparator1_handleInterrupt(void);
 void Comparator2_handleInterrupt(void);
 
+// --------------------------------------------------------------------
+// MSSP Module
+// --------------------------------------------------------------------
+#include "MSSPModule.h"
+/**
+ * MSSP Moduleのオブジェクトを返す．
+ * @return MSSPModuleの構造体ポインタ
+ */
+MSSPModule* getMSSP1(DigitalPin*, DigitalPin*);
+MSSPModule* getMSSP2(DigitalPin*, DigitalPin*);
+
 #endif /* HARDWARE_H */
