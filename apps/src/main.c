@@ -25,6 +25,7 @@ void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
+DigitalOutputPin* led2;
 SerialPort* serial;
 
 MotorDriver* leftMotor;
@@ -37,6 +38,19 @@ MotionController* motionController;
 
 I2CInterface* i2c;
 LineSensor* lineSensor;
+
+/**
+ * LEDを光らせるための周期割り込みリスナ
+ */
+static uint16_t onTimerOverflowed() {
+	bool value = led2->getValue();
+	led2->setValue(!value);
+	return 0;
+}
+
+static PeriodicInterruptListener ledBlinkListener = {
+	onTimerOverflowed,
+};
 
 void putch(char data) {
 	serial->getByteOutputStream()->write(data);
@@ -57,6 +71,7 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA2()->getDigitalOutputPin();
+	led2 = getRA3()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRB7()->getDigitalPin(),
@@ -137,6 +152,13 @@ void setup() {
 	i2c = getMSSP2(getRB2()->getDigitalPin(), getRB1()->getDigitalPin())->getI2CInterface();
 	// initilize line sensor
 	lineSensor = getLineSensor(i2c);
+
+	// add led blink task
+	TimerModule* timer2 = getTimer2(EIGHT_BIT_TIMER_PRISCALER_1_16, EIGHT_BIT_TIMER_POSTSCALER_1_16);
+	timer2->getPeriodicInterruptController()->addInterruptListener(&ledBlinkListener);
+	timer2->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
+	timer2->start();
+
 	
 
 
@@ -157,13 +179,14 @@ void interrupt high_priority isr_high() {
 
 void interrupt low_priority isr_low() {
 	Timer5_handleInterrupt();
+	Timer2_handleInterrupt();
 	EUSART2_handleInterrupt();
 }
 
 void loop() {
 	bool value = led->getValue();
 	led->setValue(!value);
-	printf("lineValue = %d\r\n", lineSensor->getLineValue());
+	printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
 	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
