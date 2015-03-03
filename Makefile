@@ -28,7 +28,7 @@ CC := xc8
 # compiler options
 CFLAGS := --chip=$(PROSESSOR_NAME) \
 	--CCI $(addprefix -I,$(INCLUDE_DIRS)) \
-	--stack=reentrant --asmlist --opt=all \
+	--stack=hybrid --asmlist --opt=all \
 	--errformat="%f:%l:%c:%n:%s" --warnformat="%f:%l:%c:%n:%s" --msgdisable=1273
 # target directory
 TARGET_DIR := bin
