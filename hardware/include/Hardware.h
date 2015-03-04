@@ -242,13 +242,18 @@ typedef enum {
 ECCPModule* getECCP1(ECCPModule_TimerSource);
 ECCPModule* getECCP2(ECCPModule_TimerSource);
 ECCPModule* getECCP3(ECCPModule_TimerSource);
+// Standard CCP
+ECCPModule* getCCP4(ECCPModule_TimerSource);
+ECCPModule* getCCP5(ECCPModule_TimerSource);
 
 /**
- * ECCPの割り込みハンドラ
+ * ECCP，CCPの割り込みハンドラ
  */
 void ECCP1_handleInterrupt(void);
 void ECCP2_handleInterrupt(void);
 void ECCP3_handleInterrupt(void);
+void CCP4_handleInterrupt(void);
+void CCP5_handleInterrupt(void);
 
 // --------------------------------------------------------------------
 // Comparator Module

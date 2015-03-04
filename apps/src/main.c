@@ -38,6 +38,8 @@ MotionController* motionController;
 I2CInterface* i2c;
 LineSensor* lineSensor;
 
+EnhancedPWMDriver* pwm;
+
 /**
  * LEDを光らせるための周期割り込みリスナ
  */
@@ -92,15 +94,15 @@ void setup() {
 	timer3->start();
 	leftMotor = getLeftMotor(
 			timer3->getPeriodicInterruptController(),
-			getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
+			getCCP4(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
 			portC,
-			0x0F,
+			0b00000001,
 			0x00, 0xFF, 0x0F, 0x00);
 	leftMotor->setForward();
 	// initilize right motor
 	rightMotor = getRightMotor(
 			timer3->getPeriodicInterruptController(),
-			getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
+			getCCP5(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
 			portC,
 			0xF0,
 			0x00, 0xFF, 0x0F, 0x00);
@@ -152,7 +154,7 @@ void setup() {
 	motionController->moveStraight(50);
 
 	// initilize i2c
-	i2c = getMSSP2(getRB2()->getDigitalPin(), getRB1()->getDigitalPin())->getI2CInterface();
+	i2c = getMSSP1(getRC4()->getDigitalPin(), getRC3()->getDigitalPin())->getI2CInterface();
 	// initilize line sensor
 	lineSensor = getLineSensor(i2c);
 
@@ -161,9 +163,17 @@ void setup() {
 	timer2->getPeriodicInterruptController()->addInterruptListener(&ledBlinkListener);
 	timer2->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
 	timer2->start();
-
 	
-
+	// pwm test
+	DigitalPin* rc2 = getRC2()->getDigitalPin();
+	rc2->setDirection(true);
+	DigitalPin* rb2 = getRB2()->getDigitalPin();
+	rb2->setDirection(true);
+	TimerModule* timer4 = getTimer4(EIGHT_BIT_TIMER_PRISCALER_1_4, EIGHT_BIT_TIMER_POSTSCALER_1_1);
+	timer4->start();
+	pwm = getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver();
+	pwm->setPWMOutputMode(ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE, ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH);
+	pwm->setPWMDutyCount(400);
 
 	// interrupt settings
 	RCONbits.IPEN = 1;
@@ -174,8 +184,8 @@ void setup() {
 void interrupt high_priority isr_high() {
 	Timer1_handleInterrupt();
 	Timer3_handleInterrupt();
-	ECCP2_handleInterrupt();
-	ECCP3_handleInterrupt();
+	CCP4_handleInterrupt();
+	CCP5_handleInterrupt();
 	Comparator1_handleInterrupt();
 	Comparator2_handleInterrupt();
 }

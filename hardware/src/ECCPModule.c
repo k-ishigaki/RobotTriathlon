@@ -75,3 +75,47 @@
 #define ECCP3_getter getECCP3
 #include "ECCPModule.substance.c"
 
+// CCP4
+// include substance.c as a Standard CCP Module
+#define IS_CCP
+// register
+#define CCP4_CCPxCON CCP4CONbits
+#define CCP4_CCPRxH CCPR4Hbits
+#define CCP4_CCPRxL CCPR4Lbits
+#define CCP4_CCPTMRSx CCPTMRS1bits
+#define CCP4_IPRx IPR4bits
+#define CCP4_PIEx PIE4bits
+#define CCP4_PIRx PIR4bits
+// string concatenation
+#define NAMESPACE(name) CCP4_##name
+#define CCPx(name) CCP4##name
+#define Cx(name) C4##name
+#define CCPRx(name) CCPR4##name
+#define DCx(name) DC4##name
+#define Px(name) P4##name
+// getter function name
+#define CCP4_getter getCCP4
+#include "ECCPModule.substance.c"
+
+// CCP5
+// include substance.c as a Standard CCP Module
+#define IS_CCP
+// register
+#define CCP5_CCPxCON CCP5CONbits
+#define CCP5_CCPRxH CCPR5Hbits
+#define CCP5_CCPRxL CCPR5Lbits
+#define CCP5_CCPTMRSx CCPTMRS1bits
+#define CCP5_IPRx IPR4bits
+#define CCP5_PIEx PIE4bits
+#define CCP5_PIRx PIR4bits
+// string concatenation
+#define NAMESPACE(name) CCP5_##name
+#define CCPx(name) CCP5##name
+#define Cx(name) C5##name
+#define CCPRx(name) CCPR5##name
+#define DCx(name) DC5##name
+#define Px(name) P5##name
+// getter function name
+#define CCP5_getter getCCP5
+#include "ECCPModule.substance.c"
+
