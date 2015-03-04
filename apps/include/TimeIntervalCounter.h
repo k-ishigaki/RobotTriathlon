@@ -28,11 +28,14 @@ typedef struct {
  * @param インプットキャプチャに使うデジタルピン
  * @param 第一引数のタイマをソースにしたインプットキャプチャ
  */
-TimeIntervalCounter* getTimeIntervalCounter(
+TimeIntervalCounter* getTimeIntervalCounter1(
 		TimerModule*,
 		DigitalPin*,
 		InputCaptureController*);
 
-
+TimeIntervalCounter* getTimeIntervalCounter2(
+		TimerModule*,
+		DigitalPin*,
+		InputCaptureController*);
 
 #endif /* TIME_INTERVAL_COUNTER_H */
