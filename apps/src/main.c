@@ -25,6 +25,7 @@ void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
+DigitalOutputPin* led2;
 SerialPort* serial;
 
 MotorDriver* leftMotor;
@@ -39,6 +40,17 @@ I2CInterface* i2c;
 LineSensor* lineSensor;
 
 EnhancedPWMDriver* pwm;
+
+InputCaptureController* inputCaptureController;
+
+static void onInputCaptured(uint16_t capturedValue) {
+	bool value = led2->getValue();
+	led2->setValue(!value);
+}
+
+static InputCaptureInterruptListener inputCaptureListener = {
+	onInputCaptured,
+};
 
 /**
  * LEDを光らせるための周期割り込みリスナ
@@ -77,17 +89,18 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA2()->getDigitalOutputPin();
+	led2 = getRA3()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
-			getRB7()->getDigitalPin(),
-			getRB6()->getDigitalPin(),
-			getEUSART2(),
+			getRC7()->getDigitalPin(),
+			getRC6()->getDigitalPin(),
+			getEUSART1(),
 			115200);
 	// gpio port settings
 
 	// initilize left motor
-	GPIOPort* portC = getPORTC();
-	portC->setDigitalOutput(0xFF);
+	GPIOPort* portA = getPORTA();
+	portA->setDigitalOutput(0xF0);
 	TimerModule* timer3 = getTimer3(
 			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
 			SIXTEEN_BIT_TIMER_PRISCALER_1_1);
@@ -95,16 +108,16 @@ void setup() {
 	leftMotor = getLeftMotor(
 			timer3->getPeriodicInterruptController(),
 			getCCP4(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
-			portC,
-			0b00000001,
+			portA,
+			0b11000000,
 			0x00, 0xFF, 0x0F, 0x00);
 	leftMotor->setForward();
 	// initilize right motor
 	rightMotor = getRightMotor(
 			timer3->getPeriodicInterruptController(),
 			getCCP5(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getCompareMatchInterruptController(),
-			portC,
-			0xF0,
+			portA,
+			0b00110000,
 			0x00, 0xFF, 0x0F, 0x00);
 	rightMotor->setForward();
 
@@ -175,6 +188,21 @@ void setup() {
 	pwm->setPWMOutputMode(ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE, ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH);
 	pwm->setPWMDutyCount(400);
 
+	DigitalPin* rc0 = getRC0()->getDigitalPin();
+	rc0->setDirection(true);
+	DigitalPin* rc1 = getRC1()->getDigitalPin();
+	rc1->setDirection(true);
+	EnhancedPWMDriver* pwm2 = getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver();
+	pwm2->setPWMOutputMode(ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE, ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH);
+	pwm2->setPWMDutyCount(400);
+
+	// input capture test
+	DigitalPin* rb5 = getRB5()->getDigitalPin();
+	rb5->setDirection(false);
+	inputCaptureController = getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2)->getInputCaptureController();
+	inputCaptureController->addInputCaptureInterruptListener(&inputCaptureListener);
+	inputCaptureController->enableInputCaptureInterrupt(HIGH_PRIORITY);
+
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
@@ -184,6 +212,7 @@ void setup() {
 void interrupt high_priority isr_high() {
 	Timer1_handleInterrupt();
 	Timer3_handleInterrupt();
+	ECCP3_handleInterrupt();
 	CCP4_handleInterrupt();
 	CCP5_handleInterrupt();
 	Comparator1_handleInterrupt();
@@ -193,11 +222,11 @@ void interrupt high_priority isr_high() {
 void interrupt low_priority isr_low() {
 	Timer5_handleInterrupt();
 	Timer2_handleInterrupt();
-	EUSART2_handleInterrupt();
+	EUSART1_handleInterrupt();
 }
 
 void loop() {
-	printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
+	//printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
 	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
