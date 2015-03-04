@@ -16,6 +16,7 @@
 #include "MotionController.h"
 #include "LineSensor.h"
 #include "PWMOutputter.h"
+#include "TimeIntervalCounter.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -41,6 +42,8 @@ I2CInterface* i2c;
 LineSensor* lineSensor;
 
 InputCaptureController* inputCaptureController;
+
+TimeIntervalCounter* timeIntervalCounter;
 
 static void onInputCaptured(uint16_t capturedValue) {
 	bool value = led2->getValue();
@@ -198,6 +201,7 @@ void setup() {
 	inputCaptureController = getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2)->getInputCaptureController();
 	inputCaptureController->addInputCaptureInterruptListener(&inputCaptureListener);
 	inputCaptureController->enableInputCaptureInterrupt(HIGH_PRIORITY);
+
 
 	// interrupt settings
 	RCONbits.IPEN = 1;
