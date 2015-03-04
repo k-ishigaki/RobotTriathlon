@@ -35,10 +35,42 @@ typedef struct {
 
 typedef struct {
 	/**
+	 * PWMのデューティー比を設定する．
+	 * @param デューティー比，設定可能な値の範囲はタイマ依存
+	 */
+	void (*setPWMDutyCount)(uint16_t);
+} PWMDriver;
+
+typedef struct {
+	/**
+	 * PWMのデューティー比を設定する．
+	 * @param デューティー比，設定可能な値の範囲はタイマ依存
+	 */
+	void (*setPWMDutyCount)(uint16_t);
+	/**
+	 * PWMの出力モードを変更する．
+	 * @param モードを表す識別子，Hardware.hで定義
+	 * @param 出力モードを表す識別子，Hardware.hで定義
+	 */
+	void (*setPWMOutputMode)(int, int);
+} EnhancedPWMDriver;
+
+typedef struct {
+	/**
 	 * コンペアマッチのインターフェースを返す．
 	 * @return コンペアマッチのインターフェース
 	 */
 	CompareMatchInterruptController* (*getCompareMatchInterruptController)(void);
+	/**
+	 * 標準PWMドライバのインターフェースを返す．
+	 * @return PWMドライバのインターフェース
+	 */
+	PWMDriver* (*getPWMDriver)(void);
+	/**
+	 * 拡張PWMドライバのインターフェースを返す．
+	 * @return 拡張PWMドライバのインターフェース
+	 */
+	EnhancedPWMDriver* (*getEnhancedPWMDriver)(void);
 } ECCPModule;
 
 #endif /* ECCP_MODULE_H */

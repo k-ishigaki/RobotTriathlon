@@ -216,6 +216,25 @@ typedef enum {
 } ECCPModule_TimerSource;
 
 /**
+ * EnhancedPWMDriverの動作モード
+ */
+typedef enum {
+	ENHANCED_PWM_DRIVER_MODE_SINGLE,
+	ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE,
+	ENHANCED_PWM_DRIVER_MODE_FULL_BRIDGE,
+} EnhancedPWMDriver_Mode;
+
+/**
+ * EnhancedPWMDriverの出力モード．
+ */
+typedef enum {
+	ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH,
+	ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_LOW,
+	ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_LOW_ACTIVE_HIGH,
+	ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_LOW_ACTIVE_LOW,
+} EnhancedPWMDriver_OutputMode;
+
+/**
  * ECCP Moduleのオブジェクトを返す．
  * @return ECCPModuleの構造体ポインタ
  */

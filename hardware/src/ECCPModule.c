@@ -25,6 +25,8 @@
 #define CCPx(name) CCP1##name
 #define Cx(name) C1##name
 #define CCPRx(name) CCPR1##name
+#define DCx(name) DC1##name
+#define Px(name) P1##name
 // getter function name
 #define ECCP1_getter getECCP1
 #include "ECCPModule.substance.c"
@@ -45,6 +47,8 @@
 #define CCPx(name) CCP2##name
 #define Cx(name) C2##name
 #define CCPRx(name) CCPR2##name
+#define DCx(name) DC2##name
+#define Px(name) P2##name
 // getter function name
 #define ECCP2_getter getECCP2
 #include "ECCPModule.substance.c"
@@ -65,6 +69,8 @@
 #define CCPx(name) CCP3##name
 #define Cx(name) C3##name
 #define CCPRx(name) CCPR3##name
+#define DCx(name) DC3##name
+#define Px(name) P3##name
 // getter function name
 #define ECCP3_getter getECCP3
 #include "ECCPModule.substance.c"

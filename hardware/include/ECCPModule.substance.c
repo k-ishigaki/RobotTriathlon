@@ -59,11 +59,90 @@ static CompareMatchInterruptController* NAMESPACE(getCompareMatchInterruptContro
 }
 
 // --------------------------------------------------------------------
+// PWMDriver
+// --------------------------------------------------------------------
+
+// field methods
+static void NAMESPACE(setPWMDutyCount)(uint16_t dutyCount) {
+	NAMESPACE(CCPRxL).CCPRx(L) = dutyCount >> 2;
+	NAMESPACE(CCPxCON).DCx(B) = dutyCount & 0b11;
+}
+
+// substance of interface
+static PWMDriver NAMESPACE(pwmDriver) = {
+	NAMESPACE(setPWMDutyCount),
+};
+
+// constructor
+static PWMDriver* NAMESPACE(getPWMDriver)() {
+	NAMESPACE(CCPxCON).CCPx(M) = 0b1100;
+	return &NAMESPACE(pwmDriver);
+}
+
+// --------------------------------------------------------------------
+// EnhancedPWMDriver
+// --------------------------------------------------------------------
+#ifdef IS_ECCP
+
+// field methods
+static void NAMESPACE(setPWMOutputMode)(int mode, int outputMode) {
+	switch ((EnhancedPWMDriver_Mode)mode) {
+		case ENHANCED_PWM_DRIVER_MODE_SINGLE:
+			NAMESPACE(CCPxCON).Px(M1) = 0;
+			NAMESPACE(CCPxCON).Px(M0) = 0;
+			break;
+		case ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE:
+			NAMESPACE(CCPxCON).Px(M1) = 1;
+			NAMESPACE(CCPxCON).Px(M0) = 0;
+			break;
+		case ENHANCED_PWM_DRIVER_MODE_FULL_BRIDGE:
+			NAMESPACE(CCPxCON).Px(M1) = 0;
+			NAMESPACE(CCPxCON).Px(M0) = 1;
+			break;
+	}
+	switch ((EnhancedPWMDriver_OutputMode)outputMode) {
+		case ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH:
+			NAMESPACE(CCPxCON).CCPx(M) = 0b1100;
+			break;
+		case ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_LOW:
+			NAMESPACE(CCPxCON).CCPx(M) = 0b1101;
+			break;
+		case ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_LOW_ACTIVE_HIGH:
+			NAMESPACE(CCPxCON).CCPx(M) = 0b1110;
+			break;
+		case ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_LOW_ACTIVE_LOW:
+			NAMESPACE(CCPxCON).CCPx(M) = 0b1111;
+			break;
+	}
+}
+
+// substance of interface
+static EnhancedPWMDriver NAMESPACE(enhancedPWMDriver) = {
+	NAMESPACE(setPWMDutyCount),
+	NAMESPACE(setPWMOutputMode),
+};
+
+static EnhancedPWMDriver* NAMESPACE(getEnhancedPWMDriver)() {
+	// ECCPも最初はシングルアウトプット
+	NAMESPACE(CCPxCON).Px(M1) = 0;
+	NAMESPACE(CCPxCON).Px(M0) = 0;
+	NAMESPACE(CCPxCON).CCPx(M) = 0b1100;
+	return &NAMESPACE(enhancedPWMDriver);
+}
+
+#endif
+// --------------------------------------------------------------------
 // ECCPModule
 // --------------------------------------------------------------------
 // substance of interface
 static ECCPModule NAMESPACE(eccpModule) = {
-	&NAMESPACE(getCompareMatchInterruptController),
+	NAMESPACE(getCompareMatchInterruptController),
+	NAMESPACE(getPWMDriver),
+#ifdef IS_ECCP
+	NAMESPACE(getEnhancedPWMDriver),
+#elif defined IS_CCP
+	NULL,
+#endif
 };
 
 // constructor
@@ -105,5 +184,7 @@ void NAMESPACE(handleInterrupt)() {
 #undef CCPx
 #undef Cx
 #undef CCPRx
+#undef DCx
+#undef Px
 
 #endif /* USING_ECCP_MODULE_SUBSTANCE */
