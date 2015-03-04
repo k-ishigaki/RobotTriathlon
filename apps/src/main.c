@@ -25,7 +25,6 @@ void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
-DigitalOutputPin* led2;
 SerialPort* serial;
 
 MotorDriver* leftMotor;
@@ -43,8 +42,13 @@ LineSensor* lineSensor;
  * LEDを光らせるための周期割り込みリスナ
  */
 static uint16_t onTimerOverflowed() {
-	bool value = led2->getValue();
-	led2->setValue(!value);
+	static char count = 0;
+	count++;
+	if (count > 100) {
+		count = 0;
+		bool value = led->getValue();
+		led->setValue(!value);
+	}
 	return 0;
 }
 
@@ -71,7 +75,6 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA2()->getDigitalOutputPin();
-	led2 = getRA3()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRB7()->getDigitalPin(),
@@ -184,8 +187,6 @@ void interrupt low_priority isr_low() {
 }
 
 void loop() {
-	bool value = led->getValue();
-	led->setValue(!value);
 	printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
 	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
