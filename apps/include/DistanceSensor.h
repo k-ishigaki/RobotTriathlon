@@ -8,6 +8,7 @@
 #include "Hardware.h"
 #include "PWMOutputter.h"
 #include "TaskManager.h"
+#include "TimeIntervalCounter.h"
 
 typedef struct {
 	/**
@@ -18,22 +19,19 @@ typedef struct {
 } DistanceSensor;
 
 /**
- * 距離センサのコンストラクタ
+ * 距離センサのコンストラクタ．
  * @param PWM出力インターフェース
- * @param インプットキャプチャのデジタルピン
- * @param インプットキャプチャインターフェース
+ * @param 時間間隔測定のインターフェース
  * @param タスクマネージャのインターフェース
  */
 DistanceSensor* getDistanceSensor1(
 		PWMOutputter*,
-		DigitalPin*,
-		InputCaptureController*
+		TimeIntervalCounter*,
 		TaskManager*);
 
 DistanceSensor* getDistanceSensor2(
 		PWMOutputter*,
-		DigitalPin*,
-		InputCaptureController*,
+		TimeIntervalCounter*,
 		TaskManager*);
 
 
