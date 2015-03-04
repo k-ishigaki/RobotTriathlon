@@ -13,6 +13,14 @@ typedef struct {
 
 typedef struct {
 	/**
+	 * インプットキャプチャ割り込みが発生した時に呼び出される．
+	 * @param キャプチャした値
+	 */
+	void (*onInputCaptured)(uint16_t);
+} InputCaptureInterruptListener;
+
+typedef struct {
+	/**
 	 * コンペアマッチが発生するときの値を設定する．
 	 * @param タイマの値と比較される値
 	 */
@@ -57,6 +65,28 @@ typedef struct {
 
 typedef struct {
 	/**
+	 * キャプチャした値を取得する．
+	 */
+	uint16_t (*getCapturedValue)(void);
+	/**
+	 * インプットキャプチャ割り込みリスナを登録する．
+	 * @param インプットキャプチャ割り込みリスナ
+	 */
+	void (*addInputCaptureInterruptListener)(InputCaptureInterruptListener*);
+	/**
+	 * キャプチャ割り込みを有効にする．
+	 * タイマは外部でクリアされる必要がある．
+	 * @param 割り込み優先度，Hardware.hで定義された列挙型定数
+	 */
+	void (*enableInputCaptureInterrupt)(int);
+	/**
+	 * キャプチャ割り込みを無効にする．
+	 */
+	void (*disableInputCaptureInterrupt)(void);
+} InputCaptureController;
+
+typedef struct {
+	/**
 	 * コンペアマッチのインターフェースを返す．
 	 * @return コンペアマッチのインターフェース
 	 */
@@ -71,6 +101,11 @@ typedef struct {
 	 * @return 拡張PWMドライバのインターフェース
 	 */
 	EnhancedPWMDriver* (*getEnhancedPWMDriver)(void);
+	/**
+	 * インプットキャプチャのインターフェースを返す．
+	 * @return インプットキャプチャのインターフェース
+	 */
+	InputCaptureController* (*getInputCaptureController)(void);
 } ECCPModule;
 
 #endif /* ECCP_MODULE_H */

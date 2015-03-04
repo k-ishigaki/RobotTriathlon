@@ -132,6 +132,53 @@ static EnhancedPWMDriver* NAMESPACE(getEnhancedPWMDriver)() {
 
 #endif
 // --------------------------------------------------------------------
+// InputCaptureController
+// --------------------------------------------------------------------
+// field variables
+InputCaptureInterruptListener* NAMESPACE(inputCaptreListener);
+
+// field methods
+uint16_t NAMESPACE(getCapturedValue)() {
+	return NAMESPACE(CCPRxL).CCPRx(L) + (((uint16_t)NAMESPACE(CCPRxH).CCPRx(H)) << 8);
+}
+
+void NAMESPACE(addInputCaptureInterruptListener)(InputCaptureInterruptListener* listener) {
+	NAMESPACE(inputCaptreListener) = listener;
+}
+
+void NAMESPACE(enableInputCaptureInterrupt)(int priority) {
+	switch ((Hardware_InterruptPriority)priority) {
+		case LOW_PRIORITY:
+			NAMESPACE(IPRx).CCPx(IP) = 0;
+			break;
+		case HIGH_PRIORITY:
+			NAMESPACE(IPRx).CCPx(IP) = 1;
+			break;
+	}
+	NAMESPACE(PIRx).CCPx(IF) = 0;
+	NAMESPACE(PIEx).CCPx(IE) = 1;
+}
+
+void NAMESPACE(disableInputCaptureInterrupt)() {
+	NAMESPACE(PIEx).CCPx(IE) = 0;
+	NAMESPACE(PIRx).CCPx(IF) = 0;
+}
+
+// substance of interface
+static InputCaptureController NAMESPACE(inputCaptureController) = {
+	NAMESPACE(getCapturedValue),
+	NAMESPACE(addInputCaptureInterruptListener),
+	NAMESPACE(enableInputCaptureInterrupt),
+	NAMESPACE(disableInputCaptureInterrupt),
+};
+
+// constructor
+static InputCaptureController* NAMESPACE(getInputCaptureController)() {
+	NAMESPACE(CCPxCON).CCPx(M) = 0b0101;
+	return &NAMESPACE(inputCaptureController);
+}
+
+// --------------------------------------------------------------------
 // ECCPModule
 // --------------------------------------------------------------------
 // substance of interface
@@ -143,6 +190,7 @@ static ECCPModule NAMESPACE(eccpModule) = {
 #elif defined IS_CCP
 	NULL,
 #endif
+	NAMESPACE(getInputCaptureController),
 };
 
 // constructor
@@ -166,15 +214,19 @@ ECCPModule* NAMESPACE(getter)(ECCPModule_TimerSource timerSource) {
 // --------------------------------------------------------------------
 void NAMESPACE(handleInterrupt)() {
 	if (NAMESPACE(PIEx).CCPx(IE) == 1 && NAMESPACE(PIRx).CCPx(IF) == 1) {
-		uint16_t compareMatchCount;
-		
 		NAMESPACE(PIRx).CCPx(IF) = 0;
-		compareMatchCount = NAMESPACE(listener)->onCompareMatched();
-		if (compareMatchCount == 0) {
-			// 0が返っていたら変化しない
-			return;
+		if (NAMESPACE(listener) != NULL) {
+			uint16_t compareMatchCount;
+			compareMatchCount = NAMESPACE(listener)->onCompareMatched();
+			if (compareMatchCount == 0) {
+				// 0が返っていたら変化しない
+				return;
+			}
+			NAMESPACE(setCompareMatchCount)(compareMatchCount);
+		} else if (NAMESPACE(inputCaptreListener) != NULL) {
+			NAMESPACE(inputCaptreListener)->onInputCaptured(
+					NAMESPACE(getCapturedValue)());
 		}
-		NAMESPACE(setCompareMatchCount)(compareMatchCount);
 	}
 }
 
