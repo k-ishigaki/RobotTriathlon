@@ -15,6 +15,7 @@
 #include "SpeedCounter.h"
 #include "MotionController.h"
 #include "LineSensor.h"
+#include "PWMOutputter.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -38,8 +39,6 @@ MotionController* motionController;
 
 I2CInterface* i2c;
 LineSensor* lineSensor;
-
-EnhancedPWMDriver* pwm;
 
 InputCaptureController* inputCaptureController;
 
@@ -178,23 +177,20 @@ void setup() {
 	timer2->start();
 	
 	// pwm test
-	DigitalPin* rc2 = getRC2()->getDigitalPin();
-	rc2->setDirection(true);
-	DigitalPin* rb2 = getRB2()->getDigitalPin();
-	rb2->setDirection(true);
 	TimerModule* timer4 = getTimer4(EIGHT_BIT_TIMER_PRISCALER_1_4, EIGHT_BIT_TIMER_POSTSCALER_1_1);
+	timer4->getPeriodicInterruptController()->setPeriodCount(100);	// 40kHz
 	timer4->start();
-	pwm = getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver();
-	pwm->setPWMOutputMode(ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE, ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH);
-	pwm->setPWMDutyCount(400);
-
-	DigitalPin* rc0 = getRC0()->getDigitalPin();
-	rc0->setDirection(true);
-	DigitalPin* rc1 = getRC1()->getDigitalPin();
-	rc1->setDirection(true);
-	EnhancedPWMDriver* pwm2 = getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver();
-	pwm2->setPWMOutputMode(ENHANCED_PWM_DRIVER_MODE_HALF_BRIDGE, ENHANCED_PWM_DRIVER_OUTPUT_MODE_ACTIVE_HIGH_ACTIVE_HIGH);
-	pwm2->setPWMDutyCount(400);
+	PWMOutputter* pwm1 = getPWMOutputter1(
+			getRC2()->getDigitalPin(),
+			getRB2()->getDigitalPin(),
+			getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver());
+	PWMOutputter* pwm2 = getPWMOutputter2(
+			getRC0()->getDigitalPin(),
+			getRC1()->getDigitalPin(),
+			getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver());
+	
+	pwm1->enablePWMOutput();
+	pwm2->enablePWMOutput();
 
 	// input capture test
 	DigitalPin* rb5 = getRB5()->getDigitalPin();
