@@ -116,7 +116,7 @@
 // P2BMX =	ECCP2 B output mux bit
 // PORTB5	P2B is on RB5
 // PORTC0	P2B is on RC0
-#pragma config P2BMX = PORTB5
+#pragma config P2BMX = PORTC0
 
 // STVREN =	Stack Full/Underflow Reset Enable bit
 // ON	Stack full/underflow will cause Reset
