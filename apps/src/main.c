@@ -39,7 +39,6 @@ SpeedCounter* rightSpeedCounter;
 
 MotionController* motionController;
 
-I2CInterface* i2c;
 LineSensor* lineSensor;
 
 DistanceSensor* leftDistanceSensor;
@@ -156,9 +155,8 @@ void setup() {
 			rightSpeedCounter);
 	motionController->moveStraight(50);
 
-	// initilize i2c
-	i2c = getMSSP1(getRC4()->getDigitalPin(), getRC3()->getDigitalPin())->getI2CInterface();
 	// initilize line sensor
+	I2CInterface* i2c = getMSSP1(getRC4()->getDigitalPin(), getRC3()->getDigitalPin())->getI2CInterface();
 	lineSensor = getLineSensor(i2c);
 
 	// add led blink task
@@ -167,7 +165,7 @@ void setup() {
 	timer2->getPeriodicInterruptController()->enableInterrupt(LOW_PRIORITY);
 	timer2->start();
 	
-	// pwm test
+	// initilize distance sensor
 	TimerModule* timer4 = getTimer4(
 			EIGHT_BIT_TIMER_PRISCALER_1_4,
 			EIGHT_BIT_TIMER_POSTSCALER_1_16);
