@@ -95,6 +95,11 @@ DistanceSensor* NAMESPACE(getter)(
 		TimeIntervalCounter* timeIntervalCounter,
 		TaskManager* taskManager) {
 	pwmOutputter->disablePWMOutput();
+	taskManager->addPeriodicCalledTack(&NAMESPACE(task1));
+	taskManager->addPeriodicCalledTack(&NAMESPACE(task2));
+	taskManager->addPeriodicCalledTack(&NAMESPACE(task3));
+	taskManager->addPeriodicCalledTack(&NAMESPACE(task4));
+	taskManager->enableTaskInterrupt();
 	NAMESPACE(pwmOutputter) = pwmOutputter;
 	NAMESPACE(timeIntervalCounter) = timeIntervalCounter;
 	return &NAMESPACE(distanceSensor);
