@@ -91,8 +91,8 @@ static uint16_t NAMESPACE(getCount)() {
 
 static void NAMESPACE(setCount)(uint16_t count) {
 	// 書き込み順はH->Lとすること(16bit mode)
-	TMR1H = count >> 8;
-	TMR1L = count;
+	NAMESPACE(TMRxH).TMRx(H) = count >> 8;
+	NAMESPACE(TMRxL).TMRx(L) = count;
 }
 #elif defined IS_8BIT_TIMER
 static uint16_t NAMESPACE(getCount)() {
