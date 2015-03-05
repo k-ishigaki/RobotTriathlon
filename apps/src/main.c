@@ -175,7 +175,7 @@ void setup() {
 			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
 	DigitalPin* rb5 = getRB5()->getDigitalPin();
 	InputCaptureController* inputCaptureController = getECCP3(
-			ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getInputCaptureController();
+			ECCP_MODULE_TIMR_SOURCE_TIMER5_TIMER6)->getInputCaptureController();
 
 	leftDistanceSensor = getDistanceSensor2(
 			getPWMOutputter2(
@@ -232,7 +232,7 @@ void loop() {
 	count++;
 	//printf("coun = %05d\tline = %05d\tspee = %05d\r\n", count, lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
 	printf("coun =%05d\tline = %05d\tspee = %05d\tdist = %05d\r\n", count, lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount(), leftDistanceSensor->getDistaneCount());
-	for (unsigned char i=0; i<100; i++) {
+	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
 }

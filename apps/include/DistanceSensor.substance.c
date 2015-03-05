@@ -29,7 +29,7 @@ static bool NAMESPACE(onTask2Called)() {
 		interruptCount++;
 		NAMESPACE(pwmOutputter)->disablePWMOutput();
 		return true;
-	} else if (interruptCount < 10){
+	} else if (interruptCount < 5){
 		interruptCount++;
 		return true;
 	}
@@ -51,7 +51,7 @@ static bool NAMESPACE(onTask3Called)() {
 		interruptCount++;
 		NAMESPACE(timeIntervalCounter)->startCapturing();
 		return true;
-	} else if (interruptCount < 10) {
+	} else if (interruptCount < 32) {
 		interruptCount++;
 		return true;
 	}

@@ -3,6 +3,7 @@
 // common field variables
 bool NAMESPACE(isCaptured) = false;
 static InputCaptureController* NAMESPACE(inputCaptureController);
+static long NAMESPACE(capturedCount) = 0;
 
 // --------------------------------------------------------------------
 // InputCaptureInterruptListener
@@ -11,6 +12,7 @@ static InputCaptureController* NAMESPACE(inputCaptureController);
 static void NAMESPACE(onInputCaptured)(uint16_t capturedCount) {
 	NAMESPACE(isCaptured) = true;
 	NAMESPACE(inputCaptureController)->disableInputCaptureInterrupt();
+	NAMESPACE(capturedCount) = capturedCount;
 }
 
 // substance of interface
@@ -37,9 +39,10 @@ static void NAMESPACE(startCapturing)() {
 
 static uint16_t NAMESPACE(getCapturedValue)() {
 	if (NAMESPACE(isCaptured) == false) {
+		NAMESPACE(capturedCount) = 0;
 		return 0;
 	}
-	return NAMESPACE(inputCaptureController)->getCapturedValue();
+	return NAMESPACE(capturedCount);
 }
 
 // substance of interface
