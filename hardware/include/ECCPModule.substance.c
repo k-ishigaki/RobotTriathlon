@@ -135,7 +135,8 @@ static EnhancedPWMDriver* NAMESPACE(getEnhancedPWMDriver)() {
 // InputCaptureController
 // --------------------------------------------------------------------
 // field variables
-InputCaptureInterruptListener* NAMESPACE(inputCaptreListener);
+InputCaptureInterruptListener* NAMESPACE(inputCaptureListener)[2];
+uint8_t NAMESPACE(numberOfInputCaptureListener) = 0;
 
 // field methods
 uint16_t NAMESPACE(getCapturedValue)() {
@@ -143,7 +144,8 @@ uint16_t NAMESPACE(getCapturedValue)() {
 }
 
 void NAMESPACE(addInputCaptureInterruptListener)(InputCaptureInterruptListener* listener) {
-	NAMESPACE(inputCaptreListener) = listener;
+	NAMESPACE(inputCaptureListener)[NAMESPACE(numberOfInputCaptureListener)] = listener;
+	NAMESPACE(numberOfInputCaptureListener)++;
 }
 
 void NAMESPACE(enableInputCaptureInterrupt)(int priority) {
@@ -223,9 +225,11 @@ void NAMESPACE(handleInterrupt)() {
 				return;
 			}
 			NAMESPACE(setCompareMatchCount)(compareMatchCount);
-		} else if (NAMESPACE(inputCaptreListener) != NULL) {
-			NAMESPACE(inputCaptreListener)->onInputCaptured(
-					NAMESPACE(getCapturedValue)());
+		} else if (NAMESPACE(inputCaptureListener)[0] != NULL) {
+			for (uint8_t index = 0; index < NAMESPACE(numberOfInputCaptureListener); index++) {
+				NAMESPACE(inputCaptureListener)[index]->onInputCaptured(
+						NAMESPACE(getCapturedValue)());
+			}
 		}
 	}
 }
