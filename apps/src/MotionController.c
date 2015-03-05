@@ -27,6 +27,14 @@ int NAMESPACE(rightTarget);
 // --------------------------------------------------------------------
 // field methods
 static uint16_t NAMESPACE(onTimerOverflowed)() {
+	// 8回に1回割り込む
+	static uint8_t interruptCount = 0;
+	if (interruptCount < 8) {
+		interruptCount++;
+		return 0;
+	} else {
+		interruptCount = 0;
+	}
 	/** 前回の速度偏差（微分項算出に使用） */
 	static int previousLeftDeflection;
 	static int previousRightDeflection;
