@@ -204,9 +204,6 @@ void setup() {
 	timer4->getPeriodicInterruptController()->setPeriodCount(100);	// 40kHz
 	timer4->start();
 
-
-
-
 	// interrupt settings
 	RCONbits.IPEN = 1;
 	INTCONbits.GIEL = 1;
