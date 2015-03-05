@@ -1,9 +1,9 @@
 #ifdef USING_DISTANCE_SENSOR_SUBSTANCE
 
 // common fields
-PWMOutputter* NAMESPACE(pwmOutputter);
-TimeIntervalCounter* NAMESPACE(timeIntervalCounter);
-uint16_t NAMESPACE(distanceCount);
+static PWMOutputter* NAMESPACE(pwmOutputter);
+static TimeIntervalCounter* NAMESPACE(timeIntervalCounter);
+static uint16_t NAMESPACE(distanceCount);
 
 // --------------------------------------------------------------------
 // PeriodicCalledTask（パルス送信+タイマスタートタスク）
