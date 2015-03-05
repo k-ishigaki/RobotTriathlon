@@ -14,7 +14,7 @@ static void NAMESPACE(onInputCaptured)(uint16_t capturedCount) {
 }
 
 // substance of interface
-static InputCaptureInterruptListener NAMESPACE(listener) = {
+static InputCaptureInterruptListener NAMESPACE(inputCaptureListener) = {
 	NAMESPACE(onInputCaptured),
 };
 
@@ -32,7 +32,7 @@ static void NAMESPACE(startTimer)() {
 
 static void NAMESPACE(startCapturing)() {
 	NAMESPACE(isCaptured) = false;
-	NAMESPACE(inputCaptureController)->enableInputCaptureInterrupt(HIGH_PRIORITY);
+	NAMESPACE(inputCaptureController)->enableInputCaptureInterrupt(LOW_PRIORITY);
 }
 
 static uint16_t NAMESPACE(getCapturedValue)() {
@@ -52,6 +52,8 @@ static TimeIntervalCounter NAMESPACE(timeIntervalCounter) = {
 // constructor
 TimeIntervalCounter* NAMESPACE(getter)(TimerModule* timerModule, DigitalPin* pin, InputCaptureController* inputCaptureController) {
 	pin->setDirection(false);
+	inputCaptureController->addInputCaptureInterruptListener(&NAMESPACE(inputCaptureListener));
+	inputCaptureController->enableInputCaptureInterrupt(LOW_PRIORITY);
 	NAMESPACE(timerModule) = timerModule;
 	NAMESPACE(inputCaptureController) = inputCaptureController;
 	return &NAMESPACE(timeIntervalCounter);
