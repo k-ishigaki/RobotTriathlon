@@ -18,6 +18,7 @@
 #include "PWMOutputter.h"
 #include "TimeIntervalCounter.h"
 #include "TaskManager.h"
+#include "DistanceSensor.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -28,7 +29,6 @@ void loop(void);
 
 // instance of Object
 DigitalOutputPin* led;
-DigitalOutputPin* led2;
 SerialPort* serial;
 
 MotorDriver* leftMotor;
@@ -42,53 +42,8 @@ MotionController* motionController;
 I2CInterface* i2c;
 LineSensor* lineSensor;
 
-InputCaptureController* inputCaptureController;
-
-TimeIntervalCounter* timeIntervalCounter;
-
-
-// --------------------------------------------------------------------
-// TestTask1
-// --------------------------------------------------------------------
-static bool TestTask1_onTaskCalled() {
-	static int count = 0;
-	if (count == 0) {
-		count++;
-		led2->setValue(true);
-		return true;
-	} else if (count < 6400) {
-		count++;
-		return true;
-	}
-	count = 0;
-	return false;
-}
-
-static PeriodicCalledTask testTask1 = {
-	TestTask1_onTaskCalled,
-};
-
-// --------------------------------------------------------------------
-// TestTask2
-// --------------------------------------------------------------------
-static bool TestTask2_onTaskCalled() {
-	static int count = 0;
-	if (count == 0) {
-		count++;
-		led2->setValue(false);
-		return true;
-	} else if (count < 6400) {
-		count++;
-		return true;
-	}
-	count = 0;
-	return false;
-}
-
-static PeriodicCalledTask testTask2 = {
-	TestTask2_onTaskCalled,
-};
-
+DistanceSensor* leftDistanceSensor;
+DistanceSensor* rightDistanceSensor;
 
 /**
  * LEDを光らせるための周期割り込みリスナ
@@ -127,7 +82,6 @@ void setup() {
 	osc->selectSystemClock(PRIMARY);
 	// LED Pin settings
 	led = getRA2()->getDigitalOutputPin();
-	led2 = getRA3()->getDigitalOutputPin();
 	// Serial Port settings
 	serial = getSerialPort(
 			getRC7()->getDigitalPin(),
@@ -192,12 +146,10 @@ void setup() {
 			comparator2,
 			timer1->getPeriodicInterruptController());
 
-	TimerModule* timer5 = getTimer5(
-			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
-			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
-	timer5->start();
+	TimerModule* timer6 = getTimer6(EIGHT_BIT_TIMER_PRISCALER_1_16, EIGHT_BIT_TIMER_POSTSCALER_1_16);
+	timer6->start();
 	motionController = getMotionController(
-			timer5->getPeriodicInterruptController(),
+			timer6->getPeriodicInterruptController(),
 			leftMotor,
 			leftSpeedCounter,
 			rightMotor,
@@ -216,32 +168,45 @@ void setup() {
 	timer2->start();
 	
 	// pwm test
-	TimerModule* timer4 = getTimer4(EIGHT_BIT_TIMER_PRISCALER_1_4, EIGHT_BIT_TIMER_POSTSCALER_1_1);
-	PWMOutputter* pwm1 = getPWMOutputter1(
-			getRC2()->getDigitalPin(),
-			getRB2()->getDigitalPin(),
-			getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver());
-	PWMOutputter* pwm2 = getPWMOutputter2(
-			getRC0()->getDigitalPin(),
-			getRC1()->getDigitalPin(),
-			getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver());
+	TimerModule* timer4 = getTimer4(
+			EIGHT_BIT_TIMER_PRISCALER_1_4,
+			EIGHT_BIT_TIMER_POSTSCALER_1_16);
 	
-	pwm1->enablePWMOutput();
-	pwm2->enablePWMOutput();
+	TimerModule* timer5 = getTimer5(
+			SIXTEEN_BIT_TIMER_CLOCKSOURCE_INSTRUCTION_CLOCK,
+			SIXTEEN_BIT_TIMER_PRISCALER_1_8);
+	DigitalPin* rb5 = getRB5()->getDigitalPin();
+	InputCaptureController* inputCaptureController = getECCP3(
+			ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getInputCaptureController();
 
-	// input capture test
-	//DigitalPin* rb5 = getRB5()->getDigitalPin();
-	//rb5->setDirection(false);
-	//inputCaptureController = getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2)->getInputCaptureController();
-	//inputCaptureController->addInputCaptureInterruptListener(&inputCaptureListener);
-	//inputCaptureController->enableInputCaptureInterrupt(LOW_PRIORITY);
+	leftDistanceSensor = getDistanceSensor2(
+			getPWMOutputter2(
+				getRC0()->getDigitalPin(),
+				getRC1()->getDigitalPin(),
+				getECCP2(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver()),
+			getTimeIntervalCounter2(
+				timer5,
+				rb5,
+				inputCaptureController),
+			getTaskManger2(
+				timer4->getPeriodicInterruptController()));
 
-	TaskManager* taskManager = getTaskManger1(timer4->getPeriodicInterruptController());
-	taskManager->addPeriodicCalledTack(&testTask1);
-	taskManager->addPeriodicCalledTack(&testTask2);
-	taskManager->enableTaskInterrupt();
+	rightDistanceSensor = getDistanceSensor1(
+			getPWMOutputter1(
+				getRC2()->getDigitalPin(),
+				getRB2()->getDigitalPin(),
+				getECCP1(ECCP_MODULE_TIMR_SOURCE_TIMER3_TIMER4)->getEnhancedPWMDriver()),
+			getTimeIntervalCounter1(
+				timer5,
+				rb5,
+				inputCaptureController),
+			getTaskManger2(
+				timer4->getPeriodicInterruptController()));
+
 	timer4->getPeriodicInterruptController()->setPeriodCount(100);	// 40kHz
 	timer4->start();
+
+
 
 
 	// interrupt settings
@@ -253,7 +218,6 @@ void setup() {
 void interrupt high_priority isr_high() {
 	Timer1_handleInterrupt();
 	Timer3_handleInterrupt();
-	Timer5_handleInterrupt();
 	CCP4_handleInterrupt();
 	CCP5_handleInterrupt();
 	Comparator1_handleInterrupt();
@@ -261,20 +225,19 @@ void interrupt high_priority isr_high() {
 }
 
 void interrupt low_priority isr_low() {
-	ECCP3_handleInterrupt();
-	Timer4_handleInterrupt();
 	Timer2_handleInterrupt();
+	Timer4_handleInterrupt();
+	Timer6_handleInterrupt();
+	ECCP3_handleInterrupt();
 	EUSART1_handleInterrupt();
 }
 
 void loop() {
-	printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
-	for (unsigned char i=0; i<10; i++) {
+	static uint8_t count = 0;
+	count++;
+	//printf("coun = %05d\tline = %05d\tspee = %05d\r\n", count, lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
+	printf("coun =%05d\tline = %05d\tspee = %05d\tdist = %05d\r\n", count, lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount(), leftDistanceSensor->getDistaneCount());
+	for (unsigned char i=0; i<100; i++) {
 		__delay_ms(10);
-	}
-	uint8_t data = serial->getByteInputStream()->read();
-	while (data != 0) {
-		serial->getByteOutputStream()->write(data);
-		data = serial->getByteInputStream()->read();
 	}
 }
