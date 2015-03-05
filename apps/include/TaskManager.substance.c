@@ -1,9 +1,10 @@
 #ifdef USING_TASK_MANAGER_SUBSTANCE
 
 // common field variables
-PeriodicCalledTask* NAMESPACE(tasks)[8] = {0};
+PeriodicCalledTask* NAMESPACE(tasks)[10] = {0};
 uint8_t NAMESPACE(numberOfTasks) = 0;
 uint8_t NAMESPACE(indexOfTaskInProgress) = 0;
+bool NAMESPACE(isRegistered) = false;
 
 // --------------------------------------------------------------------
 // PeriodicInterruptListener
@@ -59,7 +60,10 @@ TaskManager NAMESPACE(taskManager) = {
 
 // constructor
 TaskManager* NAMESPACE(getter)(PeriodicInterruptController* periodicInterruptController) {
-	periodicInterruptController->addInterruptListener(&NAMESPACE(periodicInterruptListener));
+	if (NAMESPACE(isRegistered) == false) {
+		NAMESPACE(isRegistered) = true;
+		periodicInterruptController->addInterruptListener(&NAMESPACE(periodicInterruptListener));
+	}
 	NAMESPACE(periodicInterruptController) = periodicInterruptController;
 	return &NAMESPACE(taskManager);
 }
