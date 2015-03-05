@@ -17,6 +17,7 @@
 #include "LineSensor.h"
 #include "PWMOutputter.h"
 #include "TimeIntervalCounter.h"
+#include "TaskManager.h"
 
 #define _XTAL_FREQ 64000000L
 
@@ -45,14 +46,49 @@ InputCaptureController* inputCaptureController;
 
 TimeIntervalCounter* timeIntervalCounter;
 
-static void onInputCaptured(uint16_t capturedValue) {
-	bool value = led2->getValue();
-	led2->setValue(!value);
+
+// --------------------------------------------------------------------
+// TestTask1
+// --------------------------------------------------------------------
+static bool TestTask1_onTaskCalled() {
+	static int count = 0;
+	if (count == 0) {
+		count++;
+		led2->setValue(true);
+		return true;
+	} else if (count < 6400) {
+		count++;
+		return true;
+	}
+	count = 0;
+	return false;
 }
 
-static InputCaptureInterruptListener inputCaptureListener = {
-	onInputCaptured,
+static PeriodicCalledTask testTask1 = {
+	TestTask1_onTaskCalled,
 };
+
+// --------------------------------------------------------------------
+// TestTask2
+// --------------------------------------------------------------------
+static bool TestTask2_onTaskCalled() {
+	static int count = 0;
+	if (count == 0) {
+		count++;
+		led2->setValue(false);
+		return true;
+	} else if (count < 6400) {
+		count++;
+		return true;
+	}
+	count = 0;
+	return false;
+}
+
+static PeriodicCalledTask testTask2 = {
+	TestTask2_onTaskCalled,
+};
+
 
 /**
  * LEDを光らせるための周期割り込みリスナ
@@ -181,8 +217,6 @@ void setup() {
 	
 	// pwm test
 	TimerModule* timer4 = getTimer4(EIGHT_BIT_TIMER_PRISCALER_1_4, EIGHT_BIT_TIMER_POSTSCALER_1_1);
-	timer4->getPeriodicInterruptController()->setPeriodCount(100);	// 40kHz
-	timer4->start();
 	PWMOutputter* pwm1 = getPWMOutputter1(
 			getRC2()->getDigitalPin(),
 			getRB2()->getDigitalPin(),
@@ -196,11 +230,18 @@ void setup() {
 	pwm2->enablePWMOutput();
 
 	// input capture test
-	DigitalPin* rb5 = getRB5()->getDigitalPin();
-	rb5->setDirection(false);
-	inputCaptureController = getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2)->getInputCaptureController();
-	inputCaptureController->addInputCaptureInterruptListener(&inputCaptureListener);
-	inputCaptureController->enableInputCaptureInterrupt(HIGH_PRIORITY);
+	//DigitalPin* rb5 = getRB5()->getDigitalPin();
+	//rb5->setDirection(false);
+	//inputCaptureController = getECCP3(ECCP_MODULE_TIMR_SOURCE_TIMER1_TIMER2)->getInputCaptureController();
+	//inputCaptureController->addInputCaptureInterruptListener(&inputCaptureListener);
+	//inputCaptureController->enableInputCaptureInterrupt(LOW_PRIORITY);
+
+	TaskManager* taskManager = getTaskManger1(timer4->getPeriodicInterruptController());
+	taskManager->addPeriodicCalledTack(&testTask1);
+	taskManager->addPeriodicCalledTack(&testTask2);
+	taskManager->enableTaskInterrupt();
+	timer4->getPeriodicInterruptController()->setPeriodCount(100);	// 40kHz
+	timer4->start();
 
 
 	// interrupt settings
@@ -212,7 +253,7 @@ void setup() {
 void interrupt high_priority isr_high() {
 	Timer1_handleInterrupt();
 	Timer3_handleInterrupt();
-	ECCP3_handleInterrupt();
+	Timer5_handleInterrupt();
 	CCP4_handleInterrupt();
 	CCP5_handleInterrupt();
 	Comparator1_handleInterrupt();
@@ -220,13 +261,14 @@ void interrupt high_priority isr_high() {
 }
 
 void interrupt low_priority isr_low() {
-	Timer5_handleInterrupt();
+	ECCP3_handleInterrupt();
+	Timer4_handleInterrupt();
 	Timer2_handleInterrupt();
 	EUSART1_handleInterrupt();
 }
 
 void loop() {
-	//printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
+	printf("lineValue = %05d\tspeed = %05d\r\n", lineSensor->getLineValue(), leftSpeedCounter->getSpeedCount());
 	for (unsigned char i=0; i<10; i++) {
 		__delay_ms(10);
 	}
