@@ -51,7 +51,7 @@ static bool NAMESPACE(onTask3Called)() {
 		interruptCount++;
 		NAMESPACE(timeIntervalCounter)->startCapturing();
 		return true;
-	} else if (interruptCount < 32) {
+	} else if (interruptCount < 128) {
 		interruptCount++;
 		return true;
 	}
